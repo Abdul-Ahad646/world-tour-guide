@@ -1,0 +1,82 @@
+World Tour Guide — FINAL আপডেট লাগানোর নিয়ম (সহজ ৩ ধাপ)
+========================================================
+
+এই একটাই FINAL প্যাকেজ — আগের সব zip আর লাগবে না।
+এর ভিতরে আজকের সব ঠিক করা আছে একসাথে:
+• ম্যাপে zoom (+ / − বাটন) ঠিক করা
+• ম্যাপের নিচে মহাদেশের নামে click করলে ওই মহাদেশে zoom + দেশের list filter
+• ব্যানারের লেখা মাঝখানে (center)
+• ম্যাপের নতুন সুন্দর design
+• প্রত্যেক দেশের প্রধান শহর — 197 দেশে মোট 30,542 শহর, search box সহ
+• নতুন modern CSS
+• ম্যাপে click করলে দেশের box আসে (দেশের নাম, মহাদেশ, কয়টা শহর) — হালকা নড়লেও click কাজ করে
+• ম্যাপের নিচে মহাদেশের পাশে 🌍 পুরো পৃথিবী option — click করলে পুরো বিশ্ব ফেরত আসে
+• শহরের list এখন বিভাগ / রাজ্য / প্রদেশ অনুযায়ী group করা (তার নিচে ওই এলাকার সব শহর)
+• শহর select করলেই map এর নিচে ওই শহরের দর্শনীয় জায়গার
+  নাম, ছবি ও বর্ণনা দেখায় (আলাদা page আর নেই)
+  (এই তথ্য ইন্টারনেট থেকে আসে — Wikivoyage/Wikipedia)
+• ছোট শহরও বিভাগ/রাজ্যের box এর মতই dropdown box থেকে select করতে হয়
+• ম্যাপের লাইব্রেরি (d3, topojson, jspdf) এখন ফাইলের ভিতরেই — CDN লাগবে না
+
+ধাপ ১: zip টা Extract করুন
+  world-tour-guide-FINAL.zip এ right-click > Extract All
+  (zip এর ভিতরে কোনো ফোল্ডার নেই, সব ফাইল এক জায়গায়)
+
+ধাপ ২: সব ফাইল কপি করুন
+  Extract করা সব ফাইল সিলেক্ট করুন (Ctrl+A, Ctrl+C)
+  তারপর যান: C:\Users\Abdul Ahad\Desktop\World tour guide
+  সেখানে Paste করুন (Ctrl+V) > "Replace the files in the destination" দিন
+  খেয়াল: শুধু index.html না — app.js, d3.min.js, topojson-client.min.js,
+  jspdf.umd.min.js, style.css সহ সবগুলোই লাগবে, নাহলে ম্যাপ আসবে না।
+
+ধাপ ৩: ব্রাউজারে নতুন করে খুলুন
+  index.html খুলে Ctrl+F5 চাপুন (পুরোনো ক্যাশ যেন না আসে)
+
+তাও ম্যাপ না আসলে:
+  ম্যাপের নিচে ছোট লেখায় কী আসছে সেটা আমাকে জানাবেন — ওটা দেখলেই
+  বুঝতে পারব কোথায় আটকেছে। Bangladesh ম্যাপের ডেটা ফাইলের ভিতরেই
+  দেওয়া আছে, বিশ্বের দেশের সীমানা প্রথমবার ইন্টারনেট থেকে আসে।
+
+— Luna
+
+ADMIN PAGE (admin.html)
+-----------------------
+Login: username = ahad , password = (apni jeta diyechen)
+Login er pore: desh > boro sohor > choto sohor select kore dorshoniyo jayga
+add korte parben (nam, chobir link, bornona). Edit/Delete o kora jay.
+Niche password bodlanor form o ache.
+Mone rakhben: ei add kora jayga ei browser-ei save thake (local storage),
+tai sudhu ei browser-er city page e dekhabe. Sob visitor er jonno dekhate
+chaile website er server/database lagbe.
+• Language toggle এ এখন বিশ্বের ২০টা প্রধান ভাষা আছে — select করে বদলান
+• World page banner এ রঙিন বড় লেখা: 'আপনার বিশ্ব ভ্রমণের ম্যাপ ডাউনলোড করুন'
+• World map এর ভিতরে মহাদেশ অনুযায়ী রঙ
+• World map page: paser dropdown nai, map এর উপর desher nam thekei select hoy;
+  select kora desher nam boro kore dekhay
+• World map page: side box এ checkbox list থেকে desh select হয়,
+  map এর উপর শুধু select kora desher nam dekhay
+• World page: 'দেশ বেছে নিয়ে...' lekha map এর উপরে, তার নিচে button আকারে desher nam;
+  map এর ভিতরের title majkhane
+• Map page reload করলে sob selection chole jay (notun kore shuru hoy)
+• BD map page o world page er moto layout
+• Banner writing ager moto, map er upore heading er nicher line bad,
+  'ম্যাপে নাম দেখান' option bad, name box sundor card style
+• Banner line theke 'আর' bad, 'যেসব দেশে গিয়েছি' heading majkhane choto,
+  namer box e scroll nai, download side box er niche
+• 'যেসব দেশে গিয়েছি' boro + gradient color, download ekdom side box er niche
+• BD map banner: 'কতটুকু ঘুরে দেখেছেন?' + desh select box (likha o jabe, list theke o newa jabe);
+  onno desh nile বিশ্ব ম্যাপ page e jabe
+• BD map banner: desh select korle niche box e oi desher sob rajjo/prodesh dekhay
+• Banner: 'কতটুকু ঘুরে দেখেছেন?' er pore 'আপনার শহর', tar niche download line o 'দেশ বেছে নিয়ে...' line
+• Map page: desh select korle niche box e aage rajjo/prodesh, tarpor sohor (select kora jabe),
+  niche oi desher nijossho map ashe. Bangladesh nile ager jela map tai thake
+• Map page badge: select kora desher rajjo sonkhya aage, sohor/jela pore;
+  heading ek line e, niche desh vromon line 2 ta; Bangladesh er nam auto ashe na,
+  desh select korle oi desher map e 'আমার <দেশ> ভ্রমণ' ar map click kore select o hoy
+• Country map: boro sohor gular nam map er upor thekei select kora jay (box er sathe mile),
+  'আমার <দেশ> ভ্রমণ' lekha map er upore
+• Onno desher map o Bangladesh er motoi: map er modde sohor select, pase side box
+  (count, theme, nam, photo), side box er niche PNG/JPG/PDF download, zoom o ache
+• Country map e prottek sohorer border (area) ache — click korle sei area rong hoy
+• Notun: 'boundaries' folder er vitore sob desher asol rajjo/jela simanar file ache. Update er somoy sob file + puro boundaries folder ta ek sathe replace korte hobe.
+• Thik kora (9 Oct): desher map e district gulo ulta dike anka hochchilo, tai click korlei puro map rong hoye mone hochchilo ar select kora jaygar nam asto na. Ekhon sudhu click kora district / sohorer area tai select hobe, tar nam map er upore + paser box e dekhabe. Faka jaygay click korle kichu select hobe na. India (735 jela), Afghanistan (398), Pakistan, USA, Brazil, Russia te browser e click kore test kora hoyeche.
