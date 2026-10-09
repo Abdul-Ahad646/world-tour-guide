@@ -39,7 +39,7 @@ world_h:'যেসব দেশে গিয়েছি',world_lead:'দেশ 
 exp_h:'কোথায় ঘুরবেন',wp_h:'বিশ্ব ম্যাপ থেকে দেশ ও শহর বেছে নিন',wp_lead:'আগে ম্যাপে (অথবা তালিকা থেকে) একটি দেশ বেছে নিন, তারপর সেই দেশের একটি শহর বেছে নিন।',wp_country:'১. দেশ বেছে নিন',wp_city:'২. শহর বেছে নিন',wp_pick_country:'— দেশ বেছে নিন —',wp_pick_city:'— শহর বেছে নিন —',wp_first_country:'আগে একটি দেশ বেছে নিন',wp_loading:'বিশ্ব ম্যাপ লোড হচ্ছে…',wp_mapfail:'ম্যাপ লোড হয়নি — পাশের তালিকা থেকে দেশ বেছে নিন।',wp_selected:'আপনার বাছাই',wp_city_search:'শহর খুঁজুন…',wp_more:'আরও শহর',wp_cityword:'টি শহর',wp_world:'পুরো পৃথিবী',wp_big:'২. বিভাগ / রাজ্য / প্রদেশ বেছে নিন',wp_pick_big:'— বিভাগ / রাজ্য / প্রদেশ বেছে নিন —',wp_first_big:'আগে বিভাগ / রাজ্য / প্রদেশ বেছে নিন',wp_small:'৩. শহর',wp_search_btn:'🔍 সার্চ',wp_places_btn:'দর্শনীয় স্থান দেখুন',tp_places_word:'দর্শনীয় জায়গা',tp_h2:'দর্শনীয় স্থান',tp_idx_hint:'আগে দেশ, বিভাগ/রাজ্য/প্রদেশ ও ছোট শহর বেছে নিন — ওই শহরের দর্শনীয় স্থান এখানে দেখাবে।',tp_loading:'দর্শনীয় জায়গা খোঁজা হচ্ছে…',tp_none:'দুঃখিত, এখন কোনো দর্শনীয় স্থান পাওয়া যায়নি',tp_more:'আরও জানুন',tp_source:'তথ্য ও ছবি: Wikivoyage ও Wikipedia',tp_back:'← ম্যাপে ফিরে যান',adm_login:'Admin Login',adm_user:'Username',adm_pass:'Password',adm_login_btn:'Login',adm_logout:'Logout',adm_name:'দর্শনীয় জায়গার নাম',adm_img:'ছবির লিংক (URL)',adm_url:'তথ্যের লিংক (URL, চাইলে)',adm_desc:'বর্ণনা',adm_save:'Save করুন',adm_places:'যোগ করা জায়গা',adm_newpass:'নতুন পাসওয়ার্ড',adm_change:'পাসওয়ার্ড বদলান',adm_saved:'Save হয়েছে ✓',adm_wrong:'Username বা password ঠিক না',adm_deleted:'Delete হয়েছে',adm_edit:'Edit',adm_delete:'Delete',adm_empty:'এখনো কোনো জায়গা যোগ করা হয়নি',adm_need:'দেশ, শহর আর জায়গার নাম দিতে হবে',adm_pwshort:'পাসওয়ার্ড কমপক্ষে 4 অক্ষরের হতে হবে',adm_pwsaved:'পাসওয়ার্ড বদলানো হয়েছে',adm_hint:'এই Admin দিয়ে যোগ করা জায়গা এই ব্রাউজারেই save থাকে; map এর নিচে সবার আগে দেখাবে।',tp_admin:'Admin এর যোগ করা',exp_lead:'বিভাগ ও জেলা ধরে ঘোরার জায়গা খুঁজুন, ঘোরা হলে ম্যাপে যোগ করুন বা ট্রিপে রাখুন।',
 disclaimer:'⚠️ ভাড়া, খরচ ও হোটেলের তথ্য আনুমানিক এবং সময়ের সাথে বদলায়। যাওয়ার আগে সর্বশেষ তথ্য যাচাই করে নিন। দুর্গম এলাকায় যাওয়ার আগে সরকারি নির্দেশনা দেখে নিন।',
 search:'জেলা খুঁজুন…',all:'সব',visited:'ঘোরা হয়েছে',markVisited:'ঘোরা হয়েছে',addTrip:'ট্রিপে রাখুন',inTrip:'ট্রিপে আছে',noSpots:'এই জেলার জায়গাগুলো শিগগিরই যোগ হবে।',
-quiz_h:'বাংলাদেশকে কতটা চেনেন?',quiz_lead:'১০টি প্রশ্ন, প্রতিবার নতুন সাজানো।',q_of:'প্রশ্ন',score:'আপনার স্কোর',again:'আবার খেলুন',next:'পরের প্রশ্ন',finish:'ফলাফল দেখুন',
+quiz_h:'ভ্রমণ প্রেমীর খেলা',quiz_lead:'প্রতিবার নতুন করে সাজানো ২০টি মজার প্রশ্ন — খেলো, স্কোর করো, নিজের রেকর্ড নিজেই ভাঙো!',q_of:'প্রশ্ন',score:'আপনার স্কোর',again:'আবার খেলুন',next:'পরের প্রশ্ন',finish:'ফলাফল দেখুন',qz_start:'খেলা শুরু করুন',qz_best:'সেরা স্কোর',qz_ok:'সঠিক উত্তর! 🎉',qz_no:'ভুল হয়েছে 😅',qz_right:'সঠিক উত্তর',qz_streak:'ধারাবাহিক',qz_t1:'অসাধারণ! আপনি সত্যিকারের ভ্রমণবিশারদ! 🏆',qz_t2:'খুব ভালো! বাংলাদেশটা ভালোই চেনেন। 👏',qz_t3:'ভালো চেষ্টা! আরেকবার খেললে আরো ভালো হবে। 🙂',qz_t4:'খারাপ না! ঘুরতে ঘুরতেই শিখে যাবেন। 🧭',cert_h:'সার্টিফিকেট',cert_lead:'তথ্যগুলো দিলেই সার্টিফিকেটে দেখা যাবে',f_nam:'তোমার নাম',f_country:'দেশ',f_pass:'পাসপোর্ট নম্বর',f_add:'অতিরিক্ত তথ্য',cert_to:'এই সার্টিফিকেটটি সম্মানের সাথে প্রদান করা হলো',cert_score:'স্কোর',cert_date:'তারিখ',dl_png:'PNG ডাউনলোড',dl_pdf:'PDF ডাউনলোড',
 plan_h:'ট্রিপ প্ল্যানার',plan_lead:'জেলা বেছে নিন, দিন ও বাজেট দিন; কাছাকাছি রুটে সাজানো একটি আনুমানিক প্ল্যান পাবেন।',
 p_where:'কোন কোন জেলায় যাবেন?',p_start:'প্রথমে যাবেন',p_budget:'মোট বাজেট (সবার জন্য, ঐচ্ছিক) ৳',p_days:'কত দিনের ট্যুর',p_people:'কতজন যাবেন',p_round:'শেষে শুরুর জায়গায় ফিরে আসবো',p_go:'প্ল্যান বানান',p_reset:'নতুন করে শুরু',p_print:'🖨️ প্রিন্ট / PDF',
 p_none:'অন্তত একটি জেলা বাছাই করুন।',p_total:'মোট আনুমানিক খরচ',p_trans:'যাতায়াত',p_hotel:'হোটেল',p_food:'খাওয়া',p_per:'জনপ্রতি',p_tier:'মান',p_dist:'আনুমানিক দূরত্ব',
@@ -59,7 +59,7 @@ world_h:'Countries I have visited',world_lead:'Select countries and make your ow
 exp_h:'Where to go',wp_h:'Pick a country and city on the world map',wp_lead:'First pick a country on the map (or from the list), then pick a city in that country.',wp_country:'1. Choose a country',wp_city:'2. Choose a city',wp_pick_country:'— Choose a country —',wp_pick_city:'— Choose a city —',wp_first_country:'Choose a country first',wp_loading:'Loading world map…',wp_mapfail:'Map could not load — choose a country from the list.',wp_selected:'Your pick',wp_city_search:'Search city…',wp_more:'more cities',wp_cityword:'cities',wp_world:'Whole World',wp_big:'2. Choose a division / state / province',wp_pick_big:'— Choose a division / state / province —',wp_first_big:'Choose a division / state / province first',wp_small:'3. City',wp_search_btn:'🔍 Search',wp_places_btn:'See tourist places',tp_places_word:'Tourist places',tp_h2:'Tourist Places',tp_idx_hint:'First choose a country, division/state and small city — tourist places of that city will show here.',tp_loading:'Finding tourist places…',tp_none:'Sorry, no tourist places found right now',tp_more:'Learn more',tp_source:'Information and photos: Wikivoyage and Wikipedia',tp_back:'← Back to map',adm_login:'Admin Login',adm_user:'Username',adm_pass:'Password',adm_login_btn:'Login',adm_logout:'Logout',adm_name:'Tourist place name',adm_img:'Photo link (URL)',adm_url:'Info link (URL, optional)',adm_desc:'Description',adm_save:'Save',adm_places:'Added places',adm_newpass:'New password',adm_change:'Change password',adm_saved:'Saved ✓',adm_wrong:'Wrong username or password',adm_deleted:'Deleted',adm_edit:'Edit',adm_delete:'Delete',adm_empty:'No places added yet',adm_need:'Country, city and place name are required',adm_pwshort:'Password must be at least 4 characters',adm_pwsaved:'Password changed',adm_hint:'Places added here are saved in this browser and shown first below the map.',tp_admin:'Added by admin',exp_lead:'Browse places by division and district. Mark them as visited or add them to your trip.',
 disclaimer:'⚠️ Fares, costs and hotel information are approximate and change over time. Verify the latest details before you go, and check official advice for remote areas.',
 search:'Search districts…',all:'All',visited:'Visited',markVisited:'Mark visited',addTrip:'Add to trip',inTrip:'In trip',noSpots:'Places for this district are coming soon.',
-quiz_h:'How well do you know Bangladesh?',quiz_lead:'10 questions, shuffled every time.',q_of:'Question',score:'Your score',again:'Play again',next:'Next question',finish:'See result',
+quiz_h:'The Travel Lover\'s Game',quiz_lead:'20 fun questions, freshly shuffled every round — play, score, and beat your own record!',q_of:'Question',score:'Your score',again:'Play again',next:'Next question',finish:'See result',qz_start:'Start the quiz',qz_best:'Best score',qz_ok:'Correct! 🎉',qz_no:'Not quite 😅',qz_right:'Correct answer',qz_streak:'Streak',qz_t1:'Amazing! You are a true Bangladesh explorer! 🏆',qz_t2:'Great job! You know Bangladesh well. 👏',qz_t3:'Good try! Play again to score even higher. 🙂',qz_t4:'Not bad! Keep exploring and you will learn as you go. 🧭',cert_h:'Certificate',cert_lead:'Fill in the details and they will appear on your certificate',f_nam:'Your name',f_country:'Country',f_pass:'Passport number',f_add:'Additional information',cert_to:'This certificate is proudly presented to',cert_score:'Score',cert_date:'Date',dl_png:'Download PNG',dl_pdf:'Download PDF',
 plan_h:'Trip Planner',plan_lead:'Pick districts, set days and budget, and get a rough plan ordered by nearest route.',
 p_where:'Which districts will you visit?',p_start:'Start from',p_budget:'Total budget (for everyone, optional) ৳',p_days:'Trip length (days)',p_people:'Travellers',p_round:'Return to the starting point at the end',p_go:'Build plan',p_reset:'Start over',p_print:'🖨️ Print / PDF',
 p_none:'Pick at least one district.',p_total:'Estimated total',p_trans:'Transport',p_hotel:'Hotels',p_food:'Food',p_per:'Per person',p_tier:'Level',p_dist:'Approx. distance',
@@ -220,7 +220,7 @@ function Mapper(cfg){
       const proj=(cfg.id==='bd'?d3.geoMercator():d3.geoNaturalEarth1()).fitExtent([[30,150],[W-30,H-60]],fc);
       const path=d3.geoPath(proj);
       m.feats.forEach(x=>{const on=m.sel.has(x.id);body+=`<path class="reg" data-id="${esc(x.id)}" d="${path(x.f)||''}" fill="${on?fill:base}" stroke="#ff8c1a" stroke-width="${cfg.id==='bd'?1.6:1.1}"/>`;});
-      if(m.showNames){m.feats.forEach(x=>{const _on2=m.sel.has(x.id);if(!_on2)return;let c=path.centroid(x.f);if(cfg.id==='bd'&&c&&!isNaN(c[0])){try{const iv=proj.invert(c);if(!(iv&&d3.geoContains&&d3.geoContains(x.f,iv))){const b=path.bounds(x.f);let best=null,bd=-1;for(let i=1;i<12;i++)for(let j=1;j<12;j++){const px=b[0][0]+(b[1][0]-b[0][0])*i/12,py=b[0][1]+(b[1][1]-b[0][1])*j/12;const iv2=proj.invert([px,py]);if(!iv2||!d3.geoContains(x.f,iv2))continue;const d=Math.min(px-b[0][0],b[1][0]-px,py-b[0][1],b[1][1]-py);if(d>bd){bd=d;best=[px,py];}}if(best)c=best;}}catch(e){}}if(isNaN(c[0]))return;const it=m.items.find(i=>i.id===x.id)||{en:x.id,bn:x.id};body+=`<text x="${c[0].toFixed(1)}" y="${c[1].toFixed(1)}" font-size="${cfg.id==='bd'?8.5:(_on2?13:(lang==='bn'?8.5:7.5))}" font-weight="${_on2?'800':'400'}" text-anchor="middle" fill="${_on2?'#ffffff':'#173a42'}" stroke="${_on2?'#00000066':'#ffffff88'}" stroke-width=".4" paint-order="stroke" style="pointer-events:none" font-family="Hind Siliguri,sans-serif">${esc(wName(it))}</text>`;});}
+      if(m.showNames){m.feats.forEach(x=>{const _on2=m.sel.has(x.id);if(cfg.id!=='bd'&&!_on2)return;let c=path.centroid(x.f);if(cfg.id==='bd'&&c&&!isNaN(c[0])){try{const iv=proj.invert(c);if(!(iv&&d3.geoContains&&d3.geoContains(x.f,iv))){const b=path.bounds(x.f);let best=null,bd=-1;for(let i=1;i<12;i++)for(let j=1;j<12;j++){const px=b[0][0]+(b[1][0]-b[0][0])*i/12,py=b[0][1]+(b[1][1]-b[0][1])*j/12;const iv2=proj.invert([px,py]);if(!iv2||!d3.geoContains(x.f,iv2))continue;const d=Math.min(px-b[0][0],b[1][0]-px,py-b[0][1],b[1][1]-py);if(d>bd){bd=d;best=[px,py];}}if(best)c=best;}}catch(e){}}if(isNaN(c[0]))return;const it=m.items.find(i=>i.id===x.id)||{en:x.id,bn:x.id};body+=`<text x="${c[0].toFixed(1)}" y="${c[1].toFixed(1)}" font-size="${cfg.id==='bd'?8.5:(_on2?13:(lang==='bn'?8.5:7.5))}" font-weight="${_on2?'800':'400'}" text-anchor="middle" fill="${_on2?'#ffffff':'#173a42'}" stroke="${_on2?'#00000066':'#ffffff88'}" stroke-width=".4" paint-order="stroke" style="pointer-events:none" font-family="Hind Siliguri,sans-serif">${esc(wName(it))}</text>`;});}
     }else if(m.mode==='tile'&&cfg.id==='wd'){
       const cols=14,tw=80,th=26,gx=4,gy=4,x0=(W-(cols*(tw+gx)-gx))/2;
       m.items.forEach((it,i)=>{const on=m.sel.has(it.id);const cx=x0+(i%cols)*(tw+gx),cy=140+Math.floor(i/cols)*(th+gy);const full=wName(it);const nm=full.length>13?full.slice(0,12)+'…':full;
@@ -354,7 +354,7 @@ function init(){
     if(!f){root.classList.add('d-none');root.innerHTML='';_cmCur=null;return;}
     root.classList.remove('d-none');
     const W=900;let H=560;
-    try{const _tp=d3.geoMercator().fitExtent([[25,0],[W-25,4000]],f);const _tb=d3.geoPath(_tp).bounds(f);const _cw=_tb[1][0]-_tb[0][0],_ch=_tb[1][1]-_tb[0][1];if(_cw>0&&_ch>0)H=Math.max(560,Math.min(1250,Math.round(126+(W-50)*(_ch/_cw)+36)));}catch(e){}
+    try{const _tp=d3.geoMercator().fitExtent([[25,0],[W-25,4000]],f);const _tb=d3.geoPath(_tp).bounds(f);const _cw=_tb[1][0]-_tb[0][0],_ch=_tb[1][1]-_tb[0][1];if(_cw>0&&_ch>0)H=560;}catch(e){}
     const proj=d3.geoMercator().fitExtent([[25,126],[W-25,H-30]],f);
 
     const path=d3.geoPath(proj);
@@ -371,7 +371,7 @@ function init(){
     const adm2List=adm2.map((x,i)=>{const nm=x&&x.properties&&x.properties.name;return nm?{key:i+':'+nm,id:i,name:nm,f:x}:null;}).filter(Boolean);
     const adm2NameByKey={};adm2List.forEach(o=>{adm2NameByKey[o.key]=o.name;});
     const useAdm2=adm2List.length>0;
-    try{const _drawF=adm2.length?adm2:(adm1.length?adm1:[]);const _bF=path.bounds(f);const _mx=(_bF[1][0]-_bF[0][0])*0.25,_my=(_bF[1][1]-_bF[0][1])*0.25;const _inl=_drawF.filter(function(ft){const c=path.centroid(ft);return !isNaN(c[0])&&c[0]>=_bF[0][0]-_mx&&c[0]<=_bF[1][0]+_mx&&c[1]>=_bF[0][1]-_my&&c[1]<=_bF[1][1]+_my;});if(_inl.length){const _fcI={type:'FeatureCollection',features:_inl};const _bI=path.bounds(_fcI);const _needH=Math.round(126+(_bI[1][1]-_bI[0][1])+40);if(_needH>H){H=Math.min(1250,_needH);proj.fitExtent([[25,126],[W-25,H-30]],f);}let _b2=path.bounds(_fcI);if(_b2[0][1]<118||_b2[1][1]>H-24){const _hh=Math.max(1,_b2[1][1]-_b2[0][1]);const _k=Math.min(1,(H-24-118)/_hh);if(_k<1)proj.scale(proj.scale()*_k);const _b3=path.bounds(_fcI);const _tr=proj.translate();proj.translate([_tr[0]+(W/2-(_b3[0][0]+_b3[1][0])/2),_tr[1]+(126-_b3[0][1])]);}}}catch(e){}
+    try{const _drawF=adm2.length?adm2:(adm1.length?adm1:[]);const _bF=path.bounds(f);const _mx=(_bF[1][0]-_bF[0][0])*0.25,_my=(_bF[1][1]-_bF[0][1])*0.25;const _inl=_drawF.filter(function(ft){const c=path.centroid(ft);return !isNaN(c[0])&&c[0]>=_bF[0][0]-_mx&&c[0]<=_bF[1][0]+_mx&&c[1]>=_bF[0][1]-_my&&c[1]<=_bF[1][1]+_my;});if(_inl.length){const _fcI={type:'FeatureCollection',features:_inl};proj.fitExtent([[25,126],[W-25,H-30]],{type:'FeatureCollection',features:[f].concat(_inl)});}else{proj.fitExtent([[25,126],[W-25,H-30]],f);}}catch(e){}
     if(useAdm2){[...st.districts].forEach(k=>{if(!(k in adm2NameByKey))st.districts.delete(k);});}
     const basisTotal=()=>useAdm2?adm2List.length:(hit.cities||[]).length;
     const basisSel=()=>useAdm2?st.districts.size:st.cities.size;
@@ -382,6 +382,8 @@ function init(){
     const fillC=()=>st.custom||(typeof THEMES!=='undefined'&&THEMES[st.theme||0]?THEMES[st.theme||0][0]:'#0f8a8f');
     function svgString(){
       const fc=fillC();
+      const _landTiny=(()=>{try{return path.area(f)<9000;}catch(e){return false;}})();
+      const _bigTr=function(ft){try{if(!_landTiny)return '';const _b=path.bounds(ft);const _md=Math.max(_b[1][0]-_b[0][0],_b[1][1]-_b[0][1]);if(!(_md>0&&_md<24))return '';const _k=Math.min(12,24/_md);const c=path.centroid(ft);if(!c||isNaN(c[0]))return '';return ' transform="translate('+c[0].toFixed(1)+' '+c[1].toFixed(1)+') scale('+_k.toFixed(2)+') translate('+(-c[0]).toFixed(1)+' '+(-c[1]).toFixed(1)+')"';}catch(e){return '';}};
       let b='<rect width="'+W+'" height="'+H+'" fill="#fbfaf6"/>';
       const _hasYou=!!(st.you&&String(st.you).trim());
       b+='<text id="cmap-svg-you" x="'+(W/2)+'" y="30" font-size="22" font-weight="800" text-anchor="middle" fill="#10292e" font-family="Hind Siliguri,sans-serif">'+(_hasYou?esc(st.you):'')+'</text>';
@@ -390,12 +392,14 @@ function init(){
       b+='<text id="cmap-svg-sub" x="'+(W/2)+'" y="'+(_hasYou?90:72)+'" font-size="16" font-weight="700" text-anchor="middle" fill="'+fc+'" font-family="Hind Siliguri,sans-serif">'+num(basisSel())+esc(t('of'))+num(_totC)+' '+esc(basisUnit())+' · '+num(_pctC)+'%'+'</text>';
       if(st.photo)b+='<clipPath id="cmph"><circle cx="'+(W-84)+'" cy="104" r="32"/></clipPath><image href="'+st.photo+'" x="'+(W-116)+'" y="72" width="64" height="64" clip-path="url(#cmph)" preserveAspectRatio="xMidYMid slice"/><circle cx="'+(W-84)+'" cy="104" r="32" fill="none" stroke="'+fc+'" stroke-width="2.5"/>';
       if(!useAdm2)b+='<path pointer-events="none" d="'+(path(f)||'')+'" fill="#dcebe8" stroke="none"/>';
+      if(!useAdm2&&adm1.length)adm1.forEach(function(ft){b+='<path pointer-events="none"'+_bigTr(ft)+' d="'+(path(ft)||'')+'" fill="#dcebe8" stroke="#ff8c1a" stroke-width=".8" vector-effect="non-scaling-stroke"/>';});
       if(useAdm2){
-        adm2List.forEach(o=>{const sel=st.districts.has(o.key);b+='<path data-adm2="'+esc(o.key)+'" d="'+(path(o.f)||'')+'" fill="'+(sel?fc:'#dcebe8')+'" fill-opacity="'+(sel?'.88':'1')+'" stroke="#ff8c1a" stroke-width=".7" style="cursor:pointer"/>';});
+                adm2List.forEach(o=>{const sel=st.districts.has(o.key);const _tr=_bigTr(o.f);b+='<path data-adm2="'+esc(o.key)+'"'+_tr+' d="'+(path(o.f)||'')+'" fill="'+(sel?fc:'#dcebe8')+'" fill-opacity="'+(sel?'.88':'1')+'" stroke="#ff8c1a" stroke-width=".7" vector-effect="non-scaling-stroke" style="cursor:pointer"/>';});
         
               const _insidePt=function(f){const c=path.centroid(f);if(!c||isNaN(c[0]))return c;try{const iv=proj.invert(c);if(iv&&typeof d3!=='undefined'&&d3.geoContains&&d3.geoContains(f,iv))return c;}catch(e){}
         try{const b=path.bounds(f);const x0=b[0][0],y0=b[0][1],x1=b[1][0],y1=b[1][1];let best=null,bd=-1;for(let i=1;i<12;i++)for(let j=1;j<12;j++){const px=x0+(x1-x0)*i/12,py=y0+(y1-y0)*j/12;const iv2=proj.invert([px,py]);if(!iv2||!d3.geoContains(f,iv2))continue;const d=Math.min(px-x0,x1-px,py-y0,y1-py);if(d>bd){bd=d;best=[px,py];}}if(best)return best;}catch(e){}return c;};
-        if(st.showNames!==false)adm2List.forEach(o=>{if(!st.districts.has(o.key))return;const c=_insidePt(o.f);if(!c||isNaN(c[0]))return;b+='<text data-adm2-label="'+esc(o.key)+'" x="'+c[0].toFixed(1)+'" y="'+c[1].toFixed(1)+'" font-size="9" font-weight="800" text-anchor="middle" fill="#6a1fb8" stroke="#ffffff" stroke-width="2" paint-order="stroke" style="pointer-events:none">'+esc(cName(o.name))+'</text>';});
+        
+        if(st.showNames!==false)adm2List.forEach(o=>{const c=_insidePt(o.f);if(!c||isNaN(c[0]))return;b+='<text data-adm2-label="'+esc(o.key)+'" x="'+c[0].toFixed(1)+'" y="'+c[1].toFixed(1)+'" font-size="9" font-weight="800" text-anchor="middle" fill="#6a1fb8" stroke="#ffffff" stroke-width="2" paint-order="stroke" style="pointer-events:none">'+esc(cName(o.name))+'</text>';});
       }
       const PP=[];const OUTS=[];const _selC=o=>o.names.some(n=>st.cities.has(n));if(!useAdm2){const _seen={};pts.forEach(pt=>{const p=proj([pt[2],pt[1]]);if(!p)return;const _dk=pt[1].toFixed(2)+','+pt[2].toFixed(2);if(_seen[_dk]){_seen[_dk].names.push(pt[0]);return;}const o={pt:pt,p:p,names:[pt[0]]};_seen[_dk]=o;PP.push(o);try{if(typeof d3!=='undefined'&&d3.geoContains&&!d3.geoContains(f,[pt[2],pt[1]]))OUTS.push(o);}catch(e){}});}
       if(PP.length===1){const o=PP[0];const sel=_selC(o);b+='<path data-mcity="'+esc(o.pt[0])+'" d="'+(path(f)||'')+'" fill="'+(sel?fc:'rgba(255,255,255,0.16)')+'" fill-opacity="'+(sel?'.88':'1')+'" stroke="#ff8c1a" stroke-width="1.2" style="cursor:pointer"/>';}
@@ -410,9 +414,11 @@ function init(){
 
 
       
+      if(!useAdm2)PP.forEach(o=>{const sel=_selC(o);b+='<circle data-mcity="'+esc(o.pt[0])+'" cx="'+o.p[0].toFixed(1)+'" cy="'+o.p[1].toFixed(1)+'" r="5.5" fill="'+(sel?fc:'#ffffff')+'" fill-opacity=".95" stroke="#ff8c1a" stroke-width="1.4" style="cursor:pointer"/>';});
       const _dr=0;
-      if(!useAdm2)pts.forEach((pt,ix)=>{const p=proj([pt[2],pt[1]]);if(!p)return;const sel=st.cities.has(pt[0]);if(!sel)return;
-        b+='<g data-mcity="'+esc(pt[0])+'" style="cursor:pointer"><circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+_dr+'" fill="'+(sel?'#f2762e':'#ffffff')+'" stroke="#0b5d6b" stroke-width="1.2"/>'+((st.showNames===false)?'':'<text x="'+(p[0]+6).toFixed(1)+'" y="'+(p[1]+3).toFixed(1)+'" font-size="9" font-weight="800" fill="#6a1fb8" stroke="#ffffff" stroke-width="2" paint-order="stroke">'+esc(cName(pt[0]))+'</text>')+'</g>';});
+      if(!useAdm2)pts.forEach((pt,ix)=>{const p=proj([pt[2],pt[1]]);if(!p)return;const sel=st.cities.has(pt[0]);
+        if(sel)b+='<g data-mcity="'+esc(pt[0])+'" style="cursor:pointer"><circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+_dr+'" fill="#f2762e" stroke="#0b5d6b" stroke-width="1.2"/></g>';
+        if(st.showNames!==false)b+='<text x="'+(p[0]+6).toFixed(1)+'" y="'+(p[1]+3).toFixed(1)+'" font-size="9" font-weight="800" fill="#6a1fb8" stroke="#ffffff" stroke-width="2" paint-order="stroke" style="pointer-events:none">'+esc(cName(pt[0]))+'</text>';});
       b+='<text x="'+(W/2)+'" y="'+(H-14)+'" font-size="13" text-anchor="middle" fill="#7a8f93" font-family="Hind Siliguri,sans-serif">World Tour Guide</text>';
       return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'+b+'</svg>';
     }
@@ -822,22 +828,94 @@ $('#exGrid').addEventListener('click',e=>{
 });
 
 /* ================= QUIZ ================= */
-const quiz={i:0,score:0,qs:[],done:false};
+const quiz={i:0,score:0,qs:[],done:false,started:false,streak:0,bestStreak:0,cert:{nam:'',country:'',pass:'',add:''}};
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function quizStart(){if(!document.getElementById('quizBox'))return;quiz.qs=shuffle(QUIZ).slice(0,10).map(q=>{const idx=shuffle(q.o.map((_,k)=>k));return {q:q.q,o:idx.map(k=>q.o[k]),a:idx.indexOf(q.a)};});quiz.i=0;quiz.score=0;quiz.done=false;quizRender();}
+function quizStart(){if(!document.getElementById('quizBox'))return;quiz.started=false;quiz.done=false;quizRender();}
+function _quizDeal(){quiz.qs=shuffle(QUIZ).slice(0,20).map(q=>{const idx=shuffle(q.o.map((_,k)=>k));return {q:q.q,o:idx.map(k=>q.o[k]),a:idx.indexOf(q.a)};});quiz.i=0;quiz.score=0;quiz.streak=0;quiz.bestStreak=0;quiz.done=false;quiz.started=true;quizRender();}
 function quizRender(){if(!document.getElementById('quizBox'))return;
-  const box=$('#quizBox'),li=lang==='bn'?0:1;
-  if(quiz.done){box.innerHTML=`<div class="count">${num(quiz.score)} / ${num(quiz.qs.length)}</div><p>${esc(t('score'))}</p><button class="btn btn-primary" id="qAgain" type="button">${esc(t('again'))}</button>`;$('#qAgain').onclick=quizStart;return;}
-  const q=quiz.qs[quiz.i];
-  box.innerHTML=`<div class="bar"><i style="width:${quiz.i/quiz.qs.length*100}%"></i></div><small>${esc(t('q_of'))} ${num(quiz.i+1)} / ${num(quiz.qs.length)}</small><div class="q">${esc(q.q[li])}</div>${q.o.map((o,k)=>`<button class="btn btn-outline-primary w-100 text-start mb-2 opt" data-k="${k}" type="button">${esc(o[li])}</button>`).join('')}<div id="qNext"></div>`;
-  $$('.opt',box).forEach(b=>b.onclick=()=>{
-    const k=+b.dataset.k;$$('.opt',box).forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add('ok');});
-    if(k===q.a)quiz.score++;else b.classList.add('bad');
-    const last=quiz.i===quiz.qs.length-1;
-    $('#qNext').innerHTML=`<button class="btn btn-primary" type="button" id="qn">${esc(t(last?'finish':'next'))}</button>`;
-    $('#qn').onclick=()=>{if(last)quiz.done=true;else quiz.i++;quizRender();};
-  });
+  const box=$('#quizBox'),li=lang==='bn'?0:1,letters=lang==='bn'?['ক','খ','গ','ঘ']:['A','B','C','D'];
+  if(!quiz.started){const best=+(store.get('quiz_best',0)||0);
+    box.innerHTML=`<div class="qz-intro"><div class="qz-emoji">🧠</div><h2 class="qz-title">${esc(t('quiz_h'))}</h2><p class="qz-lead">${esc(t('quiz_lead'))}</p>${best?`<div class="qz-best">🏅 ${esc(t('qz_best'))}: <b>${num(best)} / ${num(20)}</b></div>`:''}<div class="qz-form text-start">
+      <div class="row g-2">
+      <div class="col-md-6"><label class="form-label">${esc(t('f_nam'))}</label><input class="form-control" id="qzF-nam" value="${esc(quiz.cert.nam)}" autocomplete="name"></div>
+      <div class="col-md-6"><label class="form-label">${esc(t('f_country'))}</label><input class="form-control" id="qzF-country" list="qzClist" value="${esc(quiz.cert.country)}"><datalist id="qzClist">${(typeof WC!=='undefined'?WC:[]).map(c=>`<option value="${esc(lang==='bn'?(wBn(c.name)||c.name):c.name)}">`).join('')}</datalist></div>
+      <div class="col-md-6"><label class="form-label">${esc(t('f_pass'))}</label><input class="form-control" id="qzF-pass" value="${esc(quiz.cert.pass)}"></div>
+      <div class="col-md-6"><label class="form-label">${esc(t('f_add'))}</label><input class="form-control" id="qzF-add" value="${esc(quiz.cert.add)}"></div>
+      </div></div><button class="btn btn-primary btn-lg qz-start" id="qzStart" type="button">▶ ${esc(t('qz_start'))}</button><div class="qz-keys">⌨️ 1–4 / A–D</div></div>`;
+    ['nam','country','pass','add'].forEach(k=>{const inp=document.getElementById('qzF-'+k);if(inp)inp.addEventListener('input',()=>{quiz.cert[k]=inp.value;});});
+    $('#qzStart').onclick=_quizDeal;return;}
+  if(quiz.done){const tot=quiz.qs.length,pct=tot?Math.round(quiz.score/tot*100):0,best=Math.max(+(store.get('quiz_best',0)||0),quiz.score);store.set('quiz_best',best);
+    const msg=pct>=80?t('qz_t1'):pct>=60?t('qz_t2'):pct>=40?t('qz_t3'):t('qz_t4');
+    box.innerHTML=`<div class="qz-intro"><div class="qz-ring" style="--p:${pct}"><span>${num(pct)}%</span></div><div class="count">${num(quiz.score)} / ${num(tot)}</div><p class="qz-msg">${esc(msg)}</p><p class="qz-bestline">🏅 ${esc(t('qz_best'))}: <b>${num(best)} / ${num(tot)}</b>${quiz.bestStreak>1?` · 🔥 ${esc(t('qz_streak'))} ${num(quiz.bestStreak)}`:''}</p><div class="qz-actions"><button class="btn btn-primary btn-lg" id="qAgain" type="button">🔄 ${esc(t('again'))}</button><a class="btn btn-outline-primary btn-lg" href="index.html">${esc(t('nav_explore'))}</a></div></div>
+    <div class="qz-certbox"><h3 class="qz-certh">🏆 ${esc(t('cert_h'))}</h3>
+    <div id="qzCert" class="qz-cert"></div>
+    <div class="qz-actions"><button class="btn btn-success" id="qzDlPng" type="button">⬇ ${esc(t('dl_png'))}</button><button class="btn btn-outline-success" id="qzDlPdf" type="button">⬇ ${esc(t('dl_pdf'))}</button></div></div>`;
+    $('#qAgain').onclick=_quizDeal;_qzCertBind(box);if(window._qzCeleb)window._qzCeleb();return;}
+  const q=quiz.qs[quiz.i],pct=Math.round(quiz.i/quiz.qs.length*100);
+  box.innerHTML=`<div class="qz-top"><span class="qz-pill">${esc(t('q_of'))} ${num(quiz.i+1)} / ${num(quiz.qs.length)}</span><span class="qz-pill qz-score">⭐ ${num(quiz.score)}</span>${quiz.streak>1?`<span class="qz-pill qz-fire">🔥 ${num(quiz.streak)}</span>`:''}</div><div class="bar qz-bar"><i style="width:${pct}%"></i></div><div class="q qz-q">${esc(q.q[li])}</div><div class="qz-opts">${q.o.map((o,k)=>`<button class="btn opt qz-opt" data-k="${k}" type="button"><span class="qz-key">${letters[k]||k+1}</span><span class="qz-txt">${esc(o[li])}</span></button>`).join('')}</div><div id="qFeed"></div><div id="qNext"></div>`;
+  $$('.opt',box).forEach(b=>b.onclick=()=>_quizPick(b));
 }
+function _quizPick(b){const box=$('#quizBox');if(!box||quiz.done||!quiz.qs.length)return;const q=quiz.qs[quiz.i];if(!q||b.disabled)return;const k=+b.dataset.k,li=lang==='bn'?0:1;
+  $$('.opt',box).forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add('ok');});
+  const right=k===q.a;if(right){quiz.score++;quiz.streak++;quiz.bestStreak=Math.max(quiz.bestStreak,quiz.streak);}else{quiz.streak=0;b.classList.add('bad');}
+  const feed=$('#qFeed');if(feed)feed.innerHTML=right?`<div class="qz-feed ok">${esc(t('qz_ok'))}</div>`:`<div class="qz-feed bad">${esc(t('qz_no'))} ${esc(t('qz_right'))}: <b>${esc(q.o[q.a][li])}</b></div>`;
+  const sc=box.querySelector('.qz-score');if(sc)sc.textContent='⭐ '+num(quiz.score);
+  const last=quiz.i===quiz.qs.length-1;
+  $('#qNext').innerHTML=`<button class="btn btn-primary btn-lg w-100 qz-next" type="button" id="qn">${esc(t(last?'finish':'next'))} →</button>`;
+  $('#qn').onclick=()=>{if(last)quiz.done=true;else quiz.i++;quizRender();};
+}
+function _qzCertSVG(){const cc=quiz.cert,tot=quiz.qs.length||20,pct=tot?Math.round(quiz.score/tot*100):0,dt=new Date().toLocaleDateString(lang==='bn'?'bn-BD':'en-GB');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" width="1200" height="820">
+  <defs><linearGradient id="cbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffdf4"/><stop offset=".55" stop-color="#fdf6e0"/><stop offset="1" stop-color="#f3ead2"/></linearGradient>
+  <radialGradient id="seal" cx=".35" cy=".35" r="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".6" stop-color="#e9b64f"/><stop offset="1" stop-color="#b8862e"/></radialGradient></defs>
+  <rect width="1200" height="820" fill="url(#cbg)"/>
+  <circle cx="600" cy="430" r="300" fill="#0b5d6b" opacity=".045"/>
+  <rect x="22" y="22" width="1156" height="776" fill="none" stroke="#0b5d6b" stroke-width="7"/>
+  <rect x="40" y="40" width="1120" height="740" fill="none" stroke="#d9a441" stroke-width="2.5"/>
+  <rect x="50" y="50" width="1100" height="720" fill="none" stroke="#0b5d6b" stroke-width="1" opacity=".55"/>
+  <g stroke="#d9a441" stroke-width="3" fill="none"><path d="M40 92 V40 H92"/><path d="M1108 40 H1160 V92"/><path d="M1160 728 V780 H1108"/><path d="M92 780 H40 V728"/></g>
+  <g font-size="26" fill="#d9a441"><text x="600" y="86" text-anchor="middle">❦</text></g>
+  <text x="600" y="126" text-anchor="middle" font-size="32" font-weight="800" fill="#0b5d6b" font-family="Fraunces,serif" letter-spacing="1">World Tour Guide</text>
+  <line x1="440" y1="142" x2="760" y2="142" stroke="#d9a441" stroke-width="2.5"/>
+  <text x="600" y="182" text-anchor="middle" font-size="40">🏆</text>
+  <text x="600" y="240" text-anchor="middle" font-size="54" font-weight="800" fill="#0b5d6b" font-family="Fraunces,serif">${esc(t('cert_h'))}</text>
+  <text x="600" y="276" text-anchor="middle" font-size="24" font-weight="700" fill="#b8862e">${esc(t('quiz_h'))}</text>
+  <text x="600" y="316" text-anchor="middle" font-size="20" font-style="italic" fill="#5c7a80">${esc(t('cert_to'))}</text>
+  <text x="600" y="386" text-anchor="middle" font-size="48" font-weight="800" fill="#123f47" font-family="Fraunces,serif">${esc(cc.nam||'—')}</text>
+  <line x1="350" y1="408" x2="850" y2="408" stroke="#d9a441" stroke-width="2"/>
+  <g><rect x="430" y="428" width="340" height="46" rx="23" fill="#0b5d6b"/><text x="600" y="459" text-anchor="middle" font-size="23" font-weight="700" fill="#ffffff">${esc(t('cert_score'))}: ${num(quiz.score)} / ${num(tot)} (${num(pct)}%)</text></g>
+  ${cc.country?`<text x="600" y="516" text-anchor="middle" font-size="21" fill="#33555c">${esc(t('f_country'))}: <tspan font-weight="700">${esc(cc.country)}</tspan></text>`:''}
+  ${cc.pass?`<text x="600" y="552" text-anchor="middle" font-size="21" fill="#33555c">${esc(t('f_pass'))}: <tspan font-weight="700">${esc(cc.pass)}</tspan></text>`:''}
+  ${cc.add?`<text x="600" y="588" text-anchor="middle" font-size="20" font-style="italic" fill="#33555c">${esc(cc.add)}</text>`:''}
+  <g><path d="M566 640 L552 706 L584 688 L600 716 L616 688 L648 706 L634 640 Z" fill="#c0392b" opacity=".85"/><path d="M566 640 L552 706 L584 688 L600 716 L616 688 L648 706 L634 640 Z" fill="none"/>
+  <circle cx="600" cy="636" r="42" fill="url(#seal)" stroke="#b8862e" stroke-width="3"/><circle cx="600" cy="636" r="33" fill="none" stroke="#fff3c4" stroke-width="2"/><text x="600" y="650" text-anchor="middle" font-size="32" fill="#7a5200">★</text></g>
+  <text x="90" y="742" font-size="19" fill="#5c7a80">${esc(t('cert_date'))}: ${esc(dt)}</text>
+  <text x="1110" y="726" text-anchor="end" font-size="25" font-weight="800" fill="#0b5d6b" font-family="Fraunces,serif">World Tour Guide</text>
+  <text x="1110" y="754" text-anchor="end" font-size="16" fill="#5c7a80">Made by Abdul Ahad</text>
+  <text x="600" y="762" text-anchor="middle" font-size="16" fill="#5c7a80">Facebook: facebook.com/abdul.ahad.233586   ·   WhatsApp: 01646060044</text>
+  </svg>`;}
+window._qzCeleb=function(){try{const old=document.querySelector('.qz-celeb');if(old)old.remove();
+  const w=document.createElement('div');w.className='qz-celeb';const colors=['#0b5d6b','#0ea47a','#f2a33a','#e8553d','#6a1fb8','#ffd166'];
+  for(let i=0;i<70;i++){const s=document.createElement('span');s.className='qz-conf';s.style.left=(Math.random()*100)+'vw';s.style.background=colors[i%colors.length];const sz=(6+Math.random()*8);s.style.width=sz+'px';s.style.height=(sz*.5)+'px';s.style.animationDelay=(Math.random()*1.2)+'s';s.style.animationDuration=(2.4+Math.random()*2.2)+'s';s.style.transform='rotate('+(Math.random()*360)+'deg)';w.appendChild(s);}
+  for(let i=0;i<9;i++){const b=document.createElement('span');b.className='qz-bal';b.textContent='🎈';b.style.left=(4+Math.random()*92)+'vw';b.style.fontSize=(26+Math.random()*30)+'px';b.style.animationDelay=(Math.random()*1.8)+'s';b.style.animationDuration=(4.5+Math.random()*2.5)+'s';w.appendChild(b);}
+  document.body.appendChild(w);setTimeout(()=>{w.classList.add('qz-celeb-out');setTimeout(()=>w.remove(),800);},5200);}catch(e){}};
+function _qzCertBind(box){const host=box.querySelector('#qzCert');if(!host)return;const draw=()=>{host.innerHTML=_qzCertSVG();};
+  ['nam','country','pass','add'].forEach(k=>{const inp=box.querySelector('#qzF-'+k);if(inp)inp.addEventListener('input',()=>{quiz.cert[k]=inp.value;draw();});});
+  draw();
+  const dl=kind=>{const svg=host.querySelector('svg');if(!svg)return;const xml=new XMLSerializer().serializeToString(svg);const img=new Image();
+    img.onload=()=>{const cv=document.createElement('canvas');cv.width=1800;cv.height=1230;const x=cv.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,cv.width,cv.height);x.drawImage(img,0,0,cv.width,cv.height);const url=cv.toDataURL('image/png');
+      if(kind==='png'){const a=document.createElement('a');a.href=url;a.download='certificate.png';a.click();}
+      else if(window.jspdf&&window.jspdf.jsPDF){const pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:'a4'});const pw=pdf.internal.pageSize.getWidth();pdf.addImage(url,'PNG',10,10,pw-20,(pw-20)*1230/1800);pdf.save('certificate.pdf');}
+      else{const a=document.createElement('a');a.href=url;a.download='certificate.png';a.click();}};
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml);};
+  const bp=box.querySelector('#qzDlPng'),bf=box.querySelector('#qzDlPdf');if(bp)bp.onclick=()=>dl('png');if(bf)bf.onclick=()=>dl('pdf');}
+document.addEventListener('keydown',e=>{const box=document.getElementById('quizBox');if(!box||e.target.closest('input,select,textarea'))return;
+  if(!quiz.started){if(e.key==='Enter'){const s=document.getElementById('qzStart');if(s)s.click();}return;}
+  if(quiz.done){if(e.key==='Enter'){const s=document.getElementById('qAgain');if(s)s.click();}return;}
+  const nq=document.getElementById('qn');if(nq&&(e.key==='Enter'||e.key===' ')){e.preventDefault();nq.click();return;}
+  const map={'1':0,'2':1,'3':2,'4':3,'a':0,'b':1,'c':2,'d':3,'A':0,'B':1,'C':2,'D':3};const k=map[e.key];if(k===undefined)return;
+  const b=box.querySelectorAll('.opt')[k];if(b&&!b.disabled)_quizPick(b);
+});
 
 /* ================= PLANNER ================= */
 const plan={sel:new Set(store.get('plan_sel',[])),days:3,people:2,save(){store.set('plan_sel',[...plan.sel]);}};

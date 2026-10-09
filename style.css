@@ -138,3 +138,59 @@ footer .contact{justify-content:center}
 .country-map-empty{min-height:340px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#5b7a80;cursor:pointer;font-size:21px;text-align:center;padding:12px}
 .map-percent{position:absolute;top:10px;left:10px;z-index:6;background:#0b5d6b;color:#fff;border:2px solid #fff;border-radius:999px;padding:5px 13px;font-weight:800;font-size:18px;line-height:1.2;box-shadow:0 4px 14px rgba(11,93,107,.35);pointer-events:none}
 .cmap-names{font-size:13px;color:#5b7a80;margin:-2px 0 4px;max-height:88px;overflow:auto}
+
+
+/* ---- quiz page polish (10 Oct) ---- */
+.quiz{border:1.5px solid #cfe5e1;border-radius:20px;background:linear-gradient(165deg,#ffffff,#f2faf8);box-shadow:0 14px 34px rgba(11,93,107,.14)!important;padding:28px 26px;margin:0 auto}
+.qz-intro{text-align:center;padding:8px 4px}
+.qz-emoji{font-size:54px;line-height:1;filter:drop-shadow(0 6px 12px rgba(11,93,107,.25))}
+.qz-title{font-family:Fraunces,serif;font-weight:800;color:#0b5d6b;margin:10px 0 4px;font-size:clamp(24px,4vw,32px)}
+.qz-lead{color:#4c6a70;margin-bottom:14px}
+.qz-best{display:inline-block;background:#fff4d6;border:1px solid #f2d98c;color:#7a5b00;border-radius:99px;padding:4px 14px;font-weight:600;margin-bottom:16px}
+.qz-start{border-radius:99px;padding:12px 34px;font-weight:700;box-shadow:0 8px 18px rgba(11,93,107,.25)}
+.qz-keys{margin-top:12px;color:#8aa3a8;font-size:13px}
+.qz-ring{--p:0;width:132px;height:132px;border-radius:50%;margin:2px auto 12px;display:flex;align-items:center;justify-content:center;background:conic-gradient(#0ea47a calc(var(--p)*1%),#e2efec 0);position:relative}
+.qz-ring::before{content:"";position:absolute;inset:10px;border-radius:50%;background:#fff}
+.qz-ring span{position:relative;font-size:30px;font-weight:800;color:#0b5d6b}
+.qz-msg{font-size:19px;font-weight:700;color:#173a42;margin:4px 0}
+.qz-bestline{color:#5c7a80}
+.qz-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.qz-top{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.qz-pill{background:#e8f2f1;color:#0b5d6b;border-radius:99px;padding:3px 12px;font-weight:700;font-size:14px}
+.qz-pill.qz-score{background:#0b5d6b;color:#fff}
+.qz-pill.qz-fire{background:#ffe9d2;color:#9a5b00}
+.qz-bar{height:10px;margin-bottom:16px}
+.qz-bar i{background:linear-gradient(90deg,#0b5d6b,#0ea47a);transition:width .45s ease;border-radius:99px}
+.qz-q{font-size:clamp(20px,3.4vw,25px);font-weight:800;color:#122e33;line-height:1.45;margin-bottom:16px}
+.qz-opts{display:grid;gap:10px}
+.qz-opt{display:flex!important;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:2px solid #cfe0de!important;border-radius:14px!important;padding:12px 14px!important;font-size:17px;font-weight:600;color:#173a42!important;transition:transform .12s,border-color .12s,box-shadow .12s}
+.qz-opt:hover:not(:disabled){border-color:#0b5d6b!important;box-shadow:0 6px 14px rgba(11,93,107,.13);transform:translateY(-1px)}
+.qz-opt .qz-key{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:#e8f2f1;color:#0b5d6b;display:flex;align-items:center;justify-content:center;font-weight:800}
+.qz-opt.ok{background:#e7f7ee!important;border-color:#198754!important;color:#0c5c33!important}
+.qz-opt.ok .qz-key{background:#198754;color:#fff}
+.qz-opt.bad{background:#fdeeec!important;border-color:#dc3545!important;color:#8c1f2c!important;animation:qzshake .3s}
+.qz-opt.bad .qz-key{background:#dc3545;color:#fff}
+@keyframes qzshake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.qz-opt:disabled{opacity:.92}
+.qz-feed{margin-top:14px;border-radius:12px;padding:10px 14px;font-weight:700}
+.qz-feed.ok{background:#e7f7ee;color:#0c5c33}
+.qz-feed.bad{background:#fdeeec;color:#8c1f2c}
+.qz-next{margin-top:14px;border-radius:12px;font-weight:700}
+@media (max-width:576px){.quiz{padding:20px 14px}.qz-opt{font-size:16px;padding:11px 12px!important}}
+
+
+/* ---- quiz certificate (10 Oct) ---- */
+.qz-certbox{margin-top:22px;border:1.5px dashed #d9a441;border-radius:16px;padding:18px;background:#fffdf6}
+.qz-certh{color:#0b5d6b;font-weight:800;margin-bottom:2px}
+.qz-certlead{color:#5c7a80;margin-bottom:12px}
+.qz-cert{margin-top:14px}
+.qz-cert svg{width:100%;height:auto;border-radius:10px;box-shadow:0 10px 24px rgba(11,93,107,.16)}
+
+
+/* ---- quiz celebration (10 Oct) ---- */
+.qz-celeb{position:fixed;inset:0;pointer-events:none;z-index:3000;overflow:hidden;transition:opacity .8s}
+.qz-celeb-out{opacity:0}
+.qz-conf{position:absolute;top:-6vh;border-radius:2px;animation-name:qzfall;animation-timing-function:linear;animation-fill-mode:forwards}
+@keyframes qzfall{to{transform:translateY(118vh) rotate(720deg)}}
+.qz-bal{position:absolute;bottom:-14vh;animation-name:qzrise;animation-timing-function:ease-in;animation-fill-mode:forwards}
+@keyframes qzrise{to{transform:translateY(-135vh) translateX(3vw)}}
