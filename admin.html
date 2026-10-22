@@ -10,9 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="logo-user.png">
+<link rel="icon" type="image/png" href="logo-round.png">
 <link rel="stylesheet" href="bootstrap.min.css">
-<link rel="stylesheet" href="style.css?v=15">
+<link rel="stylesheet" href="style.css?v=16">
 
 <!-- App (PWA): phone e add korar jonno manifest + icon -->
 <link rel="manifest" href="manifest.webmanifest">
@@ -21,7 +21,7 @@
 </head>
 <body>
 <header class="top navbar navbar-dark shadow-sm py-2"><div class="container d-flex align-items-center flex-wrap gap-2">
-  <a class="logo navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html"><img src="logo-user.png" alt="World Tour Guide logo" class="logo-img">World Tour Guide</a>
+  <a class="logo navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html"><img src="logo-round.png" alt="World Tour Guide logo" class="logo-img">World Tour Guide</a>
 
 <!-- Menu: sob page er common navigation -->
 
@@ -90,6 +90,8 @@
                 <select class="form-select" id="admCity" required></select></div>
                 <div class="g-field"><label class="f form-label fw-semibold" for="admName" data-i18n="adm_name_opt"></label>
                 <input class="form-control" id="admName" type="text"></div>
+                <div class="g-field"><label class="f form-label fw-semibold" for="admMap" data-i18n="adm_map"></label>
+                <input class="form-control" id="admMap" type="url" placeholder="https://maps.app.goo.gl/..."></div>
                 </div>
                 <div class="gem-photo-side g-field"><label class="f form-label fw-semibold" data-i18n="adm_img"></label>
                 <label class="g-photo"><input type="file" id="admImgFile" accept="image/*" multiple><span class="g-photo-hint">📷 <span data-i18n="g_photo_hint"></span></span></label>
@@ -220,7 +222,7 @@
 
 <!-- Site er mul code (app.js) -->
 
-<script src="app.js?v=25"></script>
+<script src="app.js?v=27"></script>
 
 <!-- Offline cache (service worker) chalu -->
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});</script>

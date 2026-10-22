@@ -335,4 +335,4 @@ footer .contact{justify-content:center}
 @keyframes nscroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
 
 /* Notun logo (header) */
-.logo-img{height:50px;width:auto;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.logo-img{height:52px;width:52px;object-fit:contain}
