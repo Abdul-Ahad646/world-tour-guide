@@ -6,7 +6,7 @@
    Database (Firebase) er call kokhono cache hoy na.
    ============================================================ */
 
-const CACHE = 'wtg-v1';
+const CACHE = 'wtg-v2';
 
 /* Agey thekei cache kore rakha mul file gula */
 
@@ -47,7 +47,7 @@ self.addEventListener('fetch', e => {
 
   /* Database ar khobor er live call — kokhono cache na, soja network */
 
-  if (url.hostname.endsWith('googleapis.com') ||
+  if (url.hostname.endsWith('googleapis.com') || url.hostname.endsWith('mymemory.translated.net') ||
       url.hostname.endsWith('firebaseio.com') ||
       url.hostname.includes('allorigins') ||
       url.hostname.includes('codetabs') ||

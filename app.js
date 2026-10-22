@@ -1289,7 +1289,7 @@ async function initCityPage(){
   entries=entries.slice(0,12);
   if(!entries.length){if(status)status.textContent=t('tp_none');return;}
   if(status)status.textContent='';
-  if(grid){_tpData=[];_tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');}
+  if(grid){_tpData=[];_tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');lzGrid(grid,entries);}
 }
 
 
@@ -1361,8 +1361,10 @@ function initAdminPage(){
     const fc=scSel?scSel.value:'',fb=sbSel?sbSel.value:'',fs=ssSel?ssSel.value:'';
     if(!fc&&!fb&&!fs){listEl.innerHTML='<p style="color:var(--mute)">'+esc(t('adm_search_first'))+'</p>';return;}
     const list=all.filter(x=>(!fc||x.country===fc)&&(!fb||x.big===fb)&&(!fs||x.city===fs));
-    listEl.innerHTML=list.length?list.map(x=>{const ims=(x.imgs&&x.imgs.length?x.imgs:(x.img?[x.img]:[]));return '<div class="admitem">'+(ims.length?'<div class="admitem-imgs">'+ims.map(s=>'<img src="'+esc(s)+'" alt="">').join('')+'</div>':'')+'<div><b>'+esc(x.name)+'</b><br><small>'+esc(cName(x.city||''))+' · '+esc(wpName(x.country||''))+'</small>'+(x.desc?'<p>'+esc(String(x.desc).slice(0,140))+'</p>':'')+(x.who?'<small class="admitem-who">👤 '+esc(x.who)+'</small>':'')+(x.social?'<br><a class="admitem-who" href="'+esc(x.social)+'" target="_blank" rel="noopener">🔗 '+esc(t('tp_social'))+'</a>':'')+'</div><div class="admacts"><button type="button" class="btn btn-outline-secondary btn-sm" data-edit="'+esc(x.id)+'">'+esc(t('adm_edit'))+'</button><button type="button" class="btn btn-outline-secondary btn-sm" data-del="'+esc(x.id)+'">'+esc(t('adm_delete'))+'</button></div></div>';}).join(''):'<p style="color:var(--mute)">'+esc(t('adm_empty'))+'</p>';
+    listEl.innerHTML=list.length?list.map(x=>{const ims=(x.imgs&&x.imgs.length?x.imgs:(x.img?[x.img]:[]));return '<div class="admitem">'+(ims.length?'<div class="admitem-imgs">'+ims.map(s=>'<img src="'+esc(s)+'" alt="">').join('')+'</div>':'')+'<div><b>'+esc(plName(x))+'</b><br><small>'+esc(cName(x.city||''))+' · '+esc(wpName(x.country||''))+'</small>'+(plDesc(x)?'<p>'+esc(String(plDesc(x)).slice(0,140))+'</p>':'')+(x.who?'<small class="admitem-who">👤 '+esc(x.who)+'</small>':'')+(x.social?'<br><a class="admitem-who" href="'+esc(x.social)+'" target="_blank" rel="noopener">🔗 '+esc(t('tp_social'))+'</a>':'')+'</div><div class="admacts"><button type="button" class="btn btn-outline-secondary btn-sm" data-edit="'+esc(x.id)+'">'+esc(t('adm_edit'))+'</button><button type="button" class="btn btn-outline-secondary btn-sm" data-del="'+esc(x.id)+'">'+esc(t('adm_delete'))+'</button></div></div>';}).join(''):'<p style="color:var(--mute)">'+esc(t('adm_empty'))+'</p>';
+    lzAdmList();
   }
+  window._lzRefresh=renderList;
   if(cSel)cSel.addEventListener('change',syncBig);
   if(bSel)bSel.addEventListener('change',syncCity);
   if(sSel)sSel.addEventListener('change',renderList);
@@ -1601,9 +1603,68 @@ var _idxTpKey='',_idxTpToken=0;
    khola puro-page bistarito view (tpOpen/tpClose) — sob
    chobi, bornona, joma-dankari ar social link dekhay */
 
-function tpCardHtml(e){const full=String(e.desc||'');const lng=full.length>240;const shrt=lng?full.slice(0,240)+'…':full;return '<div class="col"><article class="card shadow-sm tpcard h-100">'+(e.img?'<img class="card-img-top" src="'+esc(e.img)+'" alt="'+esc(e.name)+'" loading="lazy">':'<div class="tpimg-fallback">📍</div>')+'<div class="card-body">'+(e.custom?'<span class="badge text-bg-success mb-1">'+esc(t('tp_admin'))+'</span>':'')+'<h3 class="h5">'+esc(e.name)+'</h3>'+(full?'<p class="card-text small">'+esc(shrt)+'</p>':'')+((full||e.img||e.url)?'<p class="mb-0 mt-2"><button type="button" class="btn btn-outline-primary btn-sm" data-tpopen="'+(_tpData.push(e)-1)+'">'+esc(t('tp_more'))+'</button>'+(e.url?' <a class="btn btn-outline-secondary btn-sm" href="'+esc(e.url)+'" target="_blank" rel="noopener">'+esc(t('tp_web'))+'</a>':'')+'</p>':'')+'</div></article></div>';}
+
+/* ================= AUTO TRANSLATE (place) =================
+   Kaj: admin je basha tei place add koruk, show hobar somoy
+   toggle er basha te auto translate hoye dekhay (MyMemory,
+   na parle Google, tao na parle asol lekha). Ekbar translate
+   hole cache e thake — bar bar lage na */
+
+function txtLang(s){return /[\u0980-\u09FF]/.test(String(s||''))?'bn':'en';}
+function trHash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36);}
+function plName(e){return e?(e._lz===lang?(e._nm||e.name||''):(e.name||'')):'';}
+function plDesc(e){return e?(e._lz===lang?(e._ds||e.desc||''):(e.desc||'')):'';}
+async function trChunk(q,src,to){
+  const key=to+':'+trHash(q);const cache=store.get('tr_cache',{});
+  if(cache[key])return cache[key];
+  let out='';
+  try{const r=await fetchTO('https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair='+src+'%7C'+to,9000);const d=await r.json();if(d&&d.responseData&&!d.quotaFinished&&String(d.responseStatus)==='200')out=d.responseData.translatedText||'';}catch(e){}
+  if(!out){try{const r=await fetchTO('https://translate.googleapis.com/translate_a/single?client=gtx&sl='+src+'&tl='+to+'&dt=t&q='+encodeURIComponent(q),9000);const d=await r.json();if(Array.isArray(d)&&Array.isArray(d[0]))out=d[0].map(x=>x[0]).join('');}catch(e){}}
+  if(out&&out!==q){cache[key]=out;const ks=Object.keys(cache);if(ks.length>500)ks.slice(0,ks.length-500).forEach(k=>delete cache[k]);try{store.set('tr_cache',cache);}catch(e){}}
+  return out||q;
+}
+async function trText(text,to){
+  const s=String(text||'');if(!s.trim())return s;
+  const src=txtLang(s);if(src===to)return s;
+  const parts=[];let cur='';
+  const sents=s.split(/(?<=[।.!?])\s+|\n+/);
+  for(const p of sents){
+    if((cur+' '+p).length>420){
+      if(cur)parts.push(cur);
+      if(p.length>420){for(let i=0;i<p.length;i+=420)parts.push(p.slice(i,i+420));cur='';}
+      else cur=p;
+    } else cur=cur?cur+' '+p:p;
+  }
+  if(cur)parts.push(cur);
+  const outs=[];for(const p of parts)outs.push(await trChunk(p,src,to));
+  return outs.join(' ');
+}
+async function lzEntry(e){
+  if(!e||e._lz===lang)return false;
+  const src=txtLang((e.name||'')+' '+(e.desc||''));
+  if(src===lang){e._nm=e.name||'';e._ds=e.desc||'';e._lz=lang;return false;}
+  const nm=await trText(e.name||'',lang),ds=await trText(e.desc||'',lang);
+  const ch=nm!==(e.name||'')||ds!==(e.desc||'');
+  e._nm=nm;e._ds=ds;e._lz=lang;return ch;
+}
+async function lzGrid(grid,entries){
+  if(!grid||!entries)return;
+  const stamp=grid.dataset.lz=(+grid.dataset.lz||0)+1;
+  let ch=false;
+  for(const e of entries){if(e.custom&&await lzEntry(e))ch=true;}
+  if(ch&&grid.isConnected&&+grid.dataset.lz===stamp){_tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');}
+}
+let _lzAdmBusy=false;
+async function lzAdmList(){
+  if(_lzAdmBusy)return;_lzAdmBusy=true;
+  try{let ch=false;for(const x of admGetPlaces()){if(await lzEntry(x))ch=true;}
+  if(ch&&window._lzRefresh)window._lzRefresh();}catch(e){}
+  _lzAdmBusy=false;
+}
+
+function tpCardHtml(e){const full=String(plDesc(e));const lng=full.length>240;const shrt=lng?full.slice(0,240)+'…':full;return '<div class="col"><article class="card shadow-sm tpcard h-100">'+(e.img?'<img class="card-img-top" src="'+esc(e.img)+'" alt="'+esc(plName(e))+'" loading="lazy">':'<div class="tpimg-fallback">📍</div>')+'<div class="card-body">'+(e.custom?'<span class="badge text-bg-success mb-1">'+esc(t('tp_admin'))+'</span>':'')+'<h3 class="h5">'+esc(plName(e))+'</h3>'+(full?'<p class="card-text small">'+esc(shrt)+'</p>':'')+((full||e.img||e.url)?'<p class="mb-0 mt-2"><button type="button" class="btn btn-outline-primary btn-sm" data-tpopen="'+(_tpData.push(e)-1)+'">'+esc(t('tp_more'))+'</button>'+(e.url?' <a class="btn btn-outline-secondary btn-sm" href="'+esc(e.url)+'" target="_blank" rel="noopener">'+esc(t('tp_web'))+'</a>':'')+'</p>':'')+'</div></article></div>';}
 let _tpData=[];
-function tpOpen(i){const e=_tpData[i];if(!e)return;const m=document.getElementById('tpModal');if(!m)return;document.getElementById('tpmName').textContent=e.name||'';const ims=(e.imgs&&e.imgs.length?e.imgs:(e.img?[e.img]:[]));const g=document.getElementById('tpmImgs');g.className='tpm-gallery'+(ims.length===1?' one':'');g.innerHTML=ims.map(x=>'<img src="'+esc(x)+'" alt="">').join('');const w=document.getElementById('tpmWho');w.textContent=e.who?('👤 '+e.who):'';w.style.display=e.who?'':'none';document.getElementById('tpmDesc').textContent=e.desc||'';const u=document.getElementById('tpmUrl');if(e.url){u.href=e.url;u.textContent=t('tp_web');u.style.display='';}else u.style.display='none';const sc=document.getElementById('tpmSocial');if(sc){if(e.social){sc.href=e.social;sc.textContent='🔗 '+t('tp_social');sc.style.display='';}else sc.style.display='none';}m.hidden=false;document.body.style.overflow='hidden';m.scrollTop=0;}
+function tpOpen(i){const e=_tpData[i];if(!e)return;const m=document.getElementById('tpModal');if(!m)return;document.getElementById('tpmName').textContent=plName(e);const ims=(e.imgs&&e.imgs.length?e.imgs:(e.img?[e.img]:[]));const g=document.getElementById('tpmImgs');g.className='tpm-gallery'+(ims.length===1?' one':'');g.innerHTML=ims.map(x=>'<img src="'+esc(x)+'" alt="">').join('');const w=document.getElementById('tpmWho');w.textContent=e.who?('👤 '+e.who):'';w.style.display=e.who?'':'none';document.getElementById('tpmDesc').textContent=plDesc(e);const u=document.getElementById('tpmUrl');if(e.url){u.href=e.url;u.textContent=t('tp_web');u.style.display='';}else u.style.display='none';const sc=document.getElementById('tpmSocial');if(sc){if(e.social){sc.href=e.social;sc.textContent='🔗 '+t('tp_social');sc.style.display='';}else sc.style.display='none';}m.hidden=false;document.body.style.overflow='hidden';m.scrollTop=0;}
 function tpClose(){const m=document.getElementById('tpModal');if(m)m.hidden=true;document.body.style.overflow='';}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tpopen]');if(b){tpOpen(+b.dataset.tpopen);return;}if(e.target.closest('[data-tpmclose]'))tpClose();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')tpClose();});
@@ -1627,7 +1688,7 @@ async function wpIdxPlaces(){
   if(token!==_idxTpToken)return;
   if(!entries.length){grid.innerHTML='';if(status){status.classList.remove('d-none');status.textContent=t('tp_none');}return;}
   if(status){status.textContent='';status.classList.add('d-none');}
-  _tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');
+  _tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');lzGrid(grid,entries);
 }
 
 
@@ -1642,7 +1703,7 @@ function renderAdminNews(){
   const empty=document.getElementById('newsAdminEmpty');
   if(empty)empty.hidden=list.length>0;
   const entries=list.map(x=>({name:x.title,desc:x.desc||'',img:x.img||'',imgs:x.img?[x.img]:[],url:x.url||'',custom:true}));
-  _tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');
+  _tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');lzGrid(grid,entries);
 }
 function parseRSS(txt){
   const doc=new DOMParser().parseFromString(txt,'text/xml');
