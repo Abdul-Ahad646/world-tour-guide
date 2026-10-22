@@ -10,56 +10,176 @@
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22 xmlns:c2pa=%22http://c2pa.org/manifest%22%3E%3Cmetadata%3E%3Cc2pa:manifest%3EAAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTpkMGRmNzg2OC1mMTNlLTRjODAtOGRjMS0yMzZiMTU0YTFkZmIAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaKqZUmRAAI0SQQpIKP5%2BYoAAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo3NjY5OTQ0Ni04MDMwLTRmMmUtYjY2Zi1kYWE0MWE1NzkxYTRscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNovjPzZiQ59EBDrptPbtSWSQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggICVSOSVY12NoaMW0SsU1yL8cv/zG4f98rw40rqP7MmOkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaK9PACCHcq5Qeqi5ryGo6UkAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCAMUQhjxi2QAkob%2BtCi%2BZmQlsCO5maYGfcJUwsBcNZhJmRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBh7Zmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmQwZGY3ODY4LWYxM2UtNGM4MC04ZGMxLTIzNmIxNTRhMWRmYi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjBhYjI0YjdlLWVhNTMtNDEwNy1hYTU0LWRjYzkwYWE1N2E2M3JjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCAgJVI5JVjXY2hoxbRKxTXIvxy//Mbh/3yvDjSuo/syY6JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggBcEpTswdColgaqq/Yy8/wwdC/s3KUdZw5j%2BKDBQFM%2ByiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggKLX/gMIbCCzATESOzp/PpKeVZfrMWqYu9dDRtHfO5Dh0Y2xhaW1fZ2VuZXJhdG9yX2luZm%2BjZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj%2BOPEz5o%2BnMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1%2BUCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9%2B1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQGUrDUK/Tw5U1d6BuR2RvLc1O2nUAq0336gHpMXpExPQ76mDaHXoph7VfHrF3vvETw0UjKQO9kx44aFeqWcu7P0=%3C/c2pa:manifest%3E%3C/metadata%3E%3Ccircle cx=%2232%22 cy=%2234%22 r=%2222%22 fill=%22%230b5d6b%22/%3E%3Cg fill=%22none%22 stroke=%22%23f2a33a%22 stroke-width=%221.6%22%3E%3Cellipse cx=%2232%22 cy=%2234%22 rx=%229%22 ry=%2222%22/%3E%3Cpath d=%22M10 34h44M13 23h38M13 45h38%22/%3E%3C/g%3E%3Cellipse cx=%2232%22 cy=%2234%22 rx=%2229%22 ry=%2210%22 transform=%22rotate(-25 32 34)%22 fill=%22none%22 stroke=%22%230b5d6b%22 stroke-width=%222.2%22 stroke-dasharray=%223 4%22/%3E%3Cg transform=%22translate(58.3 21.7) rotate(-25)%22 fill=%22%23f2a33a%22%3E%3Cpath d=%22M-6 0L-2-2 6-2 8 0 6 2-2 2ZM-1 0L-4-7-2-7 3-1ZM-1 0L-4 7-2 7 3 1Z%22/%3E%3C/g%3E%3Cpath d=%22M20 6c-4.4 0-7.5 3.2-7.5 7.2 0 5.3 7.5 12 7.5 12s7.5-6.700 7.5-12C27.500 9.200 24.400 6 20 6z%22 fill=%22%23e8553d%22/%3E%3Ccircle cx=%2220%22 cy=%2213%22 r=%222.700%22 fill=%22%23fff%22/%3E%3C/svg%3E">
 <link rel="stylesheet" href="bootstrap.min.css">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 <header class="top navbar navbar-dark shadow-sm py-2"><div class="container d-flex align-items-center flex-wrap gap-2">
   <a class="logo navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTpkMGRmNzg2OC1mMTNlLTRjODAtOGRjMS0yMzZiMTU0YTFkZmIAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaKqZUmRAAI0SQQpIKP5+YoAAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo3NjY5OTQ0Ni04MDMwLTRmMmUtYjY2Zi1kYWE0MWE1NzkxYTRscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNovjPzZiQ59EBDrptPbtSWSQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggICVSOSVY12NoaMW0SsU1yL8cv/zG4f98rw40rqP7MmOkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaK9PACCHcq5Qeqi5ryGo6UkAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCAMUQhjxi2QAkob+tCi+ZmQlsCO5maYGfcJUwsBcNZhJmRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBh7Zmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmQwZGY3ODY4LWYxM2UtNGM4MC04ZGMxLTIzNmIxNTRhMWRmYi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjBhYjI0YjdlLWVhNTMtNDEwNy1hYTU0LWRjYzkwYWE1N2E2M3JjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCAgJVI5JVjXY2hoxbRKxTXIvxy//Mbh/3yvDjSuo/syY6JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggBcEpTswdColgaqq/Yy8/wwdC/s3KUdZw5j+KDBQFM+yiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggKLX/gMIbCCzATESOzp/PpKeVZfrMWqYu9dDRtHfO5Dh0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQGUrDUK/Tw5U1d6BuR2RvLc1O2nUAq0336gHpMXpExPQ76mDaHXoph7VfHrF3vvETw0UjKQO9kx44aFeqWcu7P0=</c2pa:manifest></metadata><circle cx="32" cy="34" r="22" fill="#0b5d6b"/><g fill="none" stroke="#f2a33a" stroke-width="1.6"><ellipse cx="32" cy="34" rx="9" ry="22"/><path d="M10 34h44M13 23h38M13 45h38"/></g><ellipse cx="32" cy="34" rx="29" ry="10" transform="rotate(-25 32 34)" fill="none" stroke="#0b5d6b" stroke-width="2.2" stroke-dasharray="3 4"/><g transform="translate(58.3 21.7) rotate(-25)" fill="#f2a33a"><path d="M-6 0L-2-2 6-2 8 0 6 2-2 2ZM-1 0L-4-7-2-7 3-1ZM-1 0L-4 7-2 7 3 1Z"/></g><path d="M20 6c-4.4 0-7.5 3.2-7.5 7.2 0 5.3 7.5 12 7.5 12s7.5-6.700 7.5-12C27.500 9.200 24.400 6 20 6z" fill="#e8553d"/><circle cx="20" cy="13" r="2.700" fill="#fff"/></svg>World Tour Guide</a>
-  <nav class="nav ms-auto gap-1"><a class="btn btn-sm btn-outline-light border-0" href="index.html" data-i18n="nav_explore"></a><a class="btn btn-sm btn-outline-light border-0" href="world.html" data-i18n="nav_world"></a><a class="btn btn-sm btn-outline-light border-0" href="map.html" data-i18n="nav_map"></a><a class="btn btn-sm btn-outline-light border-0" href="quiz.html" data-i18n="nav_quiz"></a><a class="btn btn-sm btn-outline-light border-0" href="places.html" data-i18n="nav_gems"></a></nav>
+
+<!-- Menu: sob page er common navigation -->
+
+  <nav class="nav ms-auto gap-1"><a class="btn btn-sm btn-outline-light border-0" href="index.html" data-i18n="nav_explore"></a><a class="btn btn-sm btn-outline-light border-0" href="world.html" data-i18n="nav_world"></a><a class="btn btn-sm btn-outline-light border-0" href="map.html" data-i18n="nav_map"></a><a class="btn btn-sm btn-outline-light border-0" href="quiz.html" data-i18n="nav_quiz"></a><a class="btn btn-sm btn-outline-light border-0" href="places.html" data-i18n="nav_gems"></a><a class="btn btn-sm btn-outline-light border-0" href="news.html" data-i18n="nav_news"></a></nav>
   <select class="langbtn form-select form-select-sm w-auto" id="langBtn" aria-label="Language"></select>
 </div></header>
+
+<!-- Notice bar: admin er deya choloman notice (banner er upore) -->
+
+<div class="noticebar" id="noticeBar" hidden><div class="notice-track"><span id="noticeText"></span></div></div>
 <div class="pbanner py-5 text-center text-white b-explore"><div class="container"><h1 data-i18n="adm_login"></h1><p data-i18n="adm_hint"></p></div></div>
 <section class="blk py-4" id="adminPage"><div class="container">
   <div class="card shadow-sm admcard" id="admLogin">
-    <form id="admLoginForm">
-      <label class="f form-label fw-semibold" for="admUser" data-i18n="adm_user"></label>
-      <input class="form-control" id="admUser" type="text" autocomplete="username" required>
-      <label class="f form-label fw-semibold" for="admPass" data-i18n="adm_pass"></label>
-      <input class="form-control" id="admPass" type="password" autocomplete="current-password" required>
+    <form id="admLoginForm" class="bform">
+      <div class="g-field"><label class="f form-label fw-semibold" for="admUser" data-i18n="adm_user"></label>
+      <input class="form-control" id="admUser" type="text" autocomplete="username" required></div>
+      <div class="g-field"><label class="f form-label fw-semibold" for="admPass" data-i18n="adm_pass"></label>
+      <input class="form-control" id="admPass" type="password" autocomplete="current-password" required></div>
       <p><button class="btn btn-primary" type="submit" data-i18n="adm_login_btn"></button></p>
       <p id="admMsg" style="color:#c0392b"></p>
     </form>
   </div>
   <div id="admPanel" hidden>
-    <p><button class="btn btn-outline-secondary btn-sm" id="admLogout" type="button" data-i18n="adm_logout"></button></p>
-    <div class="card shadow-sm admcard">
-      <form id="admForm">
-        <label class="f form-label fw-semibold" for="admCountry" data-i18n="wp_country"></label>
-        <select class="form-select" id="admCountry" required></select>
-        <label class="f form-label fw-semibold" for="admBig" data-i18n="wp_big"></label>
-        <select class="form-select" id="admBig"></select>
-        <label class="f form-label fw-semibold" for="admCity" data-i18n="wp_small"></label>
-        <select class="form-select" id="admCity" required></select>
-        <label class="f form-label fw-semibold" for="admName" data-i18n="adm_name"></label>
-        <input class="form-control" id="admName" type="text" required>
-        <label class="f form-label fw-semibold" for="admImg" data-i18n="adm_img"></label>
-        <input class="form-control" id="admImg" type="url" placeholder="https://...">
-        <label class="f form-label fw-semibold" for="admUrl" data-i18n="adm_url"></label>
-        <input class="form-control" id="admUrl" type="url" placeholder="https://...">
-        <label class="f form-label fw-semibold" for="admDesc" data-i18n="adm_desc"></label>
-        <textarea class="form-control" id="admDesc" rows="4"></textarea>
-        <p><button class="btn btn-primary" type="submit" data-i18n="adm_save"></button></p>
-        <p id="admFormMsg" style="color:var(--brand)"></p>
-      </form>
-    </div>
-    <h2 style="margin-top:28px" data-i18n="adm_places"></h2>
-    <div id="admList"></div>
-    <div class="card shadow-sm admcard" style="margin-top:24px">
-      <form id="admPwForm">
-        <label class="f form-label fw-semibold" for="admNewPass" data-i18n="adm_newpass"></label>
-        <input class="form-control" id="admNewPass" type="password" autocomplete="new-password">
-        <p><button class="btn btn-outline-secondary" type="submit" data-i18n="adm_change"></button></p>
-      </form>
+    <div class="adm-layout">
+      <aside class="adm-side">
+        <button type="button" class="adm-tab" data-sec="place">➕ <span data-i18n="adm_tab_place"></span></button>
+        <button type="button" class="adm-tab" data-sec="quiz">❓ <span data-i18n="adm_tab_quiz"></span></button>
+        <button type="button" class="adm-tab" data-sec="banner">🖼️ <span data-i18n="adm_tab_banner"></span></button>
+        <button type="button" class="adm-tab" data-sec="news">📰 <span data-i18n="adm_tab_news"></span></button>
+        <button type="button" class="adm-tab" data-sec="notice">📢 <span data-i18n="adm_tab_notice"></span></button>
+        <button class="btn btn-outline-secondary btn-sm" id="admLogout" type="button" data-i18n="adm_logout"></button>
+        <hr style="margin:4px 0;width:100%">
+        <button class="btn btn-success btn-sm w-100" id="admExport" type="button">📦 <span data-i18n="adm_export"></span></button>
+        <small style="color:#5b7a80" data-i18n="adm_export_note"></small>
+        <p id="admExportMsg" style="color:var(--brand);font-size:13px;margin:2px 0 0"></p>
+      </aside>
+      <div class="adm-main">
+        <section id="admSec-home">
+          <div class="adm-welcome"><div class="adm-welcome-emoji">👋</div><h2 data-i18n="adm_welcome"></h2><p data-i18n="adm_welcome_sub"></p></div>
+          <div class="card shadow-sm admcard">
+            <form id="admPwForm" class="bform">
+              <div class="g-field"><label class="f form-label fw-semibold" for="admNewPass" data-i18n="adm_newpass"></label>
+              <input class="form-control" id="admNewPass" type="password" autocomplete="new-password"></div>
+              <p><button class="btn btn-outline-secondary" type="submit" data-i18n="adm_change"></button></p>
+            </form>
+          </div>
+        </section>
+        <section id="admSec-place" hidden>
+          <div class="adm-subtabs">
+            <button type="button" class="adm-subtab on" data-psub="add"><span data-i18n="adm_sub_add"></span></button>
+            <button type="button" class="adm-subtab" data-psub="place"><span data-i18n="adm_sub_place"></span></button>
+            <button type="button" class="adm-subtab" data-psub="req"><span data-i18n="adm_sub_req"></span> <span class="adm-reqcount" id="admReqCount"></span></button>
+          </div>
+          <div id="admPSub-add">
+            <div class="card shadow-sm admcard">
+              <div class="g-form-head sm"><div class="g-form-emoji">📍</div><div><h2 data-i18n="adm_add_h"></h2><p data-i18n="adm_add_sub"></p></div></div>
+              <form id="admForm" class="bform">
+                <div class="g-sec"><div class="g-sec-h">📍 <span data-i18n="g_sec1"></span></div>
+                <div class="gem-top">
+                <div class="two gem-fields">
+                <div class="g-field"><label class="f form-label fw-semibold" for="admCountry" data-i18n="wp_country"></label>
+                <select class="form-select" id="admCountry" required></select></div>
+                <div class="g-field"><label class="f form-label fw-semibold" for="admBig" data-i18n="wp_big"></label>
+                <select class="form-select" id="admBig"></select></div>
+                <div class="g-field"><label class="f form-label fw-semibold" for="admCity" data-i18n="wp_small"></label>
+                <select class="form-select" id="admCity" required></select></div>
+                <div class="g-field"><label class="f form-label fw-semibold" for="admName" data-i18n="adm_name_opt"></label>
+                <input class="form-control" id="admName" type="text"></div>
+                </div>
+                <div class="gem-photo-side g-field"><label class="f form-label fw-semibold" data-i18n="adm_img"></label>
+                <label class="g-photo"><input type="file" id="admImgFile" accept="image/*" multiple><span class="g-photo-hint">📷 <span data-i18n="g_photo_hint"></span></span></label>
+                <div id="admImgPrevs" class="g-prev-grid"></div></div>
+                </div>
+                </div>
+                <div class="g-sec"><div class="g-sec-h">📝 <span data-i18n="g_sec2"></span></div>
+                <div class="g-field"><label class="f form-label fw-semibold" for="admDesc" data-i18n="adm_desc"></label>
+                <textarea class="form-control" id="admDesc" rows="4"></textarea><div class="g-count"><span id="admDescCount">০</span> / ১৫০ <span data-i18n="g_chars"></span></div></div>
+                </div>
+                <p><button class="btn btn-primary" type="submit" data-i18n="adm_save"></button></p>
+                <p id="admFormMsg" style="color:var(--brand)"></p>
+              </form>
+            </div>
+          </div>
+          <div id="admPSub-place" hidden>
+            <div class="card shadow-sm admcard">
+              <div class="g-form-head sm"><div class="g-form-emoji">🔍</div><div><h2 data-i18n="adm_search_h"></h2></div></div>
+              <div class="row g-2">
+                <div class="col-md-4"><label class="form-label fw-semibold" data-i18n="wp_country"></label><select class="form-select" id="admSCountry"></select></div>
+                <div class="col-md-4"><label class="form-label fw-semibold" data-i18n="wp_big"></label><select class="form-select" id="admSBig"></select></div>
+                <div class="col-md-4"><label class="form-label fw-semibold" data-i18n="wp_small"></label><select class="form-select" id="admSCity"></select></div>
+              </div>
+              <p style="margin-top:12px;margin-bottom:0"><button class="btn btn-primary" id="admSSearch" type="button">🔍 <span data-i18n="adm_search_btn"></span></button></p>
+            </div>
+            <h2 style="margin-top:28px" data-i18n="adm_places"></h2>
+            <div id="admList"></div>
+          </div>
+          <div id="admPSub-req" hidden>
+            <div class="card shadow-sm admcard">
+              <div class="g-form-head sm"><div class="g-form-emoji">📥</div><div><h2 data-i18n="adm_sub_req"></h2><p data-i18n="adm_req_note"></p></div></div>
+              <div id="admReqList"></div>
+            </div>
+          </div>
+        </section>
+        <section id="admSec-quiz" hidden>
+          <div class="card shadow-sm admcard">
+            <form id="admQuizForm" class="bform">
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_q_q"></label>
+              <input class="form-control" id="admQQ" type="text" required></div>
+              <div class="two">
+                <div class="g-field"><label class="form-label fw-semibold"><span data-i18n="adm_q_o"></span> ১</label>
+                <input class="form-control" id="admQO1" type="text" required></div>
+                <div class="g-field"><label class="form-label fw-semibold"><span data-i18n="adm_q_o"></span> ২</label>
+                <input class="form-control" id="admQO2" type="text" required></div>
+                <div class="g-field"><label class="form-label fw-semibold"><span data-i18n="adm_q_o"></span> ৩</label>
+                <input class="form-control" id="admQO3" type="text" required></div>
+                <div class="g-field"><label class="form-label fw-semibold"><span data-i18n="adm_q_o"></span> ৪</label>
+                <input class="form-control" id="admQO4" type="text" required></div>
+              </div>
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_q_a"></label>
+              <select class="form-select" id="admQA"><option value="0">১</option><option value="1">২</option><option value="2">৩</option><option value="3">৪</option></select></div>
+              <p><button class="btn btn-primary" type="submit" data-i18n="adm_q_save"></button></p>
+              <p id="admQuizMsg" style="color:var(--brand)"></p>
+            </form>
+          </div>
+          <h2 style="margin-top:28px" data-i18n="adm_q_added"></h2>
+          <div id="admQuizList"></div>
+        </section>
+        <section id="admSec-news" hidden>
+          <div class="card shadow-sm admcard">
+            <form id="admNewsForm" class="bform">
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_n_title"></label>
+              <input class="form-control" id="admNTitle" type="text"></div>
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_img"></label>
+              <label class="g-photo"><input type="file" id="admNImgFile" accept="image/*"><span class="g-photo-hint">📷 <span data-i18n="g_photo_hint"></span></span><img id="admNImgPrev" class="hidden" alt=""></label></div>
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_n_desc"></label>
+              <textarea class="form-control" id="admNDesc" rows="5"></textarea></div>
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_n_link"></label>
+              <input class="form-control" id="admNUrl" type="text" placeholder="https://..."></div>
+              <button class="btn adm-save-btn" type="submit" data-i18n="adm_save"></button>
+              <p id="admNMsg" style="color:var(--brand);font-size:14px;margin:6px 0 0"></p>
+            </form>
+          </div>
+          <h3 style="margin:18px 0 10px" data-i18n="adm_n_list"></h3>
+          <div id="admNList"></div>
+        </section>
+        <section id="admSec-notice" hidden>
+          <div class="card shadow-sm admcard">
+            <form id="admNoticeForm" class="bform">
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_notice_h"></label>
+              <textarea class="form-control" id="admNoticeText" rows="3"></textarea></div>
+              <p style="color:var(--mute);font-size:13.5px" data-i18n="adm_notice_hint"></p>
+              <button class="btn adm-save-btn" type="submit" data-i18n="adm_save"></button>
+              <p id="admNoticeMsg" style="color:var(--brand);font-size:14px;margin:6px 0 0"></p>
+            </form>
+          </div>
+        </section>
+        <section id="admSec-banner" hidden>
+          <div class="card shadow-sm admcard">
+            <p data-i18n="adm_b_note" style="color:#5b7a80"></p>
+            <div id="admBannerRows"></div>
+            <p style="margin-top:14px"><button class="btn btn-primary" id="admBannerSave" type="button" data-i18n="adm_b_save"></button></p>
+            <p id="admBannerMsg" style="color:var(--brand)"></p>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
 </div></section>
@@ -79,8 +199,20 @@
     </a>
   </div>
 </div></footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="bootstrap.bundle.min.js"></script>
-<script src="app.js?v=8"></script>
+
+<!-- Bishwer data (desh/shohor talika) — alada file, tai app.js halka -->
+
+<script src="data-world.js?v=1"></script>
+
+<!-- Firebase (online database) er script -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<!-- Site er mul code (app.js) -->
+
+<script src="app.js?v=24"></script>
 </body>
 </html>

@@ -15,7 +15,6 @@ h1,h2,h3,.navbar-brand{font-family:'Fraunces','Hind Siliguri',serif}
 .pbanner h1,.wbanner h1,.hero h1{font-weight:800;text-shadow:0 2px 14px rgba(0,0,0,.35)}
 .b-explore{background-image:linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url('banner-explore.svg')}
 .b-quiz{background-image:linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url('banner-quiz.svg')}
-.b-plan{background-image:linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url('banner-plan.svg')}
 .b-places{background-image:linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url('banner-places.svg')}
 .wbanner{background-image:linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url('world-banner.svg')}
 .hero{background-image:linear-gradient(rgba(7,52,61,.5),rgba(7,52,61,.5)),url('banner-map.svg')}
@@ -42,6 +41,9 @@ h1,h2,h3,.navbar-brand{font-family:'Fraunces','Hind Siliguri',serif}
 .wpick-status{color:#5b7a80;font-size:13px;margin:6px 0 0;min-height:18px}
 .wpick-places{margin-top:14px;border-top:1.5px solid #e2eeee;padding-top:10px;text-align:left}
 .wpick-places h3{font-size:32px;font-weight:800;color:var(--brand)}
+
+/* Place card: chobi, nam, bornona ar "Aro Janun" button */
+
 .tpcard img.card-img-top,.wp-tpgrid .tpcard img{height:140px;object-fit:cover;width:100%}
 .tpimg-fallback{height:140px;display:flex;align-items:center;justify-content:center;font-size:40px;background:#e8f2f1;border-radius:6px}
 .wpick-result{margin-top:10px;font-size:15px}
@@ -81,6 +83,38 @@ h1,h2,h3,.navbar-brand{font-family:'Fraunces','Hind Siliguri',serif}
 
 /* two-column helper used by plan/places forms */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gem-top{display:flex;gap:18px;align-items:stretch;margin-bottom:4px}
+.gem-fields{flex:1;min-width:0}
+.gem-photo-side{flex:0 0 250px;display:flex;flex-direction:column;min-width:0}
+
+/* Hidden Gems form: chobi upload/preview ar shobdo count */
+
+.g-photo{position:relative;flex:1;display:flex;align-items:center;justify-content:center;min-height:196px;border:2px dashed #b9d6db;border-radius:12px;background:#f4fafb;cursor:pointer;overflow:hidden;margin:0}
+.g-photo:hover{border-color:#0b5d6b;background:#eef7f8}
+.g-photo input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.g-photo-hint{color:#0b5d6b;font-weight:600}
+#gPhotoPrev{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+@media(max-width:760px){.gem-top{flex-direction:column}.gem-photo-side{flex:1 1 auto}.g-photo{min-height:150px}}
+.g-sec{background:#f1f8f8;border:1px solid #d9e9ea;border-radius:16px;padding:18px;margin-bottom:18px}
+.g-sec-h{font-weight:700;color:#0b5d6b;font-size:17px;margin-bottom:14px}
+.g-count{text-align:right;font-size:13px;color:#8aa0a3;margin-top:6px}
+.g-count.ok{color:#0b7d5b;font-weight:700}
+#gemForm input::placeholder,#gemForm textarea::placeholder{color:#9db5b9}
+.g-photo.drag{border-color:#0b5d6b;background:#ddf0f2;transform:scale(1.02)}
+.g-form-head{display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#0b5d6b,#1290a3);border-radius:14px;padding:18px 20px;margin-bottom:22px;color:#fff;box-shadow:0 8px 18px rgba(11,93,107,.22)}
+.g-form-emoji{font-size:38px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+.g-form-head h2{margin:0;font-size:22px;color:#fff}
+.g-form-head p{margin:3px 0 0;opacity:.93;font-size:14px}
+#gemForm{counter-reset:gstep;border-radius:20px;padding:24px}
+#gemForm .g-field{counter-increment:gstep;margin-bottom:16px}
+#gemForm .g-field>label.f{display:flex;align-items:center;gap:9px;font-weight:700;color:#0b5d6b;margin-bottom:7px}
+#gemForm .g-field>label.f::before,#gemForm label.g-field.f::before{content:counter(gstep,bengali);display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,#0b5d6b,#18a3b5);color:#fff;font-size:14px;font-weight:700;flex:0 0 auto;box-shadow:0 3px 8px rgba(11,93,107,.3)}
+#gemForm .form-control{border-radius:11px;border:1.5px solid #cfdfe2;padding:10px 14px;background:#fff}
+#gemForm .form-control:focus{border-color:#0b5d6b;box-shadow:0 0 0 3px rgba(11,93,107,.13)}
+#gemForm .btn-primary{background:linear-gradient(135deg,#0b5d6b,#1595a8);border:0;border-radius:12px;padding:12px 36px;font-size:18px;font-weight:700;box-shadow:0 8px 18px rgba(11,93,107,.28);margin-top:4px}
+#gemForm .btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(11,93,107,.34)}
+
+
 @media(max-width:640px){.two{grid-template-columns:1fr}}
 .stepper{display:flex;align-items:center;gap:8px}
 .stepper button{width:30px;height:30px;border:1.5px solid #cfe0e2;background:#fff;border-radius:8px;cursor:pointer;font-size:15px}
@@ -109,8 +143,9 @@ footer .contact{justify-content:center}
 .wd-name-btn{border-radius:999px;font-size:13px}
 .map-make-title{text-align:center;font-weight:800;font-size:clamp(20px,3vw,28px);margin:4px 0 12px;color:#0b5d6b}
 .map-make-tip{text-align:center;color:#5b7a80;font-size:15px;margin:-4px 0 12px}
-.wd-name-btn{border-radius:999px;font-size:13px;box-shadow:0 1px 3px rgba(11,93,107,.15)}
-.wd-name-btn.btn-primary{box-shadow:0 3px 10px rgba(11,93,107,.35)}
+.wd-name-btn{border-radius:999px;font-size:13px;font-weight:600;box-shadow:0 1px 3px rgba(11,93,107,.15);transition:transform .12s,box-shadow .12s}
+.wd-name-btn:hover{transform:translateY(-1px)}
+.wd-name-btn.btn-primary{background:linear-gradient(135deg,#0b5d6b,#1595a8);border-color:transparent;box-shadow:0 4px 10px rgba(11,93,107,.35)}
 .mapp{margin-top:22px}
 .visited-h{text-align:center;font-size:27px;font-weight:800;margin-bottom:8px;background:linear-gradient(90deg,#0b8a8f,#7b2ff7,#f2762e);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sidecol{display:flex;flex-direction:column;gap:12px;min-width:0}
@@ -142,6 +177,9 @@ footer .contact{justify-content:center}
 
 /* ---- quiz page polish (10 Oct) ---- */
 .quiz{border:1.5px solid #cfe5e1;border-radius:20px;background:linear-gradient(165deg,#ffffff,#f2faf8);box-shadow:0 14px 34px rgba(11,93,107,.14)!important;padding:28px 26px;margin:0 auto}
+
+/* Quiz: proshno, result, certificate ar balloon/confetti */
+
 .qz-intro{text-align:center;padding:8px 4px}
 .qz-emoji{font-size:54px;line-height:1;filter:drop-shadow(0 6px 12px rgba(11,93,107,.25))}
 .qz-title{font-family:Fraunces,serif;font-weight:800;color:#0b5d6b;margin:10px 0 4px;font-size:clamp(24px,4vw,32px)}
@@ -181,6 +219,11 @@ footer .contact{justify-content:center}
 
 /* ---- quiz certificate (10 Oct) ---- */
 .qz-certbox{margin-top:22px;border:1.5px dashed #d9a441;border-radius:16px;padding:18px;background:#fffdf6}
+.qz-res2{display:flex;gap:22px;align-items:flex-start}
+.qz-res2-left{flex:0 0 330px;min-width:0}
+.qz-res2-right{flex:1;min-width:0;margin-top:0}
+@media(max-width:920px){.qz-res2{flex-direction:column}.qz-res2-left{flex:1 1 auto;width:100%}}
+
 .qz-certh{color:#0b5d6b;font-weight:800;margin-bottom:2px}
 .qz-certlead{color:#5c7a80;margin-bottom:12px}
 .qz-cert{margin-top:14px}
@@ -194,3 +237,99 @@ footer .contact{justify-content:center}
 @keyframes qzfall{to{transform:translateY(118vh) rotate(720deg)}}
 .qz-bal{position:absolute;bottom:-14vh;animation-name:qzrise;animation-timing-function:ease-in;animation-fill-mode:forwards}
 @keyframes qzrise{to{transform:translateY(-135vh) translateX(3vw)}}
+
+/* ===== Beautiful forms — site-wide ===== */
+
+/* Sundor form (bform): quiz, admin, hidden gems — sob form er saj */
+
+.bform{counter-reset:fstep}
+.bform .g-field{counter-increment:fstep;margin-bottom:14px}
+.bform .g-field>label.f{display:flex;align-items:center;gap:9px;font-weight:700;color:#0b5d6b;margin-bottom:7px}
+.bform .g-field>label.f::before{content:counter(fstep,bengali);display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,#0b5d6b,#18a3b5);color:#fff;font-size:14px;font-weight:700;flex:0 0 auto;box-shadow:0 3px 8px rgba(11,93,107,.3)}
+.bform .form-control,.bform .form-select{border-radius:11px;border:1.5px solid #cfdfe2;padding:10px 14px;background:#fff}
+.bform .form-control:focus,.bform .form-select:focus{border-color:#0b5d6b;box-shadow:0 0 0 3px rgba(11,93,107,.13);outline:0}
+.bform .btn-primary{background:linear-gradient(135deg,#0b5d6b,#1595a8);border:0;border-radius:12px;box-shadow:0 8px 18px rgba(11,93,107,.28)}
+.bform .btn-primary:hover{transform:translateY(-1px)}
+.g-form-head.sm{padding:14px 18px;margin-bottom:18px}
+.g-form-head.sm .g-form-emoji{font-size:30px}
+.g-form-head.sm h2{font-size:19px}
+#countryMapRoot .form-control,#bd-root .form-control,.wpick-card .form-select,.admcard .form-control,.admcard .form-select{border-radius:11px;border:1.5px solid #cfdfe2}
+#countryMapRoot .form-control:focus,#bd-root .form-control:focus,.wpick-card .form-select:focus,.admcard .form-control:focus,.admcard .form-select:focus{border-color:#0b5d6b;box-shadow:0 0 0 3px rgba(11,93,107,.13);outline:0}
+.hero-country:focus{border-color:#f2a33a;box-shadow:0 0 0 4px rgba(242,163,58,.35),0 6px 18px rgba(0,0,0,.25);outline:0}
+#wp-search-btn{background:linear-gradient(135deg,#0b5d6b,#1595a8);border:0;border-radius:10px;color:#fff}
+#wp-search-btn:disabled{opacity:.55}
+
+/* ===== World map page inputs ===== */
+#wd-root .form-control{border-radius:11px;border:1.5px solid #cfdfe2}
+#wd-root .form-control:focus{border-color:#0b5d6b;box-shadow:0 0 0 3px rgba(11,93,107,.13);outline:0}
+#wd-root input[type=file]::file-selector-button,#countryMapRoot input[type=file]::file-selector-button,#bd-root input[type=file]::file-selector-button{background:linear-gradient(135deg,#0b5d6b,#1595a8);color:#fff;border:0;border-radius:10px;padding:8px 16px;font-weight:600;cursor:pointer;margin-right:10px}
+#wd-root .dlbar .btn-primary{background:linear-gradient(135deg,#0b5d6b,#1595a8);border:0;border-radius:10px;box-shadow:0 6px 14px rgba(11,93,107,.25)}
+#wd-root .dlbar .btn-primary:hover{transform:translateY(-1px)}
+#wd-root .sidecol .card{border-radius:16px}
+
+/* ===== Admin sidebar ===== */
+.adm-layout{display:flex;gap:20px;align-items:flex-start}
+
+/* Admin panel: sidebar, tab ar form er saj */
+
+.adm-side{flex:0 0 230px;display:flex;flex-direction:column;gap:10px;position:sticky;top:16px}
+.adm-tab{display:flex;align-items:center;gap:10px;text-align:left;background:#fff;border:1.5px solid #d9e9ea;border-radius:12px;padding:12px 14px;font-weight:700;color:#0b5d6b;cursor:pointer;transition:all .15s;font-size:15px}
+.adm-tab:hover{border-color:#0b5d6b;transform:translateX(2px)}
+.adm-tab.on{background:linear-gradient(135deg,#0b5d6b,#1595a8);color:#fff;border-color:transparent;box-shadow:0 8px 18px rgba(11,93,107,.28)}
+.adm-main{flex:1;min-width:0}
+.adm-brow{display:grid;grid-template-columns:130px 100px 1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px dashed #d9e9ea}
+.adm-bname{font-weight:700;color:#0b5d6b}
+.adm-binputs{display:flex;flex-direction:column;gap:8px}
+.adm-bprev{width:100px;height:60px;object-fit:cover;border-radius:8px;box-shadow:0 3px 8px rgba(11,93,107,.2)}
+.adm-bnone{width:100px;height:60px;display:flex;align-items:center;justify-content:center;background:#eef4f4;border-radius:8px;font-size:12px;color:#8aa0a3;text-align:center}
+@media(max-width:860px){.adm-layout{flex-direction:column}.adm-side{flex:1 1 auto;width:100%;position:static}.adm-brow{grid-template-columns:1fr 100px}}
+
+/* ===== Admin welcome + sub tabs + requests ===== */
+.adm-welcome{text-align:center;padding:30px 16px;background:linear-gradient(135deg,#0b5d6b,#1595a8);border-radius:18px;color:#fff;margin-bottom:20px;box-shadow:0 10px 24px rgba(11,93,107,.25)}
+.adm-welcome-emoji{font-size:44px}
+.adm-welcome h2{color:#fff;font-weight:800;margin:8px 0 4px}
+.adm-welcome p{opacity:.92;margin:0}
+.adm-subtabs{display:flex;gap:10px;margin-bottom:18px}
+.adm-subtab{flex:1;background:#fff;border:1.5px solid #d9e9ea;border-radius:12px;padding:11px;font-weight:700;color:#0b5d6b;cursor:pointer;font-size:15px}
+.adm-subtab:hover{border-color:#0b5d6b}
+.adm-subtab.on{background:linear-gradient(135deg,#0b5d6b,#1595a8);color:#fff;border-color:transparent;box-shadow:0 6px 14px rgba(11,93,107,.25)}
+.adm-reqcount{background:#e33;color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;margin-left:4px}
+.adm-subtab.on .adm-reqcount{background:#fff;color:#0b5d6b}
+.admreq{border-left:4px solid #f2a33a}
+.g-prev-grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;padding:10px;max-width:100%}
+.g-prev-grid img{width:96px;height:72px;object-fit:cover;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+
+/* Admin list items: info upore, action button niche */
+.admitem{display:block;background:#fff;border:1.5px solid #d7e5e8;border-radius:14px;padding:14px 16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(11,93,107,.06)}
+.admitem p{margin:6px 0 0;color:#456}
+.admacts{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.admitem-imgs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.admitem-imgs img{width:110px;height:80px;object-fit:cover;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.admitem-who{display:inline-block;margin-top:8px;color:#0b5d6b;font-weight:600}
+
+/* Place detail: full-page overlay */
+.tpm{position:fixed;inset:0;z-index:2000;overflow-y:auto;padding:20px 12px 40px}
+.tpm[hidden]{display:none}
+
+/* Place bistarito view: puro page jure khola boro view */
+
+.tpm-back{position:fixed;inset:0;background:rgba(4,30,36,.72)}
+.tpm-sheet{position:relative;background:#fff;border-radius:18px;max-width:920px;margin:0 auto;padding:26px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.tpm-x{position:absolute;top:12px;right:12px;width:38px;height:38px;border:0;border-radius:50%;background:#0b5d6b;color:#fff;font-size:17px;line-height:1;cursor:pointer;box-shadow:0 4px 10px rgba(11,93,107,.35)}
+.tpm-sheet h2{margin:0 44px 6px 0;color:#0b3d46}
+.tpm-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:14px 0}
+.tpm-gallery img{width:100%;height:190px;object-fit:cover;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+.tpm-gallery.one img{height:340px}
+.tpm-who{color:#0b5d6b;font-weight:700;margin:4px 0}
+.tpm-desc{white-space:pre-wrap;line-height:1.75;color:#33424a}
+.b-news{background-image:linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url('banner-news.svg')}
+.news-meta{font-size:12px;color:#7a8a90;font-weight:600;letter-spacing:.02em}
+
+/* Moving notice line above the banner */
+
+/* Notice bar: banner er upore chikon lal bar, lekha chole (marquee) */
+
+.noticebar{background:linear-gradient(90deg,#b3231b,#e8553d);color:#fff;overflow:hidden;height:34px;display:flex;align-items:center;font-weight:700;font-size:14.5px;box-shadow:0 2px 8px rgba(179,35,27,.3)}
+.noticebar[hidden]{display:none}
+.notice-track{white-space:nowrap;display:inline-block;padding-left:100%;animation:nscroll 24s linear infinite}
+@keyframes nscroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
