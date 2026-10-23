@@ -34,7 +34,8 @@ const FORM_ENDPOINT=''; // e.g. a Formspree URL. Empty = entries are only saved 
 
 const NIL=new Proxy(function(){},{get:(t,p)=>p===Symbol.toPrimitive?()=>'':NIL,set:()=>true,apply:()=>NIL});
 const $=(s,r=document)=>r.querySelector(s)||NIL, $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-const store={get(k,d){try{const v=localStorage.getItem('wtg_'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('wtg_'+k,JSON.stringify(v))}catch(e){}}};
+const _MEM={};
+const store={get(k,d){if(Object.prototype.hasOwnProperty.call(_MEM,k))return _MEM[k];try{const v=localStorage.getItem('wtg_'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){_MEM[k]=v;try{localStorage.setItem('wtg_'+k,JSON.stringify(v))}catch(e){}}};
 let lang=store.get('lang','bn');
 const toBn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
 const num=n=>lang==='bn'?toBn(n):String(n);
@@ -399,6 +400,8 @@ async function cloudPull(){
     applyColl(nw,'news','cloud_on_news');
     st.docs.forEach(d=>{const v=d.data()||{};if(d.id==='banners')store.set('banners',v.data||{});if(d.id==='notice')store.set('notice',typeof v.text==='string'?v.text:'');});
     applyBanners();applyNotice();
+    try{if(document.getElementById('tpIdxGrid')&&typeof wpIdxPlaces==='function'&&wpCountry&&wpCity)wpIdxPlaces();}catch(e){}
+    try{if(document.getElementById('cityPlaces')&&typeof initCityPage==='function'){_tpInit=false;initCityPage();}}catch(e){}
     if(document.getElementById('newsAdminGrid'))renderAdminNews();
   }catch(e){}
 }

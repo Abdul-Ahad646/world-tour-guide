@@ -6,7 +6,7 @@
    Database (Firebase) er call kokhono cache hoy na.
    ============================================================ */
 
-const CACHE = 'wtg-v2';
+const CACHE = 'wtg-v3';
 
 /* Agey thekei cache kore rakha mul file gula */
 
@@ -59,7 +59,7 @@ self.addEventListener('fetch', e => {
 
   if (url.origin === self.location.origin) {
     e.respondWith(
-      caches.match(req, { ignoreSearch: true }).then(hit => {
+      caches.match(req).then(hit => {
         const fresh = fetch(req).then(res => {
           if (res && res.ok) {
             const copy = res.clone();
