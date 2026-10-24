@@ -851,7 +851,7 @@ function wpSelectCountry(name,city,fromMap){
   if(fromMap)wpZoomToCountry(name);
 }
 async function initWorldPicker(){
-  if(!document.getElementById('wp-svg'))return;
+  if(!document.getElementById('wp-country'))return;
   renderWorldPicker();
   const st=document.getElementById('wp-status');
   document.getElementById('wp-country').addEventListener('change',e=>wpSelectCountry(e.target.value,''));
@@ -862,9 +862,9 @@ async function initWorldPicker(){
   document.getElementById('wp-city').addEventListener('change',e=>{wpCity=e.target.value;renderWorldPicker();});
   document.getElementById('wp-cities').addEventListener('click',e=>{const b=e.target.closest('[data-city]');if(b){wpCity=b.dataset.city;renderWorldPicker();}});
   const _cb=document.getElementById('wp-citybox');if(_cb)_cb.addEventListener('click',e=>{const b=e.target.closest('[data-cityrow]');if(b){wpCity=b.dataset.cityrow;renderWorldPicker();}});
-  document.getElementById('wp-svg').addEventListener('click',e=>{if(wpMoved||wpJustPicked)return;const p=e.target.closest('[data-country]');if(p&&wpByName(p.dataset.country)&&p.dataset.country!==wpCountry)wpSelectCountry(p.dataset.country,'',true);});
-
   const wpSvg=document.getElementById('wp-svg');
+  if(!wpSvg)return;
+  wpSvg.addEventListener('click',e=>{if(wpMoved||wpJustPicked)return;const p=e.target.closest('[data-country]');if(p&&wpByName(p.dataset.country)&&p.dataset.country!==wpCountry)wpSelectCountry(p.dataset.country,'',true);});
   window.wpFocusContinent=c=>{
     if(wpContinent===c){wpContinent='';renderWorldPicker();wpResetView();return;}
     wpContinent=c;
