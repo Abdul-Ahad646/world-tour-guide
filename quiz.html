@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="logo-round.png">
 <link rel="stylesheet" href="bootstrap.min.css">
-<link rel="stylesheet" href="style.css?v=18">
+<link rel="stylesheet" href="style.css?v=19">
 
 <!-- App (PWA): phone e add korar jonno manifest + icon -->
 <link rel="manifest" href="manifest.webmanifest">
@@ -25,7 +25,7 @@
 
 <!-- Menu: sob page er common navigation -->
 
-  <button type="button" class="navtoggle" id="navToggle" aria-label="Menu" aria-expanded="false">☰</button><nav class="nav ms-auto gap-1" id="mainNav"><a class="btn btn-sm btn-outline-light border-0" href="index.html" data-i18n="nav_explore"></a><a class="btn btn-sm btn-outline-light border-0" href="world.html" data-i18n="nav_world"></a><a class="btn btn-sm btn-outline-light border-0" href="map.html" data-i18n="nav_map"></a><a class="btn btn-sm btn-light fw-semibold" href="quiz.html" data-i18n="nav_quiz"></a><a class="btn btn-sm btn-outline-light border-0" href="places.html" data-i18n="nav_gems"></a><a class="btn btn-sm btn-outline-light border-0" href="news.html" data-i18n="nav_news"></a></nav>
+  <button type="button" class="navtoggle" id="navToggle" aria-label="Menu" aria-expanded="false">☰</button><nav class="nav ms-auto gap-1" id="mainNav"><a class="btn btn-sm btn-outline-light border-0" href="index.html" data-i18n="nav_explore"></a><a class="btn btn-sm btn-outline-light border-0" href="world.html" data-i18n="nav_world"></a><a class="btn btn-sm btn-outline-light border-0" href="map.html" data-i18n="nav_map"></a><a class="btn btn-sm btn-light fw-semibold" href="quiz.html" data-i18n="nav_quiz"></a><a class="btn btn-sm btn-outline-light border-0" href="places.html" data-i18n="nav_gems"></a><a class="btn btn-sm btn-outline-light border-0" href="news.html" data-i18n="nav_news"></a><a class="btn btn-sm btn-outline-light border-0" href="help.html" data-i18n="nav_help"></a></nav>
   <select class="langbtn form-select form-select-sm w-auto" id="langBtn" aria-label="Language"></select>
 </div></header>
 
@@ -35,7 +35,7 @@
 
 <div class="noticebar" id="noticeBar" hidden><div class="notice-track"><span id="noticeText"></span></div></div>
 <div class="pbanner py-5 text-center text-white b-quiz"><div class="container"><h1 data-i18n="quiz_h"></h1><p data-i18n="quiz_lead"></p></div></div>
-<div class="container"><div class="adslot" data-adslot><span class="adslot-label" data-i18n="ad_label"></span></div></div>
+<div class="container"><div class="adslot" data-adslot></div></div>
 <section class="blk py-4" id="quiz"><div class="container">
   
   <div class="card shadow-sm quiz" id="quizBox" style="max-width:640px"></div>
@@ -68,7 +68,7 @@
 
 <!-- Site er mul code (app.js) -->
 
-<script src="app.js?v=34"></script>
+<script src="app.js?v=35"></script>
 
 <!-- Offline cache (service worker) chalu -->
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});</script>
