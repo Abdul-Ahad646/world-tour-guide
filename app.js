@@ -1140,7 +1140,7 @@ $('#gemForm').addEventListener('submit',async e=>{
    Kaj: bhasa bodol hole pura page abar sajano (relang) —
    map, quiz, news, explore sob notun bhasay render hoy */
 
-function relang(){const _h=document.getElementById('heroCountry');if(_h&&_h._fillDL)_h._fillDL();applyLang();if(window._refreshHeroBadge)window._refreshHeroBadge();if(document.getElementById('wp-country'))renderWorldPicker();bd&&bd.refreshAll();wd&&wd.refreshAll();if(document.getElementById('newsLiveGrid'))initNewsPage();renderExplore();quizRender();renderPlanPick();$('#pDays').textContent=num(plan.days);$('#pPeople').textContent=num(plan.people);if(document.getElementById('pOut')&&$('#pOut').innerHTML)buildPlan();}
+function relang(){const _h=document.getElementById('heroCountry');if(_h&&_h._fillDL)_h._fillDL();applyLang();if(window._refreshHeroBadge)window._refreshHeroBadge();if(document.getElementById('wp-country'))renderWorldPicker();bd&&bd.refreshAll();wd&&wd.refreshAll();if(document.getElementById('newsLiveGrid'))initNewsPage();renderExplore();quizRender();renderPlanPick();$('#pDays').textContent=num(plan.days);$('#pPeople').textContent=num(plan.people);if(document.getElementById('pOut')&&$('#pOut').innerHTML)buildPlan();_lzGridReg.forEach(r=>{if(r.grid&&r.grid.isConnected)lzGrid(r.grid,r.entries);});if(window._lzRefresh)lzAdmList();}
 const _langSel=$('#langBtn');
 if(_langSel&&_langSel.tagName==='SELECT'){_langSel.innerHTML=LANGS_LIST.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');_langSel.value=lang;_langSel.onchange=()=>{lang=_langSel.value;store.set('lang',lang);document.documentElement.dir=['ar','ur','fa'].includes(lang)?'rtl':'ltr';relang();};}
 
@@ -1649,18 +1649,22 @@ async function trText(text,to){
 }
 async function lzEntry(e){
   if(!e||e._lz===lang)return false;
+  const _had=e._lz;
   const src=txtLang((e.name||'')+' '+(e.desc||''));
-  if(src===lang){e._nm=e.name||'';e._ds=e.desc||'';e._lz=lang;return false;}
+  if(src===lang){e._nm=e.name||'';e._ds=e.desc||'';e._lz=lang;return !!_had;}
   const nm=await trText(e.name||'',lang),ds=await trText(e.desc||'',lang);
   const ch=nm!==(e.name||'')||ds!==(e.desc||'');
   e._nm=nm;e._ds=ds;e._lz=lang;return ch;
 }
+var _lzGridReg=[];
 async function lzGrid(grid,entries){
   if(!grid||!entries)return;
+  const _ri=_lzGridReg.findIndex(r=>r.grid===grid);
+  if(_ri>=0)_lzGridReg[_ri].entries=entries;else _lzGridReg.push({grid,entries});
   const stamp=grid.dataset.lz=(+grid.dataset.lz||0)+1;
   let ch=false;
   for(const e of entries){if(e.custom&&await lzEntry(e))ch=true;}
-  if(ch&&grid.isConnected&&+grid.dataset.lz===stamp){_tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');}
+  if(grid.isConnected&&+grid.dataset.lz===stamp&&(ch||grid.dataset.lzlang!==lang)){grid.dataset.lzlang=lang;_tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');}
 }
 let _lzAdmBusy=false;
 async function lzAdmList(){
