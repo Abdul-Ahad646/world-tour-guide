@@ -345,3 +345,10 @@ footer .contact{justify-content:center}
   header .nav#mainNav.open{display:flex}
   header .nav#mainNav a{text-align:left;padding:8px 12px}
 }
+
+/* Biggapon (ad) er jaiga — banner er niche, sob page e */
+.adslot{margin:14px auto 0;max-width:970px;min-height:104px;border:1.5px dashed rgba(11,93,107,.45);border-radius:12px;background:rgba(11,93,107,.05);display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.adslot .adslot-label{font-weight:700;letter-spacing:2px;color:rgba(11,93,107,.55);text-transform:uppercase;font-size:15px}
+.adslot.hasad{border:none;background:transparent;min-height:0}
+.adslot a{display:block;width:100%}
+.adslot img{display:block;width:100%;height:auto;max-height:180px;object-fit:cover;border-radius:12px}

@@ -6,7 +6,7 @@
    Database (Firebase) er call kokhono cache hoy na.
    ============================================================ */
 
-const CACHE = 'wtg-v8';
+const CACHE = 'wtg-v9';
 
 /* Agey thekei cache kore rakha mul file gula */
 

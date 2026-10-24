@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="logo-round.png">
 <link rel="stylesheet" href="bootstrap.min.css">
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 
 <!-- App (PWA): phone e add korar jonno manifest + icon -->
 <link rel="manifest" href="manifest.webmanifest">
@@ -52,6 +52,7 @@
         <button type="button" class="adm-tab" data-sec="banner">🖼️ <span data-i18n="adm_tab_banner"></span></button>
         <button type="button" class="adm-tab" data-sec="news">📰 <span data-i18n="adm_tab_news"></span></button>
         <button type="button" class="adm-tab" data-sec="notice">📢 <span data-i18n="adm_tab_notice"></span></button>
+        <button type="button" class="adm-tab" data-sec="ad">📣 <span data-i18n="adm_tab_ad"></span></button>
         <button class="btn btn-outline-secondary btn-sm" id="admLogout" type="button" data-i18n="adm_logout"></button>
         <hr style="margin:4px 0;width:100%">
         <button class="btn btn-success btn-sm w-100" id="admExport" type="button">📦 <span data-i18n="adm_export"></span></button>
@@ -180,6 +181,24 @@
             </form>
           </div>
         </section>
+        <section id="admSec-ad" hidden>
+          <div class="card shadow-sm admcard">
+            <form id="admAdForm" class="bform">
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_ad_h"></label>
+              <div id="admAdPrev"></div></div>
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_ad_img"></label>
+              <input class="form-control" type="file" id="admAdFile" accept="image/*"></div>
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_ad_url"></label>
+              <input class="form-control" type="url" id="admAdUrl" placeholder="https://..."></div>
+              <div class="g-field"><label class="form-label fw-semibold" data-i18n="adm_ad_link"></label>
+              <input class="form-control" type="url" id="admAdLink" placeholder="https://..."></div>
+              <p style="color:var(--mute);font-size:13.5px" data-i18n="adm_ad_hint"></p>
+              <button class="btn adm-save-btn" type="submit" data-i18n="adm_save"></button>
+              <button class="btn btn-outline-secondary" type="button" id="admAdRemove" data-i18n="adm_ad_remove"></button>
+              <p id="admAdMsg" style="color:var(--brand);font-size:14px;margin:6px 0 0"></p>
+            </form>
+          </div>
+        </section>
         <section id="admSec-banner" hidden>
           <div class="card shadow-sm admcard">
             <p data-i18n="adm_b_note" style="color:#5b7a80"></p>
@@ -222,7 +241,7 @@
 
 <!-- Site er mul code (app.js) -->
 
-<script src="app.js?v=33"></script>
+<script src="app.js?v=34"></script>
 
 <!-- Offline cache (service worker) chalu -->
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});</script>
