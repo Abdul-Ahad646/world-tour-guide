@@ -336,3 +336,12 @@ footer .contact{justify-content:center}
 
 /* Notun logo (header) */
 .logo-img{height:52px;width:52px;object-fit:contain}
+
+/* Mobile menu: header er sob nav button ekta ☰ icon er bhitore (app/choto screen e) */
+.navtoggle{display:none;background:transparent;border:1px solid rgba(255,255,255,.55);color:#fff;border-radius:8px;font-size:20px;line-height:1;padding:5px 11px;cursor:pointer}
+@media (max-width:860px){
+  .navtoggle{display:inline-block;margin-left:auto}
+  header .nav#mainNav{display:none;flex-basis:100%;flex-direction:column;align-items:stretch;gap:6px;padding:8px 0 4px}
+  header .nav#mainNav.open{display:flex}
+  header .nav#mainNav a{text-align:left;padding:8px 12px}
+}
