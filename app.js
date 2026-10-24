@@ -387,6 +387,22 @@ function imgShrink(src,mx,q){return new Promise(res=>{const im=new Image();im.on
 async function cloudPut(coll,id,data){if(!FBOK||!id)return false;try{await FDB.collection(coll).doc(String(id)).set(data);return true;}catch(e){return false;}}
 async function cloudDel(coll,id){if(!FBOK||!id)return;try{await FDB.collection(coll).doc(String(id)).delete();}catch(e){}}
 
+/* Kaj: QUOTA-SAFE place read — puro 'places' collection ar kokhono
+   ekbare tana hobe na. cloudPull ekhon sudhu quiz/news/settings tane;
+   visitor/admin er je shohorer place dorkar, ei function diye sudhu
+   sei shohorer doc gulai ana hoy. city = single-field filter
+   (Firestore e notun composite index lagbe na); country
+   client-side e miliye neya hoy (eki namer shohor onno deshe
+   thakte pare). World-phase e 3000+ doc holeo ekta city view
+   tokhon sudhu oi shohorer koyekta read khoroch korbe. */
+async function cloudPlacesBy(city,country){
+  if(!FBOK||!city)return[];
+  try{
+    const sn=await FDB.collection('places').where('city','==',String(city)).get();
+    return sn.docs.map(d=>Object.assign({},d.data(),{_fid:d.id})).filter(x=>!country||x.country===country);
+  }catch(e){return[];}
+}
+
 /* Kaj: PDF library (jspdf, 356KB) sudhu PDF download chaplei
    load hoy — page kholar somoy ojotha vajon lage na */
 let _pdfP=null;
@@ -394,9 +410,13 @@ function loadJsPdf(){if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve(
 async function cloudPull(){
   if(!FBOK)return;
   try{
-    const [pl,qz,nw,st]=await Promise.all([FDB.collection('places').get(),FDB.collection('quiz').get(),FDB.collection('news').get(),FDB.collection('settings').get()]);
+    /* NOTE (quota-safe): 'places' collection ekhane ar tana hoy na.
+       Prottek page load e puro collection porle (~230 read ekhon,
+       world-phase e hajar-hajar) daily 50K read quota more jeto —
+       gotokal etai hoyeche. Place ekhon dorkar-onujayi
+       cloudPlacesBy(city,country) diye sudhu oi shohorer gulai ana hoy. */
+    const [qz,nw,st]=await Promise.all([FDB.collection('quiz').get(),FDB.collection('news').get(),FDB.collection('settings').get()]);
     const applyColl=(snap,key,flag)=>{if(snap.docs.length){const cloud=snap.docs.map(d=>Object.assign({},d.data(),{_fid:d.id}));const ids=new Set(cloud.map(x=>String(x._fid||x.id)));const extra=(store.get(key,[])||[]).filter(x=>!ids.has(String(x._fid||x.id)));store.set(key,cloud.concat(extra));store.set(flag,1);}else if(store.get(flag,0)){if(!(store.get(key,[])||[]).length)store.set(key,[]);}};
-    applyColl(pl,'places_custom','cloud_on_places');
     applyColl(qz,'quiz_custom','cloud_on_quiz');
     applyColl(nw,'news','cloud_on_news');
     st.docs.forEach(d=>{const v=d.data()||{};if(d.id==='banners')store.set('banners',v.data||{});if(d.id==='notice')store.set('notice',typeof v.text==='string'?v.text:'');if(d.id==='ad')store.set('ad',v.data||{});});
@@ -411,7 +431,7 @@ async function migrateLocalToCloud(){
   try{
     const up=async(coll,key,pfx)=>{
       const local=store.get(key,[]);if(!local.length)return;
-      const snap=await FDB.collection(coll).get();if(!snap.empty)return;
+      const snap=await FDB.collection(coll).limit(1).get();if(!snap.empty)return;
       for(const it of local){const id=it._fid||it.id||(pfx+Date.now()+Math.floor(Math.random()*1e5));await FDB.collection(coll).doc(String(id)).set(stripFid(Object.assign({},it,{id:it.id||id})));}
     };
     await up('places','places_custom','c');
@@ -1297,7 +1317,9 @@ async function initCityPage(){
     });
   }
   entries=await tpWikiInfo(entries);
-  const _custom=(store.get('places_custom',[])).filter(x=>x.country===country&&x.city===city).map(x=>({name:x.name,desc:x.desc||'',img:x.img||'',imgs:(x.imgs&&x.imgs.length?x.imgs:(x.img?[x.img]:[])),who:x.who||'',social:x.social||'',url:x.url||'',custom:true}));
+  const _cl0=await cloudPlacesBy(city,country);
+  const _seen0=new Set(_cl0.map(x=>String(x._fid||x.id)));
+  const _custom=_cl0.concat((store.get('places_custom',[])||[]).filter(x=>x.country===country&&x.city===city&&!_seen0.has(String(x._fid||x.id)))).map(x=>({name:x.name,desc:x.desc||'',img:x.img||'',imgs:(x.imgs&&x.imgs.length?x.imgs:(x.img?[x.img]:[])),who:x.who||'',social:x.social||'',url:x.url||'',custom:true}));
   if(_custom.length){const _ck=new Set(_custom.map(x=>String(x.name||'').toLowerCase()));entries=_custom.concat(entries.filter(e=>!_ck.has(String(e.name||'').toLowerCase())));}
   entries=entries.slice(0,12);
   if(!entries.length){if(status)status.textContent=t('tp_none');return;}
@@ -1329,8 +1351,13 @@ function initAdminPage(){
     else if(u==='ahad'&&await admCheckPass(p)){sessionStorage.setItem('wtg_admin','1');if(msg)msg.textContent='';show();}else if(msg)msg.textContent=t('adm_wrong');});
   const logout=document.getElementById('admLogout');if(logout)logout.addEventListener('click',()=>{sessionStorage.removeItem('wtg_admin');if(FBOK&&FAUTH)FAUTH.signOut().catch(()=>{});hide();});
   const expB=document.getElementById('admExport');
-  if(expB)expB.addEventListener('click',()=>{
-    const data={v:1,places:store.get('places_custom',[]),quiz:store.get('quiz_custom',[]),banners:store.get('banners',{}),news:store.get('news',[]),ad:store.get('ad',{})};
+  if(expB)expB.addEventListener('click',async()=>{
+    /* Export e puro content dorkar — tai button chaple (explicit
+       admin action) ekbar puro collection pora hoy; na parle
+       local cache tai export hobe. */
+    let _px=store.get('places_custom',[])||[];
+    if(FBOK){try{const _sn=await FDB.collection('places').get();const _all=_sn.docs.map(d=>Object.assign({},d.data(),{_fid:d.id}));if(_all.length)_px=_all;}catch(e){}}
+    const data={v:1,places:_px,quiz:store.get('quiz_custom',[]),banners:store.get('banners',{}),news:store.get('news',[]),ad:store.get('ad',{})};
     const m=document.getElementById('admExportMsg');
     if(!data.places.length&&!data.quiz.length&&!Object.keys(data.banners).length&&!data.news.length){if(m)m.textContent=t('adm_export_empty');return;}
     const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
@@ -1352,7 +1379,29 @@ function initAdminPage(){
   }
   if(scSel)scSel.addEventListener('change',sSyncBig);
   if(sbSel)sbSel.addEventListener('change',sSyncCity);
-  const sBtn=document.getElementById('admSSearch');if(sBtn)sBtn.addEventListener('click',renderList);
+  /* Kaj: QUOTA-SAFE admin search — search button chaple sudhu filter
+     onujayi doc ana hoy (sobcheye nirdishto filter age: city →
+     division → country). Cloud theke pawa gulo local store e merge
+     kore neya hoy (id diye dedupe), tarpor renderList(). */
+  async function admCloudSearch(){
+    const fc=scSel?scSel.value:'',fb=sbSel?sbSel.value:'',fs=ssSel?ssSel.value:'';
+    if(FBOK&&(fc||fb||fs)){
+      try{
+        let q=null;
+        if(fs)q=FDB.collection('places').where('city','==',fs);
+        else if(fb)q=FDB.collection('places').where('big','==',fb);
+        else q=FDB.collection('places').where('country','==',fc);
+        const sn=await q.get();
+        const got=sn.docs.map(d=>Object.assign({},d.data(),{_fid:d.id}))
+          .filter(x=>(!fc||x.country===fc)&&(!fb||x.big===fb)&&(!fs||x.city===fs));
+        const all=store.get('places_custom',[])||[];
+        const ids=new Set(got.map(x=>String(x._fid||x.id)));
+        store.set('places_custom',got.concat(all.filter(x=>!ids.has(String(x._fid||x.id)))));
+      }catch(e){}
+    }
+    renderList();
+  }
+  const sBtn=document.getElementById('admSSearch');if(sBtn)sBtn.addEventListener('click',()=>admCloudSearch());
   function syncCity(){
     const cur=wpByName(cSel.value);const groups=cur?wpCityGroups(cur)||[]:[];
     const g=groups.find(x=>x.big===bSel.value);
@@ -1737,7 +1786,9 @@ async function wpIdxPlaces(){
     extra.forEach(e=>{const k=norm(e.name);if(!keys.some(x=>x&&(k.includes(x)||x.includes(k)))){entries.push(e);keys.push(k);}});
   }
   entries=await tpWikiInfo(entries);
-  const _custom=(store.get('places_custom',[])).filter(x=>x.country===wpCountry&&x.city===wpCity).map(x=>({name:x.name,desc:x.desc||'',img:x.img||'',imgs:(x.imgs&&x.imgs.length?x.imgs:(x.img?[x.img]:[])),who:x.who||'',social:x.social||'',url:x.url||'',custom:true}));
+  const _cl1=await cloudPlacesBy(wpCity,wpCountry);
+  const _seen1=new Set(_cl1.map(x=>String(x._fid||x.id)));
+  const _custom=_cl1.concat((store.get('places_custom',[])||[]).filter(x=>x.country===wpCountry&&x.city===wpCity&&!_seen1.has(String(x._fid||x.id)))).map(x=>({name:x.name,desc:x.desc||'',img:x.img||'',imgs:(x.imgs&&x.imgs.length?x.imgs:(x.img?[x.img]:[])),who:x.who||'',social:x.social||'',url:x.url||'',custom:true}));
   if(_custom.length){const _ck=new Set(_custom.map(x=>String(x.name||'').toLowerCase()));entries=_custom.concat(entries.filter(e=>!_ck.has(String(e.name||'').toLowerCase())));}
   entries=entries.slice(0,12);
   if(token!==_idxTpToken)return;
