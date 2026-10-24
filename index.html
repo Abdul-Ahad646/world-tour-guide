@@ -39,18 +39,26 @@
   <h2 data-i18n="wp_h"></h2>
   <p class="lead" data-i18n="wp_lead"></p>
   <div class="wpick-grid row g-3 align-items-start">
-    <div class="card shadow-sm p-3 col-12 col-lg-7"><div class="wpick-places" id="wpPlacesBox"><h3 data-i18n="tp_h2"></h3><p id="tpIdxStatus" class="d-none"></p><div class="tpgrid wp-tpgrid row row-cols-1 row-cols-sm-2 g-2" id="tpIdxGrid"></div></div></div>
-    <div class="card shadow-sm wpick-card p-3 col-12 col-lg-5">
-      <label class="f form-label fw-semibold" for="wp-country" data-i18n="wp_country"></label>
-      <select class="form-select" id="wp-country"></select>
-      <label class="f form-label fw-semibold" for="wp-big" data-i18n="wp_big"></label>
-      <select class="form-select" id="wp-big" disabled></select>
-      <label class="f form-label fw-semibold" for="wp-city" data-i18n="wp_small"></label>
-      <select class="form-select" id="wp-city" disabled></select>
+    <div class="card shadow-sm wpick-card p-3 col-12">
+      <div class="row g-2">
+        <div class="col-12 col-md-4">
+          <label class="f form-label fw-semibold" for="wp-country" data-i18n="wp_country"></label>
+          <select class="form-select" id="wp-country"></select>
+        </div>
+        <div class="col-12 col-md-4">
+          <label class="f form-label fw-semibold" for="wp-big" data-i18n="wp_big"></label>
+          <select class="form-select" id="wp-big" disabled></select>
+        </div>
+        <div class="col-12 col-md-4">
+          <label class="f form-label fw-semibold" for="wp-city" data-i18n="wp_small"></label>
+          <select class="form-select" id="wp-city" disabled></select>
+        </div>
+      </div>
       <button type="button" class="btn btn-primary btn-sm mt-2 px-2 py-1" style="font-size:12.5px;line-height:1.2" id="wp-search-btn" data-i18n="wp_search_btn" disabled></button>
       <div class="wpick-cities" id="wp-cities"></div>
       <div class="wpick-result d-none" id="wp-result"></div>
     </div>
+    <div class="card shadow-sm p-3 col-12"><div class="wpick-places" id="wpPlacesBox"><h3 data-i18n="tp_h2"></h3><p id="tpIdxStatus" class="d-none"></p><div class="tpgrid wp-tpgrid row row-cols-1 row-cols-sm-2 g-2" id="tpIdxGrid"></div></div></div>
   </div>
 </div></section>
 
