@@ -1456,6 +1456,31 @@ function initAdminPage(){
   if(form){
   const aPh=document.getElementById('admImgFile');
   if(aPh)aPh.addEventListener('change',async()=>{_admImgs=[];const fs=Array.from(aPh.files||[]).slice(0,6);for(const f of fs){try{_admImgs.push(await imgDown(f));}catch(_e){}}admRenderImgs();});
+  /* URL diye chobi: file upload charai link theke chobi ana hoy,
+     imgDown diye choto kore _admImgs e rakha hoy (save flow eki) */
+  const aPv=document.getElementById('admImgPrevs');
+  if(aPv&&!document.getElementById('admImgUrls')){
+    aPv.insertAdjacentHTML('afterend','<div class="g-urlbox" style="margin-top:8px"><label class="f form-label fw-semibold">🔗 URL থেকে ছবি / Photos by URL</label><textarea class="form-control" id="admImgUrls" rows="3" placeholder="এক লাইনে একটি ছবির URL (সর্বোচ্চ ৬টি) — one photo URL per line, max 6"></textarea><button type="button" class="btn btn-outline-primary btn-sm" id="admImgUrlBtn" style="margin-top:6px">URL থেকে ছবি আনুন / Load from URL</button> <span id="admImgUrlMsg" style="font-size:.85em"></span></div>');
+    const aUB=document.getElementById('admImgUrlBtn'),aUT=document.getElementById('admImgUrls'),aUM=document.getElementById('admImgUrlMsg');
+    if(aUB)aUB.addEventListener('click',async()=>{
+      const urls=(aUT.value||'').split(/\s+/).map(s=>s.trim()).filter(s=>/^https?:\/\//i.test(safeUrl(s))).slice(0,6);
+      if(!urls.length){if(aUM)aUM.textContent='⚠️ URL পাওয়া যায়নি / No URL found';return;}
+      aUB.disabled=true;_admImgs=[];
+      let ok=0,fail=0;
+      for(const u of urls){
+        if(aUM)aUM.textContent='⏳ '+(ok+fail+1)+'/'+urls.length;
+        try{
+          const r=await fetch(u);if(!r.ok)throw new Error('http');
+          const b=await r.blob();
+          const d=await Promise.race([imgDown(b),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),30000))]);
+          if(d){_admImgs.push(d);ok++;}else fail++;
+        }catch(_e){fail++;}
+        admRenderImgs();
+      }
+      if(aUM)aUM.textContent='✓ '+ok+'টি ছবি এসেছে'+(fail?' · '+fail+'টি আসেনি':'');
+      aUB.disabled=false;
+    });
+  }
   const aTa=document.getElementById('admDesc'),aGc=document.getElementById('admDescCount');
   if(aTa&&aGc){const up=()=>{const n=wcount(aTa.value);aGc.textContent=num(n);aGc.parentElement.classList.toggle('ok',n>=150);};aTa.addEventListener('input',up);up();}
 
