@@ -39,7 +39,10 @@ const store={get(k,d){if(Object.prototype.hasOwnProperty.call(_MEM,k))return _ME
 let lang=store.get('lang','bn');
 const toBn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
 const num=n=>lang==='bn'?toBn(n):String(n);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* safeUrl: link er jonno scheme jachai — http/https/mailto/tel ar relative
+   link chara sob (javascript:, data:, vbscript: ...) bad. Kharap link hole '' */
+const safeUrl=u=>{u=String(u||'').trim();if(!u)return '';if(/^(https?:)?\/\//i.test(u)||/^(mailto:|tel:)/i.test(u))return u;if(u.charAt(0)==='#'||u.charAt(0)==='/')return u;if(/^[a-z][a-z0-9+.-]*:/i.test(u))return '';return u;};
 const money=n=>'৳'+num(Math.round(n).toLocaleString('en-US'));
 const L={
 bn:{nav_map:'আমার ম্যাপ',nav_world:'বিশ্ব ম্যাপ',nav_explore:'কোথায় ঘুরবেন',nav_quiz:'কুইজ',nav_plan:'ট্রিপ প্ল্যানার',nav_gems:'লুকানো রত্ন',nav_news:'নিউজ',
@@ -368,7 +371,7 @@ function useWorldFeatures(m,features,doRewind){
 let bd,wd;
 function applyBanners(){try{const b=store.get('banners',{});if(!b||!Object.keys(b).length)return;const sel={index:'.pbanner.b-explore',world:'.wbanner',map:'.hero#top',quiz:'.pbanner.b-quiz',places:'.pbanner.b-places',news:'.pbanner.b-news',help:'.pbanner.b-help'};for(const k in sel){if(b[k]){const el=document.querySelector(sel[k]);if(el)el.style.backgroundImage='linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url("'+String(b[k]).replace(/"/g,'')+'")';}}}catch(e){}}
 function applyNotice(){try{const v=String(store.get('notice','')||'').trim();const bar=document.getElementById('noticeBar'),tx=document.getElementById('noticeText');if(!bar)return;if(v){if(tx)tx.textContent='📢 '+v;bar.hidden=false;}else bar.hidden=true;}catch(e){}}
-function applyAds(){try{const a=store.get('ad',{});const media=a?(a.media||a.img||''):'';const type=(a&&a.type)||'img';document.querySelectorAll('[data-adslot]').forEach(el=>{if(media){if(type==='video'){el.innerHTML='<video src="'+esc(media)+'" autoplay muted loop playsinline></video>';}else{el.innerHTML=(a.link?'<a href="'+esc(a.link)+'" target="_blank" rel="noopener sponsored"><img src="'+esc(media)+'" alt=""></a>':'<img src="'+esc(media)+'" alt="">');}el.classList.add('hasad');}else{el.innerHTML='';el.classList.remove('hasad');}});}catch(e){}}
+function applyAds(){try{const a=store.get('ad',{});const media=a?(a.media||a.img||''):'';const type=(a&&a.type)||'img';document.querySelectorAll('[data-adslot]').forEach(el=>{if(media){if(type==='video'){el.innerHTML='<video src="'+esc(media)+'" autoplay muted loop playsinline></video>';}else{el.innerHTML=(a.link?'<a href="'+esc(safeUrl(a.link))+'" target="_blank" rel="noopener sponsored"><img src="'+esc(media)+'" alt=""></a>':'<img src="'+esc(media)+'" alt="">');}el.classList.add('hasad');}else{el.innerHTML='';el.classList.remove('hasad');}});}catch(e){}}
 
 
 /* ================= FIREBASE CLOUD =================
@@ -1336,7 +1339,7 @@ async function initCityPage(){
 
 var _admInit=false,_admEditId=null;
 async function admHash(text){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(String(text)));return 'h:'+[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}catch(e){return 'p:'+String(text);}}
-async function admCheckPass(pw){const stored=store.get('admin_hash','');if(stored){const h=await admHash(pw);return h===stored||('p:'+pw)===stored;}return pw==='123456';}
+async function admCheckPass(pw){const stored=store.get('admin_hash','');if(stored){const h=await admHash(pw);return h===stored||('p:'+pw)===stored;}return false;}
 function admGetPlaces(){return store.get('places_custom',[]);}
 function initAdminPage(){
   const loginBox=document.getElementById('admLogin');if(!loginBox||_admInit)return;_admInit=true;
@@ -1423,7 +1426,7 @@ function initAdminPage(){
     const fc=scSel?scSel.value:'',fb=sbSel?sbSel.value:'',fs=ssSel?ssSel.value:'';
     if(!fc&&!fb&&!fs){listEl.innerHTML='<p style="color:var(--mute)">'+esc(t('adm_search_first'))+'</p>';return;}
     const list=all.filter(x=>(!fc||x.country===fc)&&(!fb||x.big===fb)&&(!fs||x.city===fs));
-    listEl.innerHTML=list.length?list.map(x=>{const ims=(x.imgs&&x.imgs.length?x.imgs:(x.img?[x.img]:[]));return '<div class="admitem">'+(ims.length?'<div class="admitem-imgs">'+ims.map(s=>'<img src="'+esc(s)+'" alt="">').join('')+'</div>':'')+'<div><b>'+esc(plName(x))+'</b><br><small>'+esc(cName(x.city||''))+' · '+esc(wpName(x.country||''))+'</small>'+(plDesc(x)?'<p>'+esc(String(plDesc(x)).slice(0,140))+'</p>':'')+(x.who?'<small class="admitem-who">👤 '+esc(x.who)+'</small>':'')+(x.social?'<br><a class="admitem-who" href="'+esc(x.social)+'" target="_blank" rel="noopener">🔗 '+esc(t('tp_social'))+'</a>':'')+'</div><div class="admacts"><button type="button" class="btn btn-outline-secondary btn-sm" data-edit="'+esc(x.id)+'">'+esc(t('adm_edit'))+'</button><button type="button" class="btn btn-outline-secondary btn-sm" data-del="'+esc(x.id)+'">'+esc(t('adm_delete'))+'</button></div></div>';}).join(''):'<p style="color:var(--mute)">'+esc(t('adm_empty'))+'</p>';
+    listEl.innerHTML=list.length?list.map(x=>{const ims=(x.imgs&&x.imgs.length?x.imgs:(x.img?[x.img]:[]));return '<div class="admitem">'+(ims.length?'<div class="admitem-imgs">'+ims.map(s=>'<img src="'+esc(s)+'" alt="">').join('')+'</div>':'')+'<div><b>'+esc(plName(x))+'</b><br><small>'+esc(cName(x.city||''))+' · '+esc(wpName(x.country||''))+'</small>'+(plDesc(x)?'<p>'+esc(String(plDesc(x)).slice(0,140))+'</p>':'')+(x.who?'<small class="admitem-who">👤 '+esc(x.who)+'</small>':'')+(x.social?'<br><a class="admitem-who" href="'+esc(safeUrl(x.social))+'" target="_blank" rel="noopener">🔗 '+esc(t('tp_social'))+'</a>':'')+'</div><div class="admacts"><button type="button" class="btn btn-outline-secondary btn-sm" data-edit="'+esc(x.id)+'">'+esc(t('adm_edit'))+'</button><button type="button" class="btn btn-outline-secondary btn-sm" data-del="'+esc(x.id)+'">'+esc(t('adm_delete'))+'</button></div></div>';}).join(''):'<p style="color:var(--mute)">'+esc(t('adm_empty'))+'</p>';
     lzAdmList();
   }
   window._lzRefresh=renderList;
@@ -1571,8 +1574,8 @@ function initAdminPage(){
       +'<small>📍 '+esc(r.div||'')+'</small>'
       +((r.imgs&&r.imgs.length?r.imgs:(r.img?[r.img]:[])).map(s=>'<img src="'+esc(s)+'" style="width:120px;height:80px;object-fit:cover;border-radius:8px;margin:6px 6px 0 0">').join(''))
       +(r.desc?'<p>'+esc(String(r.desc).slice(0,180))+'…</p>':'')
-      +'<small>👤 '+esc(r.who||'')+(r.social?' · <a href="'+esc(r.social)+'" target="_blank" rel="noopener">🔗</a>':'')+'</small>'
-      +(r.map?'<br><small>🗺️ <a href="'+esc(r.map)+'" target="_blank" rel="noopener">'+esc(t('adm_req_map'))+'</a></small>':'')
+      +'<small>👤 '+esc(r.who||'')+(r.social?' · <a href="'+esc(safeUrl(r.social))+'" target="_blank" rel="noopener">🔗</a>':'')+'</small>'
+      +(r.map?'<br><small>🗺️ <a href="'+esc(safeUrl(r.map))+'" target="_blank" rel="noopener">'+esc(t('adm_req_map'))+'</a></small>':'')
       +'</div><div class="admacts"><button type="button" class="btn btn-success btn-sm" data-reqok="'+i+'">'+esc(t('adm_accept'))+'</button> <button type="button" class="btn btn-outline-secondary btn-sm" data-reqdel="'+i+'">'+esc(t('adm_q_del'))+'</button></div></div>';
     }).join(''):'<p style="color:var(--mute)">'+esc(t('adm_req_empty'))+'</p>';
     renderAdmReqCount();
@@ -1766,9 +1769,9 @@ async function lzAdmList(){
   _lzAdmBusy=false;
 }
 
-function tpCardHtml(e){const lk=e.custom?(e.url||''):('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.name+', '+(e.city||'')+', '+(e.country||'')));const full=String(plDesc(e));const lng=full.length>240;const shrt=lng?full.slice(0,240)+'…':full;return '<div class="col"><article class="card shadow-sm tpcard h-100">'+(e.img?'<img class="card-img-top" src="'+esc(e.img)+'" alt="'+esc(plName(e))+'" loading="lazy">':'<div class="tpimg-fallback">📍</div>')+'<div class="card-body">'+(e.custom?'<span class="badge text-bg-success mb-1">'+esc(t('tp_admin'))+'</span>':'')+'<h3 class="h5">'+esc(plName(e))+'</h3>'+(full?'<p class="card-text small">'+esc(shrt)+'</p>':'')+((full||e.img||e.url)?'<p class="mb-0 mt-2"><button type="button" class="btn btn-outline-primary btn-sm" data-tpopen="'+(_tpData.push(e)-1)+'">'+esc(t('tp_more'))+'</button>'+(lk?' <a class="btn btn-outline-secondary btn-sm" href="'+esc(lk)+'" target="_blank" rel="noopener">'+esc(t('tp_loc'))+'</a>':'')+'</p>':'')+'</div></article></div>';}
+function tpCardHtml(e){const lk=e.custom?(e.url||''):('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.name+', '+(e.city||'')+', '+(e.country||'')));const full=String(plDesc(e));const lng=full.length>240;const shrt=lng?full.slice(0,240)+'…':full;return '<div class="col"><article class="card shadow-sm tpcard h-100">'+(e.img?'<img class="card-img-top" src="'+esc(e.img)+'" alt="'+esc(plName(e))+'" loading="lazy">':'<div class="tpimg-fallback">📍</div>')+'<div class="card-body">'+(e.custom?'<span class="badge text-bg-success mb-1">'+esc(t('tp_admin'))+'</span>':'')+'<h3 class="h5">'+esc(plName(e))+'</h3>'+(full?'<p class="card-text small">'+esc(shrt)+'</p>':'')+((full||e.img||e.url)?'<p class="mb-0 mt-2"><button type="button" class="btn btn-outline-primary btn-sm" data-tpopen="'+(_tpData.push(e)-1)+'">'+esc(t('tp_more'))+'</button>'+(lk?' <a class="btn btn-outline-secondary btn-sm" href="'+esc(safeUrl(lk))+'" target="_blank" rel="noopener">'+esc(t('tp_loc'))+'</a>':'')+'</p>':'')+'</div></article></div>';}
 let _tpData=[];
-function tpOpen(i){const e=_tpData[i];if(!e)return;const m=document.getElementById('tpModal');if(!m)return;document.getElementById('tpmName').textContent=plName(e);const ims=(e.imgs&&e.imgs.length?e.imgs:(e.img?[e.img]:[]));const g=document.getElementById('tpmImgs');g.className='tpm-gallery'+(ims.length===1?' one':'');g.innerHTML=ims.map(x=>'<img src="'+esc(x)+'" alt="">').join('');const w=document.getElementById('tpmWho');w.textContent=e.who?('👤 '+e.who):'';w.style.display=e.who?'':'none';document.getElementById('tpmDesc').textContent=plDesc(e);const u=document.getElementById('tpmUrl');const lk2=e.custom?(e.url||''):('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.name+', '+(e.city||'')+', '+(e.country||'')));if(lk2){u.href=lk2;u.textContent=t('tp_loc');u.style.display='';}else u.style.display='none';const sc=document.getElementById('tpmSocial');if(sc){if(e.social){sc.href=e.social;sc.textContent='🔗 '+t('tp_social');sc.style.display='';}else sc.style.display='none';}m.hidden=false;document.body.style.overflow='hidden';m.scrollTop=0;}
+function tpOpen(i){const e=_tpData[i];if(!e)return;const m=document.getElementById('tpModal');if(!m)return;document.getElementById('tpmName').textContent=plName(e);const ims=(e.imgs&&e.imgs.length?e.imgs:(e.img?[e.img]:[]));const g=document.getElementById('tpmImgs');g.className='tpm-gallery'+(ims.length===1?' one':'');g.innerHTML=ims.map(x=>'<img src="'+esc(x)+'" alt="">').join('');const w=document.getElementById('tpmWho');w.textContent=e.who?('👤 '+e.who):'';w.style.display=e.who?'':'none';document.getElementById('tpmDesc').textContent=plDesc(e);const u=document.getElementById('tpmUrl');const lk2=e.custom?(e.url||''):('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.name+', '+(e.city||'')+', '+(e.country||'')));if(safeUrl(lk2)){u.href=safeUrl(lk2);u.textContent=t('tp_loc');u.style.display='';}else u.style.display='none';const sc=document.getElementById('tpmSocial');if(sc){if(e.social){sc.href=safeUrl(e.social);sc.textContent='🔗 '+t('tp_social');sc.style.display='';}else sc.style.display='none';}m.hidden=false;document.body.style.overflow='hidden';m.scrollTop=0;}
 function tpClose(){const m=document.getElementById('tpModal');if(m)m.hidden=true;document.body.style.overflow='';}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tpopen]');if(b){tpOpen(+b.dataset.tpopen);return;}if(e.target.closest('[data-tpmclose]'))tpClose();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')tpClose();});
@@ -1859,7 +1862,7 @@ function newsFeeds(){
   ];
 }
 function renderLiveItems(grid,items){
-  grid.innerHTML=items.map(x=>'<div class="col"><article class="card shadow-sm tpcard h-100">'+(x.img?'<img class="card-img-top" src="'+esc(x.img)+'" alt="" loading="lazy" onerror="this.remove()">':'<div class="tpimg-fallback">📰</div>')+'<div class="card-body"><p class="news-meta">'+esc(x.source||'Google News')+(x.date?' · '+esc(new Date(x.date).toLocaleDateString(lang==='bn'?'bn-BD':'en-GB')):'')+'</p><h3 class="h5">'+esc(x.title)+'</h3>'+(x.desc?'<p class="card-text small">'+esc(x.desc)+'</p>':'')+'<a class="btn btn-outline-primary btn-sm" href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(t('news_read'))+'</a></div></article></div>').join('');
+  grid.innerHTML=items.map(x=>'<div class="col"><article class="card shadow-sm tpcard h-100">'+(x.img?'<img class="card-img-top" src="'+esc(x.img)+'" alt="" loading="lazy" onerror="this.remove()">':'<div class="tpimg-fallback">📰</div>')+'<div class="card-body"><p class="news-meta">'+esc(x.source||'Google News')+(x.date?' · '+esc(new Date(x.date).toLocaleDateString(lang==='bn'?'bn-BD':'en-GB')):'')+'</p><h3 class="h5">'+esc(x.title)+'</h3>'+(x.desc?'<p class="card-text small">'+esc(x.desc)+'</p>':'')+'<a class="btn btn-outline-primary btn-sm" href="'+esc(safeUrl(x.link))+'" target="_blank" rel="noopener">'+esc(t('news_read'))+'</a></div></article></div>').join('');
 }
 
 /* Kaj: live khobor ana — GDELT, AllOrigins, CodeTabs,
