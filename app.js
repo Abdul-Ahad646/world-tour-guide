@@ -1743,18 +1743,31 @@ function txtLang(s){return /[\u0980-\u09FF]/.test(String(s||''))?'bn':'en';}
 function trHash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36);}
 function plName(e){return e?(e._lzn===lang?(e._nm||e.name||''):(e.name||'')):'';}
 function plDesc(e){return e?(e._lzd===lang?(e._ds||e.desc||''):(e.desc||'')):'';}
+async function trGtx(q,src,to){
+  const r=await fetchTO('https://translate.googleapis.com/translate_a/single?client=gtx&sl='+src+'&tl='+to+'&dt=t&q='+encodeURIComponent(q),9000);
+  const d=await r.json();
+  if(Array.isArray(d)&&Array.isArray(d[0]))return d[0].map(x=>x[0]).join('');
+  return '';
+}
+async function trMyMem(q,src,to){
+  const r=await fetchTO('https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair='+src+'%7C'+to,9000);
+  const d=await r.json();
+  if(d&&d.responseData&&!d.quotaFinished&&String(d.responseStatus)==='200')return d.responseData.translatedText||'';
+  return '';
+}
 async function trChunk(q,src,to){
   const key=to+':'+trHash(q);const cache=store.get('tr_cache',{});
-  if(cache[key])return cache[key];
+  if(cache[key])return{t:cache[key],ok:true};
   let out='';
-  try{const r=await fetchTO('https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair='+src+'%7C'+to,9000);const d=await r.json();if(d&&d.responseData&&!d.quotaFinished&&String(d.responseStatus)==='200')out=d.responseData.translatedText||'';}catch(e){}
-  if(!out){try{const r=await fetchTO('https://translate.googleapis.com/translate_a/single?client=gtx&sl='+src+'&tl='+to+'&dt=t&q='+encodeURIComponent(q),9000);const d=await r.json();if(Array.isArray(d)&&Array.isArray(d[0]))out=d[0].map(x=>x[0]).join('');}catch(e){}}
-  if(out&&out!==q){cache[key]=out;const ks=Object.keys(cache);if(ks.length>3000)ks.slice(0,ks.length-3000).forEach(k=>delete cache[k]);try{store.set('tr_cache',cache);}catch(e){}}
-  return out||q;
+  try{out=await trGtx(q,src,to);}catch(e){}
+  if(!out){try{out=await trMyMem(q,src,to);}catch(e){}}
+  if(!out){await new Promise(r=>setTimeout(r,700));try{out=await trGtx(q,src,to);}catch(e){}}
+  if(out){if(out!==q){cache[key]=out;const ks=Object.keys(cache);if(ks.length>3000)ks.slice(0,ks.length-3000).forEach(k=>delete cache[k]);try{store.set('tr_cache',cache);}catch(e){}}return{t:out,ok:true};}
+  return{t:q,ok:false};
 }
 async function trText(text,to){
-  const s=String(text||'');if(!s.trim())return s;
-  const src=txtLang(s);if(src===to)return s;
+  const s=String(text||'');if(!s.trim())return{t:s,ok:true};
+  const src=txtLang(s);if(src===to)return{t:s,ok:true};
   const parts=[];let cur='';
   const sents=s.split(/(?<=[।.!?])\s+|\n+/);
   for(const p of sents){
@@ -1765,20 +1778,23 @@ async function trText(text,to){
     } else cur=cur?cur+' '+p:p;
   }
   if(cur)parts.push(cur);
-  const outs=[];for(const p of parts)outs.push(await trChunk(p,src,to));
-  return outs.join(' ');
+  const outs=[];let ok=true;
+  for(const p of parts){const r=await trChunk(p,src,to);outs.push(r.t);if(!r.ok)ok=false;}
+  return{t:outs.join(' '),ok};
 }
 async function lzNameE(e){
   if(!e||e._lzn===lang)return false;
   if(txtLang(e.name||'')===lang){e._nm=e.name||'';e._lzn=lang;return false;}
-  const nm=await trText(e.name||'',lang);
-  e._nm=nm;e._lzn=lang;return nm!==(e.name||'');
+  const r=await trText(e.name||'',lang);
+  if(!r.ok)return false;
+  e._nm=r.t;e._lzn=lang;return r.t!==(e.name||'');
 }
 async function lzDescE(e){
   if(!e||e._lzd===lang)return false;
   if(txtLang(e.desc||'')===lang){e._ds=e.desc||'';e._lzd=lang;return false;}
-  const ds=await trText(e.desc||'',lang);
-  e._ds=ds;e._lzd=lang;return ds!==(e.desc||'');
+  const r=await trText(e.desc||'',lang);
+  if(!r.ok)return false;
+  e._ds=r.t;e._lzd=lang;return r.t!==(e.desc||'');
 }
 async function lzEntry(e){
   if(!e)return false;
@@ -1790,7 +1806,7 @@ var _lzBnMap={};
 function lzBn(s){
   const v=String(s||'');if(!v||lang==='bn'||lang==='en')return v;
   const k=lang+':'+v;if(_lzBnMap[k])return _lzBnMap[k];
-  trText(v,lang).then(o=>{if(o&&o!==v)_lzBnMap[k]=o;});return v;
+  trText(v,lang).then(r=>{if(r.ok&&r.t&&r.t!==v)_lzBnMap[k]=r.t;});return v;
 }
 var _lzWarmBusy=false;
 async function lzWarmUi(){
@@ -1801,7 +1817,7 @@ async function lzWarmUi(){
     if(document.getElementById('wp-country')||document.getElementById('wd-root')||document.getElementById('exGrid')){(typeof WC!=='undefined'?WC:[]).forEach(x=>strs.add(x.name));}
     const list=[...strs].filter(v=>v&&!_lzBnMap[lang+':'+v]);
     if(list.length){
-      for(let i=0;i<list.length;i+=40){await Promise.all(list.slice(i,i+40).map(v=>trText(v,lang).then(o=>{if(o&&o!==v)_lzBnMap[lang+':'+v]=o;})));}
+      for(let i=0;i<list.length;i+=40){await Promise.all(list.slice(i,i+40).map(v=>trText(v,lang).then(r=>{if(r.ok&&r.t&&r.t!==v)_lzBnMap[lang+':'+v]=r.t;})));}
       if(document.getElementById('exGrid'))renderExplore();
       if(document.getElementById('wp-country'))renderWorldPicker();
       if(typeof bd!=='undefined'&&bd&&bd.refreshAll)bd.refreshAll();
