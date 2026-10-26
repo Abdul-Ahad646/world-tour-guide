@@ -1763,7 +1763,7 @@ async function trGtx(q,src,to){
   return '';
 }
 async function trMyMem(q,src,to){
-  const r=await fetchTO('https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair='+src+'%7C'+to,9000);
+  const r=await fetchTO('https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair='+src+'%7C'+to+'&de=worldtourguide646@gmail.com',9000);
   const d=await r.json();
   if(d&&d.responseData&&!d.quotaFinished&&String(d.responseStatus)==='200')return d.responseData.translatedText||'';
   return '';
@@ -1791,8 +1791,18 @@ async function trText(text,to){
     } else cur=cur?cur+' '+p:p;
   }
   if(cur)parts.push(cur);
-  const outs=[];let ok=true;
-  for(const p of parts){const r=await trChunk(p,src,to);outs.push(r.t);if(!r.ok)ok=false;}
+  const outs=new Array(parts.length).fill(null);
+  let _ci=0;
+  async function _wk(){while(_ci<parts.length){const i=_ci++;const r=await trChunk(parts[i],src,to);if(r.ok)outs[i]=r.t;}}
+  await Promise.all([_wk(),_wk(),_wk()]);
+  const _failed=[];for(let i=0;i<parts.length;i++)if(outs[i]===null)_failed.push(i);
+  if(_failed.length){
+    await new Promise(r=>setTimeout(r,1500));
+    for(const i of _failed){const r=await trChunk(parts[i],src,to);if(r.ok)outs[i]=r.t;}
+  }
+  let _okN=0;
+  for(let i=0;i<parts.length;i++){if(outs[i]===null)outs[i]=parts[i];else _okN++;}
+  const ok=!parts.length||(_okN/parts.length)>=0.5;
   return{t:outs.join(' '),ok};
 }
 async function lzNameE(e){
