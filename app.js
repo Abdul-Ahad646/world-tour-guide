@@ -114,7 +114,7 @@ function key(s){let k=String(s).toLowerCase().replace(/\b(district|zila|zilla|je
 const DIST=[];const DK={};
 DIVS.forEach(([dv,list])=>list.forEach(([en,bn])=>{const o={id:key(en),en,bn,div:dv};DIST.push(o);DK[o.id]=o;}));
 const DIV_CENTER={dhaka:[90.41,23.81],chattogram:[91.78,22.34],rajshahi:[88.6,24.37],khulna:[89.55,22.82],barishal:[90.37,22.7],sylhet:[91.87,24.9],rangpur:[89.25,25.74],mymensingh:[90.4,24.75]};
-const dName=d=>lang==='bn'?d.bn:d.en;
+const dName=d=>lang==='bn'?d.bn:(lang==='en'?d.en:lzBn(d.en));
 const S=(en,bn)=>({en,bn});
 const SPOTS={
 dhaka:[S('Lalbagh Fort','লালবাগ কেল্লা'),S('Ahsan Manzil','আহসান মঞ্জিল'),S('Sadarghat river port','সদরঘাট')],
@@ -192,6 +192,7 @@ Q('কান্তজিউ মন্দির কোন জেলায়?','W
 
 function applyLang(){
   document.documentElement.lang=lang;
+  document.documentElement.dir=['ar','ur','fa'].includes(lang)?'rtl':'ltr';
   $$('[data-i18n]').forEach(e=>{if(e.getAttribute&&e.getAttribute('data-dynamic')==='1')return;e.textContent=t(e.dataset.i18n);});
   $$('[data-i18n-ph]').forEach(e=>e.placeholder=t(e.dataset.i18nPh));
   const _lb=$('#langBtn');if(_lb&&_lb.tagName==='SELECT')_lb.value=lang;
@@ -455,7 +456,7 @@ async function migrateLocalToCloud(){
    notice, map toiri ar database theke data tana (cloudPull) */
 
 function init(){
-  applyLang();applyBanners();applyNotice();applyAds();cloudPull();
+  applyLang();applyBanners();applyNotice();applyAds();cloudPull();lzWarmUi();
   if(document.getElementById('bd-root'))bd=Mapper({id:'bd',noList:1,W:900,H:1060,items:DIST.map(d=>({id:d.id,en:d.en,bn:d.bn,div:d.div})),onFile:(m,j)=>{if(useBDFeatures(m,toFeatures(j))){m.loading=false;m.render();}else alert('Could not match district names in this file.');}});
   if(document.getElementById('wd-root'))wd=Mapper({id:'wd',noList:1,W:1200,H:760,mode:'tile',items:WORLD_ISO.map(n=>({id:n,en:n,bn:wBn(n)})),onFile:(m,j)=>{if(useWorldFeatures(m,toFeatures(j),true)){m.loading=false;m.render();}else alert('Could not read countries from this file.');}});
   bd&&bd.refreshAll();wd&&wd.refreshAll();
@@ -707,7 +708,7 @@ let exDiv='all';
 const WBX={"American Samoa": "আমেরিকান সামোয়া", "Anguilla": "অ্যাঙ্গুইলা", "Aruba": "আরুবা", "Bermuda": "বারমুডা", "Bonaire, Sint Eustatius and Saba": "বোনেয়ার, সিন্ট ইউস্ট্যাটিয়াস ও সাবা", "Bouvet Island": "বুভে দ্বীপ", "British Indian Ocean Territory": "ব্রিটিশ ভারত মহাসাগরীয় অঞ্চল", "Brunei Darussalam": "ব্রুনাই", "Cayman Islands": "কেম্যান দ্বীপপুঞ্জ", "Christmas Island": "ক্রিসমাস দ্বীপ", "Cocos (Keeling) Islands": "কোকোস (কিলিং) দ্বীপপুঞ্জ", "Congo, The Democratic Republic of the": "গণতান্ত্রিক কঙ্গো", "Cook Islands": "কুক দ্বীপপুঞ্জ", "Curaçao": "কুরাসাও", "Côte d'Ivoire": "আইভরি কোস্ট", "Falkland Islands (Malvinas)": "ফকল্যান্ড দ্বীপপুঞ্জ", "Faroe Islands": "ফেরো দ্বীপপুঞ্জ", "French Guiana": "ফরাসি গায়ানা", "French Polynesia": "ফরাসি পলিনেশিয়া", "French Southern Territories": "ফরাসি দক্ষিণ ভূখণ্ড", "Gibraltar": "জিব্রাল্টার", "Greenland": "গ্রিনল্যান্ড", "Guadeloupe": "গুয়াদালুপ", "Guam": "গুয়াম", "Guernsey": "গার্নসি", "Heard Island and McDonald Islands": "হার্ড ও ম্যাকডোনাল্ড দ্বীপপুঞ্জ", "Holy See (Vatican City State)": "ভ্যাটিকান সিটি", "Hong Kong": "হংকং", "Isle of Man": "আইল অফ ম্যান", "Jersey": "জার্সি", "Macao": "মাকাও", "Martinique": "মার্টিনিক", "Mayotte": "মায়োত", "Micronesia, Federated States of": "মাইক্রোনেশিয়া", "Montserrat": "মন্টসেরাট", "New Caledonia": "নিউ ক্যালেডোনিয়া", "Niue": "নিউয়ে", "Norfolk Island": "নরফোক দ্বীপ", "Northern Mariana Islands": "উত্তর মারিয়ানা দ্বীপপুঞ্জ", "Palestine, State of": "ফিলিস্তিন", "Pitcairn": "পিটকেয়ার্ন দ্বীপপুঞ্জ", "Puerto Rico": "পুয়ের্তো রিকো", "Russian Federation": "রাশিয়া", "Réunion": "রিউনিয়ন", "Saint Barthélemy": "সেন্ট বার্থেলেমি", "Saint Helena, Ascension and Tristan da Cunha": "সেন্ট হেলেনা, অ্যাসেনশন ও ট্রিস্টান দা কুনহা", "Saint Martin (French part)": "সেন্ট মার্টিন (ফরাসি অংশ)", "Saint Pierre and Miquelon": "সেন্ট পিয়ের ও মিকেলন", "Sint Maarten (Dutch part)": "সিন্ট মার্টেন", "South Georgia and the South Sandwich Islands": "দক্ষিণ জর্জিয়া ও দক্ষিণ স্যান্ডউইচ দ্বীপপুঞ্জ", "Svalbard and Jan Mayen": "স্বালবার্ড ও ইয়ান মায়েন", "Tokelau": "টোকেলাউ", "Turks and Caicos Islands": "টার্কস ও কেইকোস দ্বীপপুঞ্জ", "Türkiye": "তুরস্ক", "United States Minor Outlying Islands": "যুক্তরাষ্ট্রের ক্ষুদ্র বহিঃস্থ দ্বীপপুঞ্জ", "Virgin Islands, British": "ব্রিটিশ ভার্জিন দ্বীপপুঞ্জ", "Virgin Islands, U.S.": "মার্কিন ভার্জিন দ্বীপপুঞ্জ", "Wallis and Futuna": "ওয়ালিস ও ফুটুনা", "Western Sahara": "পশ্চিম সাহারা", "Åland Islands": "আল্যান্ড দ্বীপপুঞ্জ", "W. Sahara": "পশ্চিম সাহারা", "Falkland Is.": "ফকল্যান্ড দ্বীপপুঞ্জ", "Fr. S. Antarctic Lands": "ফরাসি দক্ষিণ ভূখণ্ড", "N. Cyprus": "উত্তর সাইপ্রাস", "Somaliland": "সোমালিল্যান্ড"};
 const WALIAS={"United States of America": "United States", "USA": "United States", "Dem. Rep. Congo": "DR Congo", "Democratic Republic of the Congo": "DR Congo", "Republic of the Congo": "Congo", "Central African Rep.": "Central African Republic", "Dominican Rep.": "Dominican Republic", "Eq. Guinea": "Equatorial Guinea", "Bosnia and Herz.": "Bosnia and Herzegovina", "Czech Republic": "Czechia", "Macedonia": "North Macedonia", "S. Sudan": "South Sudan", "eSwatini": "Eswatini", "Swaziland": "Eswatini", "Republic of Serbia": "Serbia", "Guinea Bissau": "Guinea-Bissau", "The Bahamas": "Bahamas", "The Gambia": "Gambia", "United Republic of Tanzania": "Tanzania", "East Timor": "Timor-Leste", "Cape Verde": "Cabo Verde", "Vatican": "Vatican City", "Burma": "Myanmar", "Lao PDR": "Laos", "Korea": "South Korea", "Republic of Korea": "South Korea", "Dem. Rep. Korea": "North Korea", "Solomon Is.": "Solomon Islands", "Cote d'Ivoire": "Ivory Coast", "Côte d’Ivoire": "Ivory Coast", "Palestine": "Palestine", "St. Vin. and Gren.": "Saint Vincent and the Grenadines", "St. Kitts and Nevis": "Saint Kitts and Nevis", "Antigua and Barb.": "Antigua and Barbuda", "São Tomé and Principe": "Sao Tome and Principe", "Marshall Is.": "Marshall Islands", "Is. of Man": "Isle of Man"};
 const wBn=n=>WBN[n]||WBX[n]||WBN[WALIAS[n]]||'';
-const wName=it=>lang==='bn'?(it.bn||it.en):it.en;
+const wName=it=>lang==='bn'?(it.bn||it.en):(lang==='en'?it.en:lzBn(it.en));
 const WCONT={Asia:['Asia','এশিয়া'],Europe:['Europe','ইউরোপ'],Africa:['Africa','আফ্রিকা'],NorthAmerica:['North America','উত্তর আমেরিকা'],SouthAmerica:['South America','দক্ষিণ আমেরিকা'],Oceania:['Oceania','ওশেনিয়া']};
 /* data: WC -> data-world.js file e sorano hoyeche */
 /* data: WPG -> data-world.js file e sorano hoyeche */
@@ -763,7 +764,7 @@ function wpApplyView(){const s=document.getElementById('wp-svg');if(s)s.setAttri
 function wpZoom(f,cx,cy,rerender){const s=document.getElementById('wp-svg');if(!s)return;if(cx===undefined){cx=wpView.x+wpView.w/2;cy=wpView.y+wpView.h/2;}const ow=wpView.w;wpView.w=wpView.w/f;wpClampView();const k=wpView.w/ow;wpView.x=cx-(cx-wpView.x)*k;wpView.y=cy-(cy-wpView.y)*k;wpClampView();wpApplyView();if(rerender)renderWpMap();}
 function wpResetView(){wpView={x:0,y:0,w:960,h:500};wpApplyView();renderWpMap();}
 const wpByName=n=>WC.find(x=>x.name===n);
-function wpName(n){return lang==='bn'?(WBN[n]||n):n;}
+function wpName(n){return lang==='bn'?(WBN[n]||n):(lang==='en'?n:lzBn(n));}
 
 /* Kaj: bishwer desh bachai (world picker) — desh khonja,
    deshe click e tar map, shohor bachai ar place list */
@@ -927,7 +928,7 @@ function renderWorldExplore(){
   $('#exTabs').innerHTML=`<button class="btn btn-outline-primary btn-sm tab ${exDiv==='all'?'on':''}" data-d="all" type="button">${esc(t('all'))}</button>`+Object.keys(WCD).map(c=>`<button class="btn btn-outline-primary btn-sm tab ${exDiv===c?'on':''}" data-d="${c}" type="button">${esc(cLbl(c))}</button>`).join('');
   const term=$('#exSearch').value.trim().toLowerCase();
   const list=WC.filter(x=>(exDiv==='all'||x.c===exDiv)&&(!term||x.name.toLowerCase().includes(term)||(WBN[x.name]||'').includes(term)||x.cities.some(s=>s.toLowerCase().includes(term))));
-  $('#exGrid').innerHTML=list.length?list.map(x=>`<div class="card shadow-sm dc"><h3>${esc(x.name)}${WBN[x.name]?' · '+esc(WBN[x.name]):''}</h3><small>${esc(cLbl(x.c))}</small><ul>${x.cities.slice(0,12).map(s=>`<li>${esc(s)}</li>`).join('')}${x.cities.length>12?`<li>+${x.cities.length-12} ${esc(t('wp_more'))}</li>`:''}</ul></div>`).join(''):`<p style="color:var(--mute)">—</p>`;
+  $('#exGrid').innerHTML=list.length?list.map(x=>`<div class="card shadow-sm dc"><h3>${esc(lang==='bn'?x.name:(lang==='en'?x.name:lzBn(x.name)))}${lang==='bn'&&WBN[x.name]?' · '+esc(WBN[x.name]):''}</h3><small>${esc(cLbl(x.c))}</small><ul>${x.cities.slice(0,12).map(s=>`<li>${esc(s)}</li>`).join('')}${x.cities.length>12?`<li>+${x.cities.length-12} ${esc(t('wp_more'))}</li>`:''}</ul></div>`).join(''):`<p style="color:var(--mute)">—</p>`;
 }
 function renderExplore(){if(!document.getElementById('exGrid'))return;
   $('#exMode').innerHTML=['bd','world'].map(m=>`<button class="btn btn-outline-primary btn-sm tab ${exMode===m?'on':''}" data-m="${m}" type="button">${m==='bd'?(lang==='bn'?'বাংলাদেশ':'Bangladesh'):(lang==='bn'?'বিশ্ব':'World')}</button>`).join('');
@@ -940,7 +941,7 @@ function renderExplore(){if(!document.getElementById('exGrid'))return;
   $('#exGrid').innerHTML=list.map(d=>{
     const sp=SPOTS[d.id];const v=visitedHas(d.id),inTrip=plan.sel.has(d.id);
     return `<div class="card shadow-sm dc"><h3>${esc(dName(d))}</h3><small>${esc(t('div_'+d.div))}</small>
-    ${sp?`<ul>${sp.map(s=>`<li>${esc(lang==='bn'?s.bn:s.en)}</li>`).join('')}</ul>`:`<p style="font-size:14px;color:var(--mute)">${esc(t('noSpots'))}</p>`}
+    ${sp?`<ul>${sp.map(s=>`<li>${esc(lang==='bn'?s.bn:(lang==='en'?s.en:lzBn(s.en)))}</li>`).join('')}</ul>`:`<p style="font-size:14px;color:var(--mute)">${esc(t('noSpots'))}</p>`}
     <div class="acts"><button class="btn btn-outline-secondary btn-sm" data-v="${d.id}" type="button">${v?'✓ '+esc(t('visited')):esc(t('markVisited'))}</button><button class="btn btn-outline-secondary btn-sm" data-t="${d.id}" type="button">${inTrip?'✓ '+esc(t('inTrip')):esc(t('addTrip'))}</button></div></div>`;}).join('');
 }
 $('#exTabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b){exDiv=b.dataset.d;renderExplore();}});
@@ -1114,7 +1115,7 @@ function buildPlan(){
   <p style="font-size:14px;color:var(--mute)">${esc(t('p_trans'))}: ${money(c.trans)} · ${esc(t('p_hotel'))}: ${money(c.hotel)} · ${esc(t('p_food'))}: ${money(c.food)}</p>`;
   days.forEach((d,i)=>{
     const names=d.places.map(id=>dName(DK[id])).join(' + ');
-    const spots=[];d.places.forEach(id=>{const sp=SPOTS[id];if(sp){const s=sp[d.k%sp.length];spots.push(lang==='bn'?s.bn:s.en);}});
+    const spots=[];d.places.forEach(id=>{const sp=SPOTS[id];if(sp){const s=sp[d.k%sp.length];spots.push(lang==='bn'?s.bn:(lang==='en'?s.en:lzBn(s.en)));}});
     let travel='';
     if(d.first){const idx=seq.indexOf(d.places[0]);if(idx>0)travel=`${t('travel')}: ${dName(DK[seq[idx-1]])} → ${dName(DK[d.places[0]])} · ~${num(legs[idx-1])} km`;}
     html+=`<div class="day"><h4>${esc(t('day'))} ${num(i+1)} · ${esc(names)}</h4>${travel?`<p class="leg">${esc(travel)}</p>`:''}<p class="leg">${esc(t('explore'))}: ${esc(spots.length?spots.join(', '):t('free'))}</p></div>`;
@@ -1170,7 +1171,7 @@ $('#gemForm').addEventListener('submit',async e=>{
    Kaj: bhasa bodol hole pura page abar sajano (relang) —
    map, quiz, news, explore sob notun bhasay render hoy */
 
-function relang(){const _h=document.getElementById('heroCountry');if(_h&&_h._fillDL)_h._fillDL();applyLang();if(window._refreshHeroBadge)window._refreshHeroBadge();if(document.getElementById('wp-country'))renderWorldPicker();bd&&bd.refreshAll();wd&&wd.refreshAll();if(document.getElementById('newsLiveGrid'))initNewsPage();renderExplore();quizRender();renderPlanPick();$('#pDays').textContent=num(plan.days);$('#pPeople').textContent=num(plan.people);if(document.getElementById('pOut')&&$('#pOut').innerHTML)buildPlan();_lzGridReg.forEach(r=>{if(r.grid&&r.grid.isConnected)lzGrid(r.grid,r.entries);});if(window._lzRefresh)lzAdmList();}
+function relang(){const _h=document.getElementById('heroCountry');if(_h&&_h._fillDL)_h._fillDL();applyLang();if(window._refreshHeroBadge)window._refreshHeroBadge();if(document.getElementById('wp-country'))renderWorldPicker();bd&&bd.refreshAll();wd&&wd.refreshAll();if(document.getElementById('newsLiveGrid'))initNewsPage();renderExplore();quizRender();renderPlanPick();$('#pDays').textContent=num(plan.days);$('#pPeople').textContent=num(plan.people);if(document.getElementById('pOut')&&$('#pOut').innerHTML)buildPlan();_lzGridReg.forEach(r=>{if(r.grid&&r.grid.isConnected)lzGrid(r.grid,r.entries);});if(window._lzRefresh)lzAdmList();lzWarmUi();}
 const _langSel=$('#langBtn');
 if(_langSel&&_langSel.tagName==='SELECT'){_langSel.innerHTML=LANGS_LIST.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');_langSel.value=lang;_langSel.onchange=()=>{lang=_langSel.value;store.set('lang',lang);document.documentElement.dir=['ar','ur','fa'].includes(lang)?'rtl':'ltr';relang();};}
 const _nt=document.getElementById('navToggle'),_mn=document.getElementById('mainNav');
@@ -1740,15 +1741,15 @@ var _idxTpKey='',_idxTpToken=0;
 
 function txtLang(s){return /[\u0980-\u09FF]/.test(String(s||''))?'bn':'en';}
 function trHash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36);}
-function plName(e){return e?(e._lz===lang?(e._nm||e.name||''):(e.name||'')):'';}
-function plDesc(e){return e?(e._lz===lang?(e._ds||e.desc||''):(e.desc||'')):'';}
+function plName(e){return e?(e._lzn===lang?(e._nm||e.name||''):(e.name||'')):'';}
+function plDesc(e){return e?(e._lzd===lang?(e._ds||e.desc||''):(e.desc||'')):'';}
 async function trChunk(q,src,to){
   const key=to+':'+trHash(q);const cache=store.get('tr_cache',{});
   if(cache[key])return cache[key];
   let out='';
   try{const r=await fetchTO('https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair='+src+'%7C'+to,9000);const d=await r.json();if(d&&d.responseData&&!d.quotaFinished&&String(d.responseStatus)==='200')out=d.responseData.translatedText||'';}catch(e){}
   if(!out){try{const r=await fetchTO('https://translate.googleapis.com/translate_a/single?client=gtx&sl='+src+'&tl='+to+'&dt=t&q='+encodeURIComponent(q),9000);const d=await r.json();if(Array.isArray(d)&&Array.isArray(d[0]))out=d[0].map(x=>x[0]).join('');}catch(e){}}
-  if(out&&out!==q){cache[key]=out;const ks=Object.keys(cache);if(ks.length>500)ks.slice(0,ks.length-500).forEach(k=>delete cache[k]);try{store.set('tr_cache',cache);}catch(e){}}
+  if(out&&out!==q){cache[key]=out;const ks=Object.keys(cache);if(ks.length>3000)ks.slice(0,ks.length-3000).forEach(k=>delete cache[k]);try{store.set('tr_cache',cache);}catch(e){}}
   return out||q;
 }
 async function trText(text,to){
@@ -1767,14 +1768,47 @@ async function trText(text,to){
   const outs=[];for(const p of parts)outs.push(await trChunk(p,src,to));
   return outs.join(' ');
 }
+async function lzNameE(e){
+  if(!e||e._lzn===lang)return false;
+  if(txtLang(e.name||'')===lang){e._nm=e.name||'';e._lzn=lang;return false;}
+  const nm=await trText(e.name||'',lang);
+  e._nm=nm;e._lzn=lang;return nm!==(e.name||'');
+}
+async function lzDescE(e){
+  if(!e||e._lzd===lang)return false;
+  if(txtLang(e.desc||'')===lang){e._ds=e.desc||'';e._lzd=lang;return false;}
+  const ds=await trText(e.desc||'',lang);
+  e._ds=ds;e._lzd=lang;return ds!==(e.desc||'');
+}
 async function lzEntry(e){
-  if(!e||e._lz===lang)return false;
+  if(!e)return false;
   const _had=e._lz;
-  const src=txtLang((e.name||'')+' '+(e.desc||''));
-  if(src===lang){e._nm=e.name||'';e._ds=e.desc||'';e._lz=lang;return !!_had;}
-  const nm=await trText(e.name||'',lang),ds=await trText(e.desc||'',lang);
-  const ch=nm!==(e.name||'')||ds!==(e.desc||'');
-  e._nm=nm;e._ds=ds;e._lz=lang;return ch;
+  const a=await lzNameE(e),b=await lzDescE(e);
+  e._lz=lang;return a||b||(!!_had&&_had!==lang);
+}
+var _lzBnMap={};
+function lzBn(s){
+  const v=String(s||'');if(!v||lang==='bn'||lang==='en')return v;
+  const k=lang+':'+v;if(_lzBnMap[k])return _lzBnMap[k];
+  trText(v,lang).then(o=>{if(o&&o!==v)_lzBnMap[k]=o;});return v;
+}
+var _lzWarmBusy=false;
+async function lzWarmUi(){
+  if(lang==='bn'||lang==='en'||_lzWarmBusy)return;_lzWarmBusy=true;
+  try{
+    const strs=new Set();
+    if(document.getElementById('exGrid')||document.getElementById('bd-root')){DIST.forEach(d=>{strs.add(d.en);(SPOTS[d.id]||[]).forEach(s=>strs.add(s.en));});}
+    if(document.getElementById('wp-country')||document.getElementById('wd-root')||document.getElementById('exGrid')){(typeof WC!=='undefined'?WC:[]).forEach(x=>strs.add(x.name));}
+    const list=[...strs].filter(v=>v&&!_lzBnMap[lang+':'+v]);
+    if(list.length){
+      for(let i=0;i<list.length;i+=40){await Promise.all(list.slice(i,i+40).map(v=>trText(v,lang).then(o=>{if(o&&o!==v)_lzBnMap[lang+':'+v]=o;})));}
+      if(document.getElementById('exGrid'))renderExplore();
+      if(document.getElementById('wp-country'))renderWorldPicker();
+      if(typeof bd!=='undefined'&&bd&&bd.refreshAll)bd.refreshAll();
+      if(typeof wd!=='undefined'&&wd&&wd.refreshAll)wd.refreshAll();
+    }
+  }catch(e){}
+  _lzWarmBusy=false;
 }
 var _lzGridReg=[];
 async function lzGrid(grid,entries){
@@ -1782,9 +1816,13 @@ async function lzGrid(grid,entries){
   const _ri=_lzGridReg.findIndex(r=>r.grid===grid);
   if(_ri>=0)_lzGridReg[_ri].entries=entries;else _lzGridReg.push({grid,entries});
   const stamp=grid.dataset.lz=(+grid.dataset.lz||0)+1;
+  const _rr=()=>{if(grid.isConnected&&+grid.dataset.lz===stamp){grid.dataset.lzlang=lang;_tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');}};
   let ch=false;
-  for(const e of entries){if(e.custom&&await lzEntry(e))ch=true;}
-  if(grid.isConnected&&+grid.dataset.lz===stamp&&(ch||grid.dataset.lzlang!==lang)){grid.dataset.lzlang=lang;_tpData=[];grid.innerHTML=entries.map(tpCardHtml).join('');}
+  await Promise.all(entries.map(async e=>{if(await lzNameE(e))ch=true;}));
+  if(ch||grid.dataset.lzlang!==lang)_rr();
+  ch=false;
+  await Promise.all(entries.map(async e=>{if(await lzDescE(e))ch=true;}));
+  if(ch)_rr();
 }
 let _lzAdmBusy=false;
 async function lzAdmList(){
