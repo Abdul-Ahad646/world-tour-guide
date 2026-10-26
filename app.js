@@ -96,6 +96,14 @@ const t=k=>(L[lang]&&L[lang][k])||L.en[k]||k;
 const LOCALES={bn:'bn-BD',en:'en-GB',hi:'hi-IN',ur:'ur-PK',ar:'ar-EG',es:'es-ES',fr:'fr-FR',de:'de-DE',pt:'pt-PT',ru:'ru-RU',zh:'zh-CN',ja:'ja-JP',ko:'ko-KR',it:'it-IT',tr:'tr-TR',id:'id-ID',th:'th-TH',vi:'vi-VN',fa:'fa-IR',ne:'ne-NP'};
 var _lzBnMap={};var _lzUiBusy=false;var _lzUiTried={};
 
+/* SPEED (v45): world data (data-world.js, ~2MB) ekhon page kholar
+   poth atke na rekhe background e load hoy; data ese gele
+   wtgDataLoaded() data-dependent ongsho gula sajiye dey */
+var _wtgDataCbs=[];
+function wtgOnData(cb){if(window.WTG_DATA_OK){try{cb();}catch(e){}}else _wtgDataCbs.push(cb);}
+function wtgDataLoaded(){var cbs=_wtgDataCbs.splice(0,_wtgDataCbs.length);cbs.forEach(function(cb){try{cb();}catch(e){}});try{if(document.getElementById('wp-country'))renderWorldPicker();}catch(e){}try{var _hc2=document.getElementById('heroCountry');if(_hc2&&_hc2._fillDL)_hc2._fillDL();}catch(e){}try{lzWarmUi();}catch(e){}}
+window.wtgDataLoaded=wtgDataLoaded;
+
 
 /* ================= DATA =================
    Kaj: sob sthir tothyo — Bangladesh er 64 jela, jaygar nam,
@@ -460,7 +468,7 @@ async function migrateLocalToCloud(){
 function init(){
   applyLang();applyBanners();applyNotice();applyAds();cloudPull();lzWarmUi();lzUiDict();
   if(document.getElementById('bd-root'))bd=Mapper({id:'bd',noList:1,W:900,H:1060,items:DIST.map(d=>({id:d.id,en:d.en,bn:d.bn,div:d.div})),onFile:(m,j)=>{if(useBDFeatures(m,toFeatures(j))){m.loading=false;m.render();}else alert(t('al_bdfile'));}});
-  if(document.getElementById('wd-root'))wd=Mapper({id:'wd',noList:1,W:1200,H:760,mode:'tile',items:WORLD_ISO.map(n=>({id:n,en:n,bn:wBn(n)})),onFile:(m,j)=>{if(useWorldFeatures(m,toFeatures(j),true)){m.loading=false;m.render();}else alert(t('al_wdfile'));}});
+  if(document.getElementById('wd-root')){const _mkWd=()=>{if(wd)return;wd=Mapper({id:'wd',noList:1,W:1200,H:760,mode:'tile',items:WORLD_ISO.map(n=>({id:n,en:n,bn:wBn(n)})),onFile:(m,j)=>{if(useWorldFeatures(m,toFeatures(j),true)){m.loading=false;m.render();}else alert(t('al_wdfile'));}});wd.refreshAll();};wtgOnData(_mkWd);}
   bd&&bd.refreshAll();wd&&wd.refreshAll();
 
   // ===== Country map (same experience as the Bangladesh district map) =====
@@ -613,10 +621,10 @@ function init(){
   // hero country combobox (BD map page): type or pick a country
   const _hc=document.getElementById('heroCountry'),_hdl=document.getElementById('heroCountryList');
   if(_hc&&_hdl){
-    const fillDL=()=>{_hdl.innerHTML=WC.map(c=>'<option value="'+esc(wpName(c.name))+'"></option>').join('');_hc.placeholder=t('hcountry_ph');};
-    fillDL();
+    const fillDL=()=>{if(!window.WTG_DATA_OK)return;_hdl.innerHTML=WC.map(c=>'<option value="'+esc(wpName(c.name))+'"></option>').join('');_hc.placeholder=t('hcountry_ph');};
+    fillDL();wtgOnData(fillDL);
     let _lastCountry='';
-    const findCountry=v=>WC.find(c=>c.name===v||wpName(c.name)===v);
+    const findCountry=v=>{if(!window.WTG_DATA_OK)return null;return WC.find(c=>c.name===v||wpName(c.name)===v);};
     const go=()=>{const v=_hc.value.trim();if(!v)return;const hit=findCountry(v);if(!hit)return;if(hit.name===_lastCountry)return;_lastCountry=hit.name;showCountry(hit);};
     const _cselAll={};
     const updBadge=(hit)=>{const _bdg=document.querySelector('.hero .badge');if(!_bdg)return;if(hit.name==='Bangladesh'){const _g=wpCityGroups(hit)||[];_bdg.textContent=num(_g.length)+' '+t('reg_title')+' \u00b7 '+num(64)+' '+t('distr');}else{const _cn=(typeof WGB_CANON==='function')?WGB_CANON(hit.name):hit.name;const _gb=(typeof WGB!=='undefined'&&WGB[_cn])?WGB[_cn]:null;const _a2=(_gb&&_gb.a2&&_gb.a2.features)||[];const _a1=(_gb&&_gb.a1&&_gb.a1.features)||[];const _g=wpCityGroups(hit)||[];const _rc=_a1.length||_g.length;const _cc=_a2.length||(hit.cities||[]).length;_bdg.textContent=num(_rc)+' '+t('reg_title')+' \u00b7 '+num(_cc)+' '+t('cities_h');}_bdg.setAttribute('data-dynamic','1');};
@@ -709,7 +717,7 @@ let exDiv='all';
 /* data: WBN -> data-world.js file e sorano hoyeche */
 const WBX={"American Samoa": "আমেরিকান সামোয়া", "Anguilla": "অ্যাঙ্গুইলা", "Aruba": "আরুবা", "Bermuda": "বারমুডা", "Bonaire, Sint Eustatius and Saba": "বোনেয়ার, সিন্ট ইউস্ট্যাটিয়াস ও সাবা", "Bouvet Island": "বুভে দ্বীপ", "British Indian Ocean Territory": "ব্রিটিশ ভারত মহাসাগরীয় অঞ্চল", "Brunei Darussalam": "ব্রুনাই", "Cayman Islands": "কেম্যান দ্বীপপুঞ্জ", "Christmas Island": "ক্রিসমাস দ্বীপ", "Cocos (Keeling) Islands": "কোকোস (কিলিং) দ্বীপপুঞ্জ", "Congo, The Democratic Republic of the": "গণতান্ত্রিক কঙ্গো", "Cook Islands": "কুক দ্বীপপুঞ্জ", "Curaçao": "কুরাসাও", "Côte d'Ivoire": "আইভরি কোস্ট", "Falkland Islands (Malvinas)": "ফকল্যান্ড দ্বীপপুঞ্জ", "Faroe Islands": "ফেরো দ্বীপপুঞ্জ", "French Guiana": "ফরাসি গায়ানা", "French Polynesia": "ফরাসি পলিনেশিয়া", "French Southern Territories": "ফরাসি দক্ষিণ ভূখণ্ড", "Gibraltar": "জিব্রাল্টার", "Greenland": "গ্রিনল্যান্ড", "Guadeloupe": "গুয়াদালুপ", "Guam": "গুয়াম", "Guernsey": "গার্নসি", "Heard Island and McDonald Islands": "হার্ড ও ম্যাকডোনাল্ড দ্বীপপুঞ্জ", "Holy See (Vatican City State)": "ভ্যাটিকান সিটি", "Hong Kong": "হংকং", "Isle of Man": "আইল অফ ম্যান", "Jersey": "জার্সি", "Macao": "মাকাও", "Martinique": "মার্টিনিক", "Mayotte": "মায়োত", "Micronesia, Federated States of": "মাইক্রোনেশিয়া", "Montserrat": "মন্টসেরাট", "New Caledonia": "নিউ ক্যালেডোনিয়া", "Niue": "নিউয়ে", "Norfolk Island": "নরফোক দ্বীপ", "Northern Mariana Islands": "উত্তর মারিয়ানা দ্বীপপুঞ্জ", "Palestine, State of": "ফিলিস্তিন", "Pitcairn": "পিটকেয়ার্ন দ্বীপপুঞ্জ", "Puerto Rico": "পুয়ের্তো রিকো", "Russian Federation": "রাশিয়া", "Réunion": "রিউনিয়ন", "Saint Barthélemy": "সেন্ট বার্থেলেমি", "Saint Helena, Ascension and Tristan da Cunha": "সেন্ট হেলেনা, অ্যাসেনশন ও ট্রিস্টান দা কুনহা", "Saint Martin (French part)": "সেন্ট মার্টিন (ফরাসি অংশ)", "Saint Pierre and Miquelon": "সেন্ট পিয়ের ও মিকেলন", "Sint Maarten (Dutch part)": "সিন্ট মার্টেন", "South Georgia and the South Sandwich Islands": "দক্ষিণ জর্জিয়া ও দক্ষিণ স্যান্ডউইচ দ্বীপপুঞ্জ", "Svalbard and Jan Mayen": "স্বালবার্ড ও ইয়ান মায়েন", "Tokelau": "টোকেলাউ", "Turks and Caicos Islands": "টার্কস ও কেইকোস দ্বীপপুঞ্জ", "Türkiye": "তুরস্ক", "United States Minor Outlying Islands": "যুক্তরাষ্ট্রের ক্ষুদ্র বহিঃস্থ দ্বীপপুঞ্জ", "Virgin Islands, British": "ব্রিটিশ ভার্জিন দ্বীপপুঞ্জ", "Virgin Islands, U.S.": "মার্কিন ভার্জিন দ্বীপপুঞ্জ", "Wallis and Futuna": "ওয়ালিস ও ফুটুনা", "Western Sahara": "পশ্চিম সাহারা", "Åland Islands": "আল্যান্ড দ্বীপপুঞ্জ", "W. Sahara": "পশ্চিম সাহারা", "Falkland Is.": "ফকল্যান্ড দ্বীপপুঞ্জ", "Fr. S. Antarctic Lands": "ফরাসি দক্ষিণ ভূখণ্ড", "N. Cyprus": "উত্তর সাইপ্রাস", "Somaliland": "সোমালিল্যান্ড"};
 const WALIAS={"United States of America": "United States", "USA": "United States", "Dem. Rep. Congo": "DR Congo", "Democratic Republic of the Congo": "DR Congo", "Republic of the Congo": "Congo", "Central African Rep.": "Central African Republic", "Dominican Rep.": "Dominican Republic", "Eq. Guinea": "Equatorial Guinea", "Bosnia and Herz.": "Bosnia and Herzegovina", "Czech Republic": "Czechia", "Macedonia": "North Macedonia", "S. Sudan": "South Sudan", "eSwatini": "Eswatini", "Swaziland": "Eswatini", "Republic of Serbia": "Serbia", "Guinea Bissau": "Guinea-Bissau", "The Bahamas": "Bahamas", "The Gambia": "Gambia", "United Republic of Tanzania": "Tanzania", "East Timor": "Timor-Leste", "Cape Verde": "Cabo Verde", "Vatican": "Vatican City", "Burma": "Myanmar", "Lao PDR": "Laos", "Korea": "South Korea", "Republic of Korea": "South Korea", "Dem. Rep. Korea": "North Korea", "Solomon Is.": "Solomon Islands", "Cote d'Ivoire": "Ivory Coast", "Côte d’Ivoire": "Ivory Coast", "Palestine": "Palestine", "St. Vin. and Gren.": "Saint Vincent and the Grenadines", "St. Kitts and Nevis": "Saint Kitts and Nevis", "Antigua and Barb.": "Antigua and Barbuda", "São Tomé and Principe": "Sao Tome and Principe", "Marshall Is.": "Marshall Islands", "Is. of Man": "Isle of Man"};
-const wBn=n=>WBN[n]||WBX[n]||WBN[WALIAS[n]]||'';
+const wBn=n=>{if(!window.WTG_DATA_OK)return '';return WBN[n]||WBX[n]||WBN[WALIAS[n]]||'';};
 const wName=it=>lang==='bn'?(it.bn||it.en):(lang==='en'?it.en:lzBn(it.en));
 const WCONT={Asia:['Asia','এশিয়া'],Europe:['Europe','ইউরোপ'],Africa:['Africa','আফ্রিকা'],NorthAmerica:['North America','উত্তর আমেরিকা'],SouthAmerica:['South America','দক্ষিণ আমেরিকা'],Oceania:['Oceania','ওশেনিয়া']};
 /* data: WC -> data-world.js file e sorano hoyeche */
@@ -750,10 +758,10 @@ function bnWord(w){
 }
 function bnTranslit(s){if(!s||/[^\x00-\x7F]/.test(s))return s;return s.split(/(\s+|[-'])/).map(w=>/^[A-Za-z]+$/.test(w)?bnWord(w):w).join('');}
 
-function cName(s){return (typeof lang!=='undefined'&&lang==='bn')?(WBC[s]||(typeof WBC2!=='undefined'&&WBC2[s])||bnTranslit(s)):s;}
+function cName(s){if(!s||!window.WTG_DATA_OK)return s;return (typeof lang!=='undefined'&&lang==='bn')?(WBC[s]||(typeof WBC2!=='undefined'&&WBC2[s])||bnTranslit(s)):s;}
 /* data: WPR -> data-world.js file e sorano hoyeche */
 /* data: WBR -> data-world.js file e sorano hoyeche */
-function rName(r){if(!r)return r;if(typeof lang!=='undefined'&&lang==='bn')return WBR[r]||WBC[r]||(typeof WBC2!=='undefined'&&WBC2[r])||bnTranslit(r);return r;}
+function rName(r){if(!r||!window.WTG_DATA_OK)return r;if(typeof lang!=='undefined'&&lang==='bn')return WBR[r]||WBC[r]||(typeof WBC2!=='undefined'&&WBC2[r])||bnTranslit(r);return r;}
 function wpCityGroups(cur){if(!cur)return null;try{if(typeof WPR!=='undefined'&&WPR[cur.name])return WPR[cur.name].split(';').filter(Boolean).map(seg=>{const c=seg.indexOf(':');const reg=seg.slice(0,c);const cities=seg.slice(c+1).split(',').filter(Boolean).map(Number).map(i=>cur.cities[i]).filter(Boolean);return {big:reg,cities};}).filter(g=>g.cities.length);if(typeof WPG!=='undefined'&&WPG[cur.name])return WPG[cur.name].split(';').filter(Boolean).map(seg=>{const c=seg.indexOf(':');const bi=+seg.slice(0,c);const cities=seg.slice(c+1).split(',').filter(Boolean).map(Number).map(i=>cur.cities[i]).filter(Boolean);return {big:cur.cities[bi],cities};}).filter(g=>g.big&&g.cities.length);}catch(e){}return null;}
 let exMode='bd';
 const cLbl=c=>WCONT[c][lang==='bn'?1:0];
@@ -765,13 +773,14 @@ function wpClampView(){wpView.w=Math.min(960,Math.max(130,wpView.w));wpView.h=wp
 function wpApplyView(){const s=document.getElementById('wp-svg');if(s)s.setAttribute('viewBox',wpView.x+' '+wpView.y+' '+wpView.w+' '+wpView.h);}
 function wpZoom(f,cx,cy,rerender){const s=document.getElementById('wp-svg');if(!s)return;if(cx===undefined){cx=wpView.x+wpView.w/2;cy=wpView.y+wpView.h/2;}const ow=wpView.w;wpView.w=wpView.w/f;wpClampView();const k=wpView.w/ow;wpView.x=cx-(cx-wpView.x)*k;wpView.y=cy-(cy-wpView.y)*k;wpClampView();wpApplyView();if(rerender)renderWpMap();}
 function wpResetView(){wpView={x:0,y:0,w:960,h:500};wpApplyView();renderWpMap();}
-const wpByName=n=>WC.find(x=>x.name===n);
-function wpName(n){return lang==='bn'?(WBN[n]||n):(lang==='en'?n:lzBn(n));}
+const wpByName=n=>{if(!window.WTG_DATA_OK)return null;return WC.find(x=>x.name===n);};
+function wpName(n){if(!window.WTG_DATA_OK)return n;return lang==='bn'?(WBN[n]||n):(lang==='en'?n:lzBn(n));}
 
 /* Kaj: bishwer desh bachai (world picker) — desh khonja,
    deshe click e tar map, shohor bachai ar place list */
 
 function renderWorldPicker(){
+  if(!window.WTG_DATA_OK)return;
   const cs=document.getElementById('wp-country');if(!cs)return;
   const wpsi=document.getElementById('wp-city-search');if(wpsi&&!wpsi.value)wpsi.placeholder=t('wp_city_search');
   const keepC=wpCountry,keepCity=wpCity;
@@ -995,7 +1004,7 @@ function quizRender(){if(!document.getElementById('quizBox'))return;
     box.innerHTML=`<div class="qz-intro"><div class="qz-emoji">🧠</div><h2 class="qz-title">${esc(t('quiz_h'))}</h2><p class="qz-lead">${esc(t('quiz_lead'))}</p>${best?`<div class="qz-best">🏅 ${esc(t('qz_best'))}: <b>${num(best)} / ${num(20)}</b></div>`:''}<div class="g-form-head sm"><div class="g-form-emoji">📜</div><div><h2>${esc(t('cert_h'))}</h2><p>${esc(t('cert_lead'))}</p></div></div><div class="qz-form text-start bform">
       <div class="row g-2">
       <div class="col-md-6 g-field"><label class="form-label">${esc(t('f_nam'))}</label><input class="form-control" id="qzF-nam" value="${esc(quiz.cert.nam)}" autocomplete="name"></div>
-      <div class="col-md-6 g-field"><label class="form-label">${esc(t('f_country'))}</label><input class="form-control" id="qzF-country" list="qzClist" value="${esc(quiz.cert.country)}"><datalist id="qzClist">${(typeof WC!=='undefined'?WC:[]).map(c=>`<option value="${esc(lang==='bn'?(wBn(c.name)||c.name):c.name)}">`).join('')}</datalist></div>
+      <div class="col-md-6 g-field"><label class="form-label">${esc(t('f_country'))}</label><input class="form-control" id="qzF-country" list="qzClist" value="${esc(quiz.cert.country)}"><datalist id="qzClist">${(window.WTG_DATA_OK?WC:[]).map(c=>`<option value="${esc(lang==='bn'?(wBn(c.name)||c.name):c.name)}">`).join('')}</datalist></div>
       <div class="col-md-6 g-field"><label class="form-label">${esc(t('f_pass'))}</label><input class="form-control" id="qzF-pass" value="${esc(quiz.cert.pass)}"></div>
       <div class="col-md-6 g-field"><label class="form-label">${esc(t('f_add'))}</label><input class="form-control" id="qzF-add" value="${esc(quiz.cert.add)}"></div>
       </div></div><button class="btn btn-primary btn-lg qz-start" id="qzStart" type="button">▶ ${esc(t('qz_start'))}</button><div class="qz-keys">⌨️ 1–4 / A–D</div></div>`;
@@ -1139,12 +1148,13 @@ $('#pReset').onclick=()=>{plan.sel.clear();plan.save();plan.days=3;plan.people=2
 function wcount(s){s=String(s||'').trim();return s?s.split(/\s+/).length:0;}
 (function(){
   const cS=document.getElementById('gCountry'),bS=document.getElementById('gBig'),sS=document.getElementById('gCity');
-  if(cS&&bS&&sS&&typeof WC!=='undefined'&&typeof wpByName==='function'){
+  let _gemsDone=false;
+  const _gemsFill=()=>{if(_gemsDone)return;if(cS&&bS&&sS&&window.WTG_DATA_OK&&typeof wpByName==='function'){_gemsDone=true;
     const sBig=()=>{const cur=wpByName(cS.value);const gr=cur?(wpCityGroups(cur)||[]):[];bS.innerHTML='<option value="">'+esc(t('wp_pick_big'))+'</option>'+gr.map(g=>'<option value="'+esc(g.big)+'">'+esc(rName(g.big))+'</option>').join('');sCity();};
     const sCity=()=>{const cur=wpByName(cS.value);const gr=cur?(wpCityGroups(cur)||[]):[];const g=gr.find(x=>x.big===bS.value);sS.innerHTML='<option value="">'+esc(t('wp_pick_city'))+'</option>'+(g?g.cities.map(s=>'<option value="'+esc(s)+'">'+esc(cName(s))+'</option>').join(''):'');};
     cS.addEventListener('change',sBig);bS.addEventListener('change',sCity);
     cS.innerHTML='<option value="">'+esc(t('wp_pick_country'))+'</option>'+WC.map(x=>'<option value="'+esc(x.name)+'">'+esc(wpName(x.name))+'</option>').join('');sBig();
-  }
+  }};_gemsFill();wtgOnData(_gemsFill);
 })();
 (function(){const ph=document.getElementById('gPhoto'),pv=document.getElementById('gPhotoPrev'),hn=document.querySelector('.g-photo-hint');if(ph&&pv){const showP=()=>{const fs=ph.files?[...ph.files]:[];pv.innerHTML='';if(!fs.length){pv.classList.add('hidden');if(hn)hn.classList.remove('hidden');return;}fs.slice(0,6).forEach(f=>{const im=document.createElement('img');im.alt='';im.src=URL.createObjectURL(f);pv.appendChild(im);});pv.classList.remove('hidden');if(hn)hn.classList.add('hidden');};ph.addEventListener('change',showP);var dz=document.querySelector('.g-photo');if(dz){dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('drag');});dz.addEventListener('dragleave',function(){dz.classList.remove('drag');});dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length){ph.files=e.dataTransfer.files;showP();}});}}const ta=document.querySelector('#gemForm textarea[name=desc]'),gc=document.getElementById('gCount');if(ta&&gc){const gt=document.getElementById('gTotal');if(gt)gt.textContent=num(150);const up=()=>{const n=wcount(ta.value);gc.textContent=num(n);gc.parentElement.classList.toggle('ok',n>=150);};ta.addEventListener('input',up);up();}})();
 $('#gemForm').addEventListener('submit',async e=>{
@@ -1181,6 +1191,7 @@ if(_nt&&_mn){_nt.addEventListener('click',()=>{const o=_mn.classList.toggle('ope
 
 init();
 renderExplore();quizStart();renderPlanPick();initWorldPicker();initCityPage();initAdminPage();
+if(window.WTG_DATA_OK)wtgDataLoaded();
 $('#pDays').textContent=num(plan.days);$('#pPeople').textContent=num(plan.people);
 
 /* ================= CITY TOURIST PLACES =================
@@ -1370,9 +1381,9 @@ function initAdminPage(){
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='world-tour-guide-content.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},4000);
     if(m)m.textContent=t('adm_exported');
   });
-  if(cSel)cSel.innerHTML='<option value="">'+esc(t('wp_pick_country'))+'</option>'+WC.map(x=>'<option value="'+esc(x.name)+'">'+esc(wpName(x.name))+'</option>').join('');
+  const _admFillC=()=>{if(!window.WTG_DATA_OK)return;if(cSel)cSel.innerHTML='<option value="">'+esc(t('wp_pick_country'))+'</option>'+WC.map(x=>'<option value="'+esc(x.name)+'">'+esc(wpName(x.name))+'</option>').join('');const _sc2=document.getElementById('admSCountry');if(_sc2)_sc2.innerHTML='<option value="">'+esc(t('wp_pick_country'))+'</option>'+WC.map(x=>'<option value="'+esc(x.name)+'">'+esc(wpName(x.name))+'</option>').join('');};
+  _admFillC();wtgOnData(_admFillC);
   const scSel=document.getElementById('admSCountry'),sbSel=document.getElementById('admSBig'),ssSel=document.getElementById('admSCity');
-  if(scSel)scSel.innerHTML='<option value="">'+esc(t('wp_pick_country'))+'</option>'+WC.map(x=>'<option value="'+esc(x.name)+'">'+esc(wpName(x.name))+'</option>').join('');
   function sSyncCity(){
     if(!ssSel)return;const cur=wpByName(scSel.value);const groups=cur?wpCityGroups(cur)||[]:[];
     const g=groups.find(x=>x.big===sbSel.value);

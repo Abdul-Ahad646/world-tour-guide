@@ -69,13 +69,13 @@
 
 <!-- Firebase (online database) er script -->
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js" defer></script>
+<script src="firebase-config.js" defer></script>
 
 <!-- Site er mul code (app.js) -->
 
-<script src="app.js?v=44"></script>
+<script src="app.js?v=45" defer></script>
 
 <!-- Offline cache (service worker) chalu -->
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});</script>
