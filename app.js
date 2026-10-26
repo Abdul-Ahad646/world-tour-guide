@@ -93,6 +93,7 @@ for(const _c in WBD)if(L[_c])L[_c].wb_dl=WBD[_c];
 
 const LANGS_LIST=[["bn","বাংলা"],["en","English"],["hi","हिन्दी (Hindi)"],["ur","اردو (Urdu)"],["ar","العربية (Arabic)"],["es","Español (Spanish)"],["fr","Français (French)"],["de","Deutsch (German)"],["pt","Português (Portuguese)"],["ru","Русский (Russian)"],["zh","中文 (Chinese)"],["ja","日本語 (Japanese)"],["ko","한국어 (Korean)"],["it","Italiano (Italian)"],["tr","Türkçe (Turkish)"],["id","Bahasa Indonesia"],["th","ไทย (Thai)"],["vi","Tiếng Việt (Vietnamese)"],["fa","فارسی (Persian)"],["ne","नेपाली (Nepali)"]];
 const t=k=>(L[lang]&&L[lang][k])||L.en[k]||k;
+var _lzBnMap={};var _lzUiBusy=false;var _lzUiTried={};
 
 
 /* ================= DATA =================
@@ -371,7 +372,7 @@ function useWorldFeatures(m,features,doRewind){
 
 let bd,wd;
 function applyBanners(){try{const b=store.get('banners',{});if(!b||!Object.keys(b).length)return;const sel={index:'.pbanner.b-explore',world:'.wbanner',map:'.hero#top',quiz:'.pbanner.b-quiz',places:'.pbanner.b-places',news:'.pbanner.b-news',help:'.pbanner.b-help'};for(const k in sel){if(b[k]){const el=document.querySelector(sel[k]);if(el)el.style.backgroundImage='linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url("'+String(b[k]).replace(/"/g,'')+'")';}}}catch(e){}}
-function applyNotice(){try{const v=String(store.get('notice','')||'').trim();const bar=document.getElementById('noticeBar'),tx=document.getElementById('noticeText');if(!bar)return;if(v){if(tx)tx.textContent='📢 '+v;bar.hidden=false;}else bar.hidden=true;}catch(e){}}
+function applyNotice(){try{const v=String(store.get('notice','')||'').trim();const bar=document.getElementById('noticeBar'),tx=document.getElementById('noticeText');if(!bar)return;if(v){if(tx)tx.textContent='📢 '+v;bar.hidden=false;lzNotice(v);}else bar.hidden=true;}catch(e){}}
 function applyAds(){try{const a=store.get('ad',{});const media=a?(a.media||a.img||''):'';const type=(a&&a.type)||'img';document.querySelectorAll('[data-adslot]').forEach(el=>{if(media){if(type==='video'){el.innerHTML='<video src="'+esc(media)+'" autoplay muted loop playsinline></video>';}else{el.innerHTML=(a.link?'<a href="'+esc(safeUrl(a.link))+'" target="_blank" rel="noopener sponsored"><img src="'+esc(media)+'" alt=""></a>':'<img src="'+esc(media)+'" alt="">');}el.classList.add('hasad');}else{el.innerHTML='';el.classList.remove('hasad');}});}catch(e){}}
 
 
@@ -456,7 +457,7 @@ async function migrateLocalToCloud(){
    notice, map toiri ar database theke data tana (cloudPull) */
 
 function init(){
-  applyLang();applyBanners();applyNotice();applyAds();cloudPull();lzWarmUi();
+  applyLang();applyBanners();applyNotice();applyAds();cloudPull();lzWarmUi();lzUiDict();
   if(document.getElementById('bd-root'))bd=Mapper({id:'bd',noList:1,W:900,H:1060,items:DIST.map(d=>({id:d.id,en:d.en,bn:d.bn,div:d.div})),onFile:(m,j)=>{if(useBDFeatures(m,toFeatures(j))){m.loading=false;m.render();}else alert('Could not match district names in this file.');}});
   if(document.getElementById('wd-root'))wd=Mapper({id:'wd',noList:1,W:1200,H:760,mode:'tile',items:WORLD_ISO.map(n=>({id:n,en:n,bn:wBn(n)})),onFile:(m,j)=>{if(useWorldFeatures(m,toFeatures(j),true)){m.loading=false;m.render();}else alert('Could not read countries from this file.');}});
   bd&&bd.refreshAll();wd&&wd.refreshAll();
@@ -1007,12 +1008,12 @@ function quizRender(){if(!document.getElementById('quizBox'))return;
     $('#qAgain').onclick=_quizDeal;_qzCertBind(box);if(window._qzCeleb)window._qzCeleb();_qzHistSync();return;}
   const q=quiz.qs[quiz.i],pct=Math.round(quiz.i/quiz.qs.length*100);
   box.innerHTML=`<div class="qz-top"><span class="qz-pill">${esc(t('q_of'))} ${num(quiz.i+1)} / ${num(quiz.qs.length)}</span><span class="qz-pill qz-score">⭐ ${num(quiz.score)}</span>${quiz.streak>1?`<span class="qz-pill qz-fire">🔥 ${num(quiz.streak)}</span>`:''}</div><div class="bar qz-bar"><i style="width:${pct}%"></i></div><div class="q qz-q">${esc(q.q[li])}</div><div class="qz-opts">${q.o.map((o,k)=>`<button class="btn opt qz-opt" data-k="${k}" type="button"><span class="qz-key">${letters[k]||k+1}</span><span class="qz-txt">${esc(o[li])}</span></button>`).join('')}</div><div id="qFeed"></div><div id="qNext"></div>`;
-  $$('.opt',box).forEach(b=>b.onclick=()=>_quizPick(b));_qzHistSync();
+  $$('.opt',box).forEach(b=>b.onclick=()=>_quizPick(b));_qzHistSync();lzQuizQ(q);
 }
 function _quizPick(b){const box=$('#quizBox');if(!box||quiz.done||!quiz.qs.length)return;const q=quiz.qs[quiz.i];if(!q||b.disabled)return;const k=+b.dataset.k,li=lang==='bn'?0:1;
   $$('.opt',box).forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add('ok');});
   const right=k===q.a;if(right){quiz.score++;quiz.streak++;quiz.bestStreak=Math.max(quiz.bestStreak,quiz.streak);}else{quiz.streak=0;b.classList.add('bad');}
-  const feed=$('#qFeed');if(feed)feed.innerHTML=right?`<div class="qz-feed ok">${esc(t('qz_ok'))}</div>`:`<div class="qz-feed bad">${esc(t('qz_no'))} ${esc(t('qz_right'))}: <b>${esc(q.o[q.a][li])}</b></div>`;
+  const feed=$('#qFeed');if(feed)feed.innerHTML=right?`<div class="qz-feed ok">${esc(t('qz_ok'))}</div>`:`<div class="qz-feed bad">${esc(t('qz_no'))} ${esc(t('qz_right'))}: <b>${esc(q._tl===lang&&q._to?q._to[q.a]:q.o[q.a][li])}</b></div>`;
   const sc=box.querySelector('.qz-score');if(sc)sc.textContent='⭐ '+num(quiz.score);
   const last=quiz.i===quiz.qs.length-1;
   $('#qNext').innerHTML=`<button class="btn btn-primary btn-lg w-100 qz-next" type="button" id="qn">${esc(t(last?'finish':'next'))} →</button>`;
@@ -1171,7 +1172,7 @@ $('#gemForm').addEventListener('submit',async e=>{
    Kaj: bhasa bodol hole pura page abar sajano (relang) —
    map, quiz, news, explore sob notun bhasay render hoy */
 
-function relang(){const _h=document.getElementById('heroCountry');if(_h&&_h._fillDL)_h._fillDL();applyLang();if(window._refreshHeroBadge)window._refreshHeroBadge();if(document.getElementById('wp-country'))renderWorldPicker();bd&&bd.refreshAll();wd&&wd.refreshAll();if(document.getElementById('newsLiveGrid'))initNewsPage();renderExplore();quizRender();renderPlanPick();$('#pDays').textContent=num(plan.days);$('#pPeople').textContent=num(plan.people);if(document.getElementById('pOut')&&$('#pOut').innerHTML)buildPlan();_lzGridReg.forEach(r=>{if(r.grid&&r.grid.isConnected)lzGrid(r.grid,r.entries);});if(window._lzRefresh)lzAdmList();lzWarmUi();}
+function relang(){const _h=document.getElementById('heroCountry');if(_h&&_h._fillDL)_h._fillDL();applyLang();if(window._refreshHeroBadge)window._refreshHeroBadge();if(document.getElementById('wp-country'))renderWorldPicker();bd&&bd.refreshAll();wd&&wd.refreshAll();if(document.getElementById('newsLiveGrid'))initNewsPage();renderExplore();quizRender();renderPlanPick();$('#pDays').textContent=num(plan.days);$('#pPeople').textContent=num(plan.people);if(document.getElementById('pOut')&&$('#pOut').innerHTML)buildPlan();_lzGridReg.forEach(r=>{if(r.grid&&r.grid.isConnected)lzGrid(r.grid,r.entries);});if(window._lzRefresh)lzAdmList();lzWarmUi();lzUiDict();}
 const _langSel=$('#langBtn');
 if(_langSel&&_langSel.tagName==='SELECT'){_langSel.innerHTML=LANGS_LIST.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');_langSel.value=lang;_langSel.onchange=()=>{lang=_langSel.value;store.set('lang',lang);document.documentElement.dir=['ar','ur','fa'].includes(lang)?'rtl':'ltr';relang();};}
 const _nt=document.getElementById('navToggle'),_mn=document.getElementById('mainNav');
@@ -1815,7 +1816,6 @@ async function lzEntry(e){
   const a=await lzNameE(e),b=await lzDescE(e);
   e._lz=lang;return a||b||(!!_had&&_had!==lang);
 }
-var _lzBnMap={};
 function lzBn(s){
   const v=String(s||'');if(!v||lang==='bn'||lang==='en')return v;
   const k=lang+':'+v;if(_lzBnMap[k])return _lzBnMap[k];
@@ -1859,6 +1859,57 @@ async function lzAdmList(){
   try{let ch=false;for(const x of admGetPlaces()){if(await lzEntry(x))ch=true;}
   if(ch&&window._lzRefresh)window._lzRefresh();}catch(e){}
   _lzAdmBusy=false;
+}
+async function lzUiDict(){
+  if(lang==='bn'||lang==='en'||_lzUiBusy)return;
+  const have=(typeof LX!=='undefined'&&LX[lang])?LX[lang]:{};
+  const todo=Object.keys(L.bn).filter(k=>!have[k]&&!_lzUiTried[lang+':'+k]&&L.bn[k]&&L.en[k]&&L.bn[k]!==L.en[k]&&String(L.bn[k]).trim()&&L[lang][k]===L.en[k]);
+  if(!todo.length)return;
+  _lzUiBusy=true;
+  try{
+    let ch=false;
+    for(let i=0;i<todo.length;i+=12){
+      await Promise.all(todo.slice(i,i+12).map(async k=>{
+        const r=await trText(L.bn[k],lang);
+        if(r.ok){_lzUiTried[lang+':'+k]=1;if(r.t&&r.t!==L.bn[k]){L[lang][k]=r.t;ch=true;}}
+      }));
+    }
+    if(ch)relang();
+  }catch(e){}
+  _lzUiBusy=false;
+}
+async function lzNotice(v){
+  try{
+    if(!v||txtLang(v)===lang)return;
+    const r=await trText(v,lang);
+    if(!r.ok||!r.t||r.t===v)return;
+    if(String(store.get('notice','')||'').trim()!==v)return;
+    const tx=document.getElementById('noticeText');if(tx)tx.textContent='📢 '+r.t;
+  }catch(e){}
+}
+async function lzLiveNews(grid,items){
+  if(!grid||!items||!items.length||lang==='bn')return;
+  const stamp=grid.dataset.lzn=(+grid.dataset.lzn||0)+1;
+  await Promise.all(items.map(async(x,i)=>{
+    const card=grid.children[i];if(!card)return;
+    const h=card.querySelector('h3'),p=card.querySelector('.card-text');
+    if(h&&x.title){const r=await trText(x.title,lang);if(r.ok&&r.t&&r.t!==x.title&&+grid.dataset.lzn===stamp&&h.isConnected)h.textContent=r.t;}
+    if(p&&x.desc){const r=await trText(x.desc,lang);if(r.ok&&r.t&&r.t!==x.desc&&+grid.dataset.lzn===stamp&&p.isConnected)p.textContent=r.t;}
+  }));
+}
+async function lzQuizQ(q){
+  if(!q||lang==='bn'||lang==='en')return;
+  const box=$('#quizBox');if(!box)return;
+  const stamp=quiz.i;
+  try{
+    const rq=await trText(q.q[1],lang);
+    const ros=await Promise.all(q.o.map(o=>trText(o[1],lang)));
+    if(quiz.i!==stamp||quiz.done||!quiz.started)return;
+    q._tl=lang;
+    q._to=q.o.map((o,k)=>ros[k]&&ros[k].ok&&ros[k].t?ros[k].t:o[1]);
+    if(rq.ok&&rq.t){const qe=box.querySelector('.qz-q');if(qe)qe.textContent=rq.t;}
+    $$('.qz-opt .qz-txt',box).forEach((el,k)=>{if(q._to[k])el.textContent=q._to[k];});
+  }catch(e){}
 }
 
 function tpCardHtml(e){const lk=e.custom?(e.url||''):('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.name+', '+(e.city||'')+', '+(e.country||'')));const full=String(plCardDesc(e));const lng=full.length>240;const shrt=lng?full.slice(0,240)+'…':full;return '<div class="col"><article class="card shadow-sm tpcard h-100">'+(e.img?'<img class="card-img-top" src="'+esc(e.img)+'" alt="'+esc(plName(e))+'" loading="lazy">':'<div class="tpimg-fallback">📍</div>')+'<div class="card-body">'+(e.custom?'<span class="badge text-bg-success mb-1">'+esc(t('tp_admin'))+'</span>':'')+'<h3 class="h5">'+esc(plName(e))+'</h3>'+(full?'<p class="card-text small">'+esc(shrt)+'</p>':'')+((full||e.img||e.url)?'<p class="mb-0 mt-2"><button type="button" class="btn btn-outline-primary btn-sm" data-tpopen="'+(_tpData.push(e)-1)+'">'+esc(t('tp_more'))+'</button>'+(lk?' <a class="btn btn-outline-secondary btn-sm" href="'+esc(safeUrl(lk))+'" target="_blank" rel="noopener">'+esc(t('tp_loc'))+'</a>':'')+'</p>':'')+'</div></article></div>';}
@@ -1955,7 +2006,7 @@ function newsFeeds(){
   ];
 }
 function renderLiveItems(grid,items){
-  grid.innerHTML=items.map(x=>'<div class="col"><article class="card shadow-sm tpcard h-100">'+(x.img?'<img class="card-img-top" src="'+esc(x.img)+'" alt="" loading="lazy" onerror="this.remove()">':'<div class="tpimg-fallback">📰</div>')+'<div class="card-body"><p class="news-meta">'+esc(x.source||'Google News')+(x.date?' · '+esc(new Date(x.date).toLocaleDateString(lang==='bn'?'bn-BD':'en-GB')):'')+'</p><h3 class="h5">'+esc(x.title)+'</h3>'+(x.desc?'<p class="card-text small">'+esc(x.desc)+'</p>':'')+'<a class="btn btn-outline-primary btn-sm" href="'+esc(safeUrl(x.link))+'" target="_blank" rel="noopener">'+esc(t('news_read'))+'</a></div></article></div>').join('');
+  grid.innerHTML=items.map(x=>'<div class="col"><article class="card shadow-sm tpcard h-100">'+(x.img?'<img class="card-img-top" src="'+esc(x.img)+'" alt="" loading="lazy" onerror="this.remove()">':'<div class="tpimg-fallback">📰</div>')+'<div class="card-body"><p class="news-meta">'+esc(x.source||'Google News')+(x.date?' · '+esc(new Date(x.date).toLocaleDateString(lang==='bn'?'bn-BD':'en-GB')):'')+'</p><h3 class="h5">'+esc(x.title)+'</h3>'+(x.desc?'<p class="card-text small">'+esc(x.desc)+'</p>':'')+'<a class="btn btn-outline-primary btn-sm" href="'+esc(safeUrl(x.link))+'" target="_blank" rel="noopener">'+esc(t('news_read'))+'</a></div></article></div>').join('');lzLiveNews(grid,items);
 }
 
 /* Kaj: live khobor ana — GDELT, AllOrigins, CodeTabs,
