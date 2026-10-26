@@ -1796,6 +1796,19 @@ async function lzDescE(e){
   if(!r.ok)return false;
   e._ds=r.t;e._lzd=lang;return r.t!==(e.desc||'');
 }
+async function lzCardE(e){
+  if(!e||e._lzc===lang||e._lzd===lang)return false;
+  if(txtLang(e.desc||'')===lang){e._dsc=e.desc||'';e._lzc=lang;return false;}
+  const r=await trText(String(e.desc||'').slice(0,300),lang);
+  if(!r.ok)return false;
+  e._dsc=r.t;e._lzc=lang;return true;
+}
+function plCardDesc(e){
+  if(!e)return '';
+  if(e._lzd===lang)return plDesc(e);
+  if(e._lzc===lang&&e._dsc)return e._dsc;
+  return e.desc||'';
+}
 async function lzEntry(e){
   if(!e)return false;
   const _had=e._lz;
@@ -1837,7 +1850,7 @@ async function lzGrid(grid,entries){
   await Promise.all(entries.map(async e=>{if(await lzNameE(e))ch=true;}));
   if(ch||grid.dataset.lzlang!==lang)_rr();
   ch=false;
-  await Promise.all(entries.map(async e=>{if(await lzDescE(e))ch=true;}));
+  await Promise.all(entries.map(async e=>{if(await lzCardE(e))ch=true;}));
   if(ch)_rr();
 }
 let _lzAdmBusy=false;
@@ -1848,10 +1861,11 @@ async function lzAdmList(){
   _lzAdmBusy=false;
 }
 
-function tpCardHtml(e){const lk=e.custom?(e.url||''):('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.name+', '+(e.city||'')+', '+(e.country||'')));const full=String(plDesc(e));const lng=full.length>240;const shrt=lng?full.slice(0,240)+'…':full;return '<div class="col"><article class="card shadow-sm tpcard h-100">'+(e.img?'<img class="card-img-top" src="'+esc(e.img)+'" alt="'+esc(plName(e))+'" loading="lazy">':'<div class="tpimg-fallback">📍</div>')+'<div class="card-body">'+(e.custom?'<span class="badge text-bg-success mb-1">'+esc(t('tp_admin'))+'</span>':'')+'<h3 class="h5">'+esc(plName(e))+'</h3>'+(full?'<p class="card-text small">'+esc(shrt)+'</p>':'')+((full||e.img||e.url)?'<p class="mb-0 mt-2"><button type="button" class="btn btn-outline-primary btn-sm" data-tpopen="'+(_tpData.push(e)-1)+'">'+esc(t('tp_more'))+'</button>'+(lk?' <a class="btn btn-outline-secondary btn-sm" href="'+esc(safeUrl(lk))+'" target="_blank" rel="noopener">'+esc(t('tp_loc'))+'</a>':'')+'</p>':'')+'</div></article></div>';}
+function tpCardHtml(e){const lk=e.custom?(e.url||''):('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.name+', '+(e.city||'')+', '+(e.country||'')));const full=String(plCardDesc(e));const lng=full.length>240;const shrt=lng?full.slice(0,240)+'…':full;return '<div class="col"><article class="card shadow-sm tpcard h-100">'+(e.img?'<img class="card-img-top" src="'+esc(e.img)+'" alt="'+esc(plName(e))+'" loading="lazy">':'<div class="tpimg-fallback">📍</div>')+'<div class="card-body">'+(e.custom?'<span class="badge text-bg-success mb-1">'+esc(t('tp_admin'))+'</span>':'')+'<h3 class="h5">'+esc(plName(e))+'</h3>'+(full?'<p class="card-text small">'+esc(shrt)+'</p>':'')+((full||e.img||e.url)?'<p class="mb-0 mt-2"><button type="button" class="btn btn-outline-primary btn-sm" data-tpopen="'+(_tpData.push(e)-1)+'">'+esc(t('tp_more'))+'</button>'+(lk?' <a class="btn btn-outline-secondary btn-sm" href="'+esc(safeUrl(lk))+'" target="_blank" rel="noopener">'+esc(t('tp_loc'))+'</a>':'')+'</p>':'')+'</div></article></div>';}
 let _tpData=[];
-function tpOpen(i){const e=_tpData[i];if(!e)return;const m=document.getElementById('tpModal');if(!m)return;document.getElementById('tpmName').textContent=plName(e);const ims=(e.imgs&&e.imgs.length?e.imgs:(e.img?[e.img]:[]));const g=document.getElementById('tpmImgs');g.className='tpm-gallery'+(ims.length===1?' one':'');g.innerHTML=ims.map(x=>'<img src="'+esc(x)+'" alt="">').join('');const w=document.getElementById('tpmWho');w.textContent=e.who?('👤 '+e.who):'';w.style.display=e.who?'':'none';document.getElementById('tpmDesc').textContent=plDesc(e);const u=document.getElementById('tpmUrl');const lk2=e.custom?(e.url||''):('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.name+', '+(e.city||'')+', '+(e.country||'')));if(safeUrl(lk2)){u.href=safeUrl(lk2);u.textContent=t('tp_loc');u.style.display='';}else u.style.display='none';const sc=document.getElementById('tpmSocial');if(sc){if(e.social){sc.href=safeUrl(e.social);sc.textContent='🔗 '+t('tp_social');sc.style.display='';}else sc.style.display='none';}m.hidden=false;document.body.style.overflow='hidden';m.scrollTop=0;}
-function tpClose(){const m=document.getElementById('tpModal');if(m)m.hidden=true;document.body.style.overflow='';}
+var _tpModalE=null;
+function tpOpen(i){const e=_tpData[i];if(!e)return;const m=document.getElementById('tpModal');if(!m)return;_tpModalE=e;document.getElementById('tpmName').textContent=plName(e);const ims=(e.imgs&&e.imgs.length?e.imgs:(e.img?[e.img]:[]));const g=document.getElementById('tpmImgs');g.className='tpm-gallery'+(ims.length===1?' one':'');g.innerHTML=ims.map(x=>'<img src="'+esc(x)+'" alt="">').join('');const w=document.getElementById('tpmWho');w.textContent=e.who?('👤 '+e.who):'';w.style.display=e.who?'':'none';document.getElementById('tpmDesc').textContent=plDesc(e);if(e._lzd!==lang){const _e=e;lzDescE(_e).then(()=>{if(_tpModalE===_e&&!m.hidden)document.getElementById('tpmDesc').textContent=plDesc(_e);});}const u=document.getElementById('tpmUrl');const lk2=e.custom?(e.url||''):('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(e.name+', '+(e.city||'')+', '+(e.country||'')));if(safeUrl(lk2)){u.href=safeUrl(lk2);u.textContent=t('tp_loc');u.style.display='';}else u.style.display='none';const sc=document.getElementById('tpmSocial');if(sc){if(e.social){sc.href=safeUrl(e.social);sc.textContent='🔗 '+t('tp_social');sc.style.display='';}else sc.style.display='none';}m.hidden=false;document.body.style.overflow='hidden';m.scrollTop=0;}
+function tpClose(){const m=document.getElementById('tpModal');if(m)m.hidden=true;_tpModalE=null;document.body.style.overflow='';}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tpopen]');if(b){tpOpen(+b.dataset.tpopen);return;}if(e.target.closest('[data-tpmclose]'))tpClose();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')tpClose();});
 async function wpIdxPlaces(){
