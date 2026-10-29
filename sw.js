@@ -6,14 +6,14 @@
    Database (Firebase) er call kokhono cache hoy na.
    ============================================================ */
 
-const CACHE = 'wtg-v24';
+const CACHE = 'wtg-v25';
 
 /* Agey thekei cache kore rakha mul file gula */
 
 const CORE = [
   './',
   'index.html', 'world.html', 'map.html', 'quiz.html',
-  'places.html', 'news.html','help.html', 'admin.html',
+  'places.html', 'news.html','help.html', 'service.html', 'admin.html',
   'app.js', 'data-world.js', 'style.css', 'firebase-config.js',
   'bootstrap.min.css', 'd3.min.js', 'topojson-client.min.js',
   'jspdf.umd.min.js',

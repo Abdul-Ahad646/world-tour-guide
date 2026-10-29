@@ -356,3 +356,7 @@ footer .contact{justify-content:center}
 .adslot.hasad{display:flex}
 .adslot video{display:block;width:100%;height:auto;max-height:260px;object-fit:cover;border-radius:12px}
 .pbanner.b-help{background-image:linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url('banner-news.svg');background-size:cover;background-position:center}
+.pbanner.b-service{background-image:linear-gradient(rgba(7,52,61,.55),rgba(7,52,61,.55)),url('banner-places.svg');background-size:cover;background-position:center}
+.svc-card{display:block;height:100%;text-decoration:none;color:inherit}
+.svc-card h5{font-weight:700;color:var(--brand)}
+.svc-card p{margin:0;font-size:15px}
