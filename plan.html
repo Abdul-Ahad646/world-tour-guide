@@ -567,10 +567,14 @@ async function buildPlan(){
   if(cTo){townKeys.sort(function(a,b){var da=exactCoords(tc,a),db=exactCoords(tc,b);return (da?distKm(cTo,da):9999)-(db?distKm(cTo,db):9999)})}
   townKeys.forEach(function(ct){mains.push({p:townMain[ct],town:ct});usedN[townMain[ct].name]=1});
   cityPool.forEach(function(p){mains.push({p:p,town:tci});usedN[p.name]=1});
+  mains.slice(days).forEach(function(m){usedN[m.p.name]=0});
   function takeSec(town,n){
     var res=[];
     if(town&&townExtra[town]){for(var i3=0;i3<townExtra[town].length&&res.length<n;i3++){var pp=townExtra[town][i3];if(!usedN[pp.name]){usedN[pp.name]=1;res.push(pp)}}}
-    for(var j3=0;j3<places.length&&res.length<n;j3++){var q=places[j3];if(!usedN[q.name]){usedN[q.name]=1;res.push(q)}}
+    var baseC=town?exactCoords(tc,town):null;if(!baseC)baseC=cTo;
+    for(var pass=0;pass<2&&res.length<n;pass++){
+      for(var j3=0;j3<places.length&&res.length<n;j3++){var q=places[j3];if(usedN[q.name])continue;if(pass===0&&(!q.city||q.city===tci))continue;var qc=q.city?exactCoords(tc,q.city):null;if(baseC&&qc&&distKm(baseC,qc)>60)continue;usedN[q.name]=1;res.push(q)}
+    }
     return res;
   }
   var prevTown=tci,prevBase=tci;
@@ -678,7 +682,7 @@ function init(){
   $("plDownload").addEventListener("click",downloadPlan);
   $("plRoutePng").addEventListener("click",downloadRoutePng);
   $("plTrailPng").addEventListener("click",downloadTrailPng);
-  if(q.get("go"))setTimeout(buildPlan,900);
+  if(q.get("go")){setTimeout(buildPlan,900);var __gt=0;var __gi=setInterval(function(){__gt++;if((document.getElementById("plSummary")||{}).innerHTML||__gt>=4){clearInterval(__gi);return}buildPlan()},3000);}
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
