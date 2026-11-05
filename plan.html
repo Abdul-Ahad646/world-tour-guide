@@ -104,7 +104,6 @@
       
       </div>
     </div>
-    <div class="pl-sec" id="plLegs"></div>
     <div class="pl-sec" id="plImgs">
       <h3>🗺️ রুটের ছবি — কোন জায়গার পর কোন জায়গা + আসল ম্যাপে রুট</h3>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
@@ -113,9 +112,7 @@
       </div>
       <p class="text-muted mb-0" style="font-size:12.5px">বামে: কোন জায়গার পর কোন জায়গা (ধাপে ধাপে) • ডানে: আসল ম্যাপে যাওয়ার পথ (সবুজ লাইন) আর ফেরার পথ (কমলা ড্যাশ) — একই জায়গায় দুবার না গিয়ে সবচেয়ে ভালো রুটে সাজানো।</p>
     </div>
-    <div class="pl-sec" id="plGo"></div>
     <div class="pl-sec" id="plDaysOut"></div>
-    <div class="pl-sec" id="plReturn"></div>
     <div class="pl-sec" id="plCost"></div>
     <div class="pl-sec" id="plSafe"></div>
     <div class="pl-sec" id="plAi"></div>
@@ -278,9 +275,9 @@ function downloadPlan(){
   var html='<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>ট্রিপ প্ল্যান — '+esc(D.tci)+'</title><style>body{font-family:sans-serif;max-width:840px;margin:20px auto;padding:0 14px;color:#212121}h1{color:#0b5d6b;font-size:24px}.sec{background:#f7fbfb;border:1px solid #e0e0e0;border-radius:12px;padding:14px;margin:12px 0}table{width:100%;border-collapse:collapse}td{padding:6px 8px;border-bottom:1px solid #eee}.text-end{text-align:right}.pl-total{font-size:20px;font-weight:800;color:#0b5d6b}.pl-chip{display:inline-block;background:#fff3e0;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600;margin:2px}.pl-day{border-left:4px solid #0b5d6b;background:#ffffff;border-radius:10px;padding:10px 12px;margin:10px 0}.pl-time{display:inline-block;background:#e0f2f1;color:#0b5d6b;border-radius:999px;padding:1px 10px;font-size:13px;font-weight:700}.pl-place{font-weight:700}.pl-imgs img{width:31%;height:80px;object-fit:cover;border-radius:8px;margin-right:4px}svg{width:100%;height:auto}@page{margin:12mm}@media print{body{max-width:none;margin:0}.sec{break-inside:avoid}}</style></head><body>'
    +'<h1>🧭 ট্রিপ প্ল্যান: '+flagOf(D.fc)+" "+esc(D.fci)+", "+esc(D.fc)+" → "+flagOf(D.tc)+" "+esc(D.tci)+", "+esc(D.tc)+'</h1>'
    +sec("plSummary")
-   +'<div class="sec"><h3>🗺️ রুট ম্যাপ ছবি — জায়গার চিহ্ন ও ফেরার পথসহ</h3>'+$("plTrailImg").outerHTML+'</div>'
+   +'<div class="sec"><h3>🗺️ রুট ম্যাপ ছবি — আসল ম্যাপে রুট ও ফেরার পথ</h3><img src="'+$("plMapImg").toDataURL("image/png")+'" style="width:100%;height:auto"></div>'
    +'<div class="sec"><h3>🧭 কোন জায়গার পর কোন জায়গা — রুটের ছবি</h3>'+$("plRouteImg").outerHTML+'</div>'
-   +sec("plGo")+sec("plLegs")+sec("plDaysOut")+sec("plReturn")+sec("plCost")+sec("plSafe")+sec("plAi")
+   +sec("plDaysOut")+sec("plCost")+sec("plSafe")+sec("plAi")
    +'<p style="color:#888;font-size:12px">World Tour Guide — https://abdul-ahad646.github.io/world-tour-guide/plan.html • সব খরচ আনুমানিক।</p></body></html>';
   html=html.replace("</body>","<script>window.addEventListener('load',function(){setTimeout(function(){window.print()},500)})<\/script></body>");
   var w=window.open("","_blank");
@@ -598,50 +595,86 @@ async function buildPlan(){
     if(!ims.length)return "";
     return '<div class="pl-imgs">'+ims.map(function(u){return '<img loading="lazy" src="'+esc(u)+'" alt="">'}).join("")+'</div>';
   }
-  var tripLegs=[];
-  var prevTown=tci,prevBase=tci;
+  /* ===== PLANNER v5 (user format 2026-11-06) =====
+     Prottek din: golpo-akare bornona (shudhu asol jayga — site-er data theke),
+     tarpor oi diner khoroc item dhore dhore + diner mot, tarpor oi diner chobi.
+     Diner khoroc gulo jog korlei jonproti mot khoroc mile jay. */
+  var goShare=Math.round(transCost/2/10)*10, retShare=transCost-goShare;
+  var goLines=[],retLines=[];
+  if(intl&&cap!==tci){
+    var fg=Math.round(goShare*0.72/10)*10, fr=Math.round(retShare*0.72/10)*10;
+    goLines.push(["✈️ "+fci+" → "+cap+" বিমান ভাড়া",fg],["🚌 "+cap+" → "+tci+" বাস/গাড়ি ভাড়া",goShare-fg]);
+    retLines.push(["🚌 "+tci+" → "+cap+" বাস/গাড়ি ভাড়া",retShare-fr],["✈️ "+cap+" → "+fci+" বিমান ভাড়া",fr]);
+  }else if(intl){
+    goLines.push(["✈️ "+fci+" → "+tci+" বিমান ভাড়া",goShare]);
+    retLines.push(["✈️ "+tci+" → "+fci+" বিমান ভাড়া",retShare]);
+  }else if(km>380){
+    goLines.push(["✈️/🚌 "+fci+" → "+tci+" যাতায়াত",goShare]);
+    retLines.push(["✈️/🚌 "+tci+" → "+fci+" যাতায়াত",retShare]);
+  }else if(km>60){
+    goLines.push(["🚌 "+fci+" → "+tci+" বাস/ট্রেন ভাড়া",goShare]);
+    retLines.push(["🚌 "+tci+" → "+fci+" বাস/ট্রেন ভাড়া",retShare]);
+  }else{
+    goLines.push(["🚕 "+fci+" → "+tci+" ট্যাক্সি/গাড়ি ভাড়া",goShare]);
+    retLines.push(["🚕 "+tci+" → "+fci+" ট্যাক্সি/গাড়ি ভাড়া",retShare]);
+  }
+  function foodLines(d){
+    var a=Math.round(food*0.25/10)*10,b=Math.round(food*0.35/10)*10;
+    if(d===1&&days>1)return [["🍽️ দুপুরের খাবার",b],["🍽️ রাতের খাবার",food-b]];
+    if(d===days&&days>1)return [["🍳 সকালের নাশতা",a],["🍽️ দুপুরের খাবার",food-a]];
+    return [["🍳 সকালের নাশতা",a],["🍽️ দুপুরের খাবার",b],["🍽️ রাতের খাবার",food-a-b]];
+  }
+  var mainCount=mains.length;
+  var tBase=mainCount?Math.floor(ticketTot/mainCount):0, tRem=mainCount?(ticketTot-tBase*mainCount):0;
+  function s1(p){return esc(firstSent(introDesc(p)))}
+  var goStory,retStory;
+  if(intl){goStory=fci+" থেকে বিমানে করে "+cap+" যাবেন"+(cap!==tci?", সেখান থেকে বাস/গাড়িতে করে "+tci+" পৌঁছাবেন":"")+"। "+tci+" পৌঁছে হোটেলে চেক-ইন করে একটু বিশ্রাম নিন।";
+    retStory=tci+" থেকে "+(cap!==tci?"বাস/গাড়িতে "+cap+" এসে সেখান থেকে বিমানে ":"বিমানে ")+fci+"-এর পথে রওনা দিন।";}
+  else if(km>380){goStory=fci+" থেকে ফ্লাইটে বা রাতের বাসে "+tci+" পৌঁছান। হোটেলে চেক-ইন করে একটু বিশ্রাম নিন।";
+    retStory=tci+" থেকে ফ্লাইটে/রাতের বাসে "+fci+"-এর পথে রওনা দিন।";}
+  else if(km>60){goStory=fci+" থেকে বাস/ট্রেনে করে "+tci+" পৌঁছান (আনুমানিক "+num(Math.max(1,Math.round(km/45)))+"–"+num(Math.max(2,Math.round(km/35)))+" ঘণ্টার পথ)। হোটেলে চেক-ইন করে একটু বিশ্রাম নিন।";
+    retStory=tci+" থেকে বাস/ট্রেনে "+fci+"-এর পথে রওনা দিন।";}
+  else{goStory=fci+" থেকে ট্যাক্সি/প্রাইভেট গাড়িতে সরাসরি "+tci+" পৌঁছে হোটেলে চেক-ইন করুন।";
+    retStory=tci+" থেকে একই গাড়িতে "+fci+"-এর পথে রওনা দিন।";}
+  var dayTotals=[];
   for(var d=1;d<=days;d++){
     var main=mains[d-1]||null;
-    var baseTown=main?main.town:prevTown;
-    var secs=takeSec(main?main.town:null,(d===days)?1:2);
-    var cursor=(d===1)?810:540;
-    var blocks=[];
-    if(d===1)blocks.push({t:"🛬 "+tci+" পৌঁছানো",x:"হোটেলে চেক-ইন ও বিশ্রাম — তারপর আজকের গন্তব্যের দিকে রওনা।",dur:90});
-    else blocks.push({t:"🍳 সকালের নাশতা",x:prevBase+"-এর হোটেলে নাশতা সেরে বের হোন। আজকের খাবারের বাজেট জনপ্রতি আনুমানিক "+tk(food)+"।",dur:30});
-    var inner=blocks.map(function(it){
-      var chip='<div><span class="pl-time">🕘 '+fmtT(cursor)+' থেকে</span></div>';cursor+=it.dur;
-      return chip+'<div class="pl-place">'+it.t+'</div><div>'+esc(it.x)+'</div>';
-    }).join("");
-    var routeNames=[];
-    if(d===1)routeNames.push(tci);
-    if(main&&main.town!==prevTown){var L1=legInfo(prevTown,main.town);if(L1)tripLegs.push(L1);inner+='<div class="pl-move">'+(L1?legTxt(L1):'🚕 '+esc(prevTown)+' থেকে '+esc(main.town)+' — আজকের যাত্রা')+'</div>';cursor+=60;}
-    if(main){
-      var dur=DURS[pIdx%DURS.length];pIdx++;
-      var st=cursor;cursor+=dur;
-      routeNames.push(main.p.name);
-      routeSeq.push({label:main.p.name,sub:"📅 দিন "+num(d)+" • 🌙 "+main.town});
-      inner+='<div><span class="pl-time">🕘 '+fmtT(st)+' – '+fmtT(cursor)+' • '+durTxt(dur)+'</span></div>'
-        +'<div class="pl-place">📍 '+esc(main.p.name)+'</div>'
-        +photoRow(main.p,true)
-        +(main.p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(main.p.url)+'">🗺️ ম্যাপে দেখুন</a>':"");
-      var fullDesc=String(main.p.desc||"").trim();
-      if(fullDesc.length>50)inner+='<details class="mt-2"><summary style="cursor:pointer;font-weight:700;color:#0e7a3d">📖 পুরো গাইড — এই জায়গাটা পুরোপুরি কীভাবে ঘুরবেন</summary>'+guideSteps(main.p)+'<div style="white-space:pre-line;margin-top:6px">'+esc(fullDesc)+'</div></details>';
+    var secs=takeSec(tci,(d===days)?1:2);
+    var lines=[];
+    if(d===1)goLines.forEach(function(x){lines.push(x)});
+    if(d===days)retLines.forEach(function(x){lines.push(x)});
+    if(d<=stayNights)lines.push(["🏨 হোটেল ভাড়া ("+num(d)+" নম্বর রাত)",hotel]);
+    foodLines(d).forEach(function(x){lines.push(x)});
+    lines.push(["🚕 স্থানীয় যাতায়াত (শহরের ভেতরে ঘোরা)",local]);
+    if(main)lines.push(["🎟️ "+main.p.name+" — টিকিট/এন্ট্রি ফি",tBase+((d-1)===0?tRem:0)]);
+    var dTot=0;lines.forEach(function(x){dTot+=x[1]});
+    dayTotals.push(dTot);
+    var story="";
+    if(d===1){
+      story=goStory+" দুপুরের খাবার খেয়ে বিকেলে "+(main?esc(main.p.name)+" ঘুরতে বের হোন — "+s1(main.p):tci+" শহরের আশপাশ হেঁটে ঘুরে দেখুন")+" ঘোরা শেষে সন্ধ্যায় হোটেলে ফিরে রাতের খাবার খেয়ে বিশ্রাম নিন।";
+    }else if(d===days){
+      story="সকালে নাশতা করে হোটেল থেকে চেক-আউট করুন। "+(main?"বের হওয়ার আগে "+esc(main.p.name)+" ঘুরে দেখুন — "+s1(main.p)+" ":"")+(secs.length?"সময় থাকলে কাছের "+secs.map(function(p){return esc(p.name)}).join(" ও ")+" দেখে নিন, শেষ কেনাকাটাও সেরে নিন। ":"শেষ কেনাকাটা সেরে নিন। ")+retStory;
+    }else{
+      story="সকালে হোটেলে নাশতা করে "+(main?esc(main.p.name)+"-এর উদ্দেশ্যে রওনা দিন। পৌঁছে জায়গাটা ভালো করে ঘুরে দেখুন — "+s1(main.p):tci+"-এর বাকি জায়গাগুলো ধীরে ধীরে ঘুরে দেখুন")+" দুপুরের খাবার খেয়ে "+(secs.length?"তারপর কাছেই "+secs.map(function(p){return esc(p.name)}).join(" ও ")+" দেখে নিন। ":"")+"বিকেলে স্থানীয় বাজার/এলাকা ঘুরে সন্ধ্যায় হোটেলে ফিরুন — রাতের খাবার খেয়ে বিশ্রাম নিন।";
     }
-    var lastCity=main?main.town:prevTown;
-    secs.forEach(function(p){
-      cursor+=30;
-      var pc2=p.city||lastCity,mv;
-      if(pc2===lastCity){mv='<div class="pl-move">🚶 একই এলাকায় — রিকশা/হেঁটে প্রায় ১০–২০ মিনিট</div>'}
-      else{var L2=legInfo(lastCity,pc2);mv='<div class="pl-move">'+(L2?legTxt(L2):'🚕 যাতায়াত')+'</div>'}
-      lastCity=pc2;
-      var dur2=90,stt=cursor;cursor+=dur2;
-      routeNames.push(p.name);
-      inner+=mv+'<div><span class="pl-time">🕘 '+fmtT(stt)+' – '+fmtT(cursor)+' • '+durTxt(dur2)+'</span></div><div class="pl-place">📍 '+esc(p.name)+'</div>'+photoRow(p,false)+'<div>'+esc(shortDesc(p))+'</div>'+(p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(p.url)+'">🗺️ ম্যাপে দেখুন</a>':"");
-    });
-    if(!main&&!secs.length)inner+='<div class="pl-place">🏙️ '+esc(baseTown)+' আশপাশ ঘোরা</div><div>'+esc(baseTown)+'-এর বাজার, স্থানীয় এলাকা ও বাকি আকর্ষণ ধীরে ধীরে ঘুরে দেখুন।</div>';
-    if(d===days){inner+='<div class="pl-move">🧳 চেক-আউট ও ফেরার যাত্রা</div><div class="pl-place">🔁 '+esc(baseTown)+' থেকে ফেরা</div><div>কেনাকাটা সেরে '+esc(tci)+' হয়ে ফেরার গাড়ি/ফ্লাইট ধরুন।</div>';routeNames.push("ফেরা");}
-    dayBlocks+='<div class="pl-day"><b>📅 দিন '+num(d)+(main?' — '+esc(main.p.name):'')+'</b><div class="pl-move">🧭 আজকের রুট: '+esc(routeNames.join(" → "))+'</div>'+inner+(d<days?'<div class="pl-move">🌙 রাত কাটান: '+esc(baseTown)+(main?' — '+esc(main.p.name)+' এলাকায়':'')+' ('+esc(stayKind)+')</div>':"")+'</div>';
-    if(main){prevTown=main.town;prevBase=main.p.name}
+    if(main)routeSeq.push({label:main.p.name,sub:"📅 দিন "+num(d)+" • 🌙 "+tci});
+    var photos="";
+    if(main)photos+=photoRow(main.p,true);
+    secs.forEach(function(p){photos+='<div class="pl-place" style="margin-top:8px">📍 '+esc(p.name)+'</div>'+photoRow(p,false)+'<div>'+esc(shortDesc(p))+'</div>'+(p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(p.url)+'">🗺️ ম্যাপে দেখুন</a>':"")});
+    var guide="";
+    if(main){
+      if(main.p.url)guide+='<div style="margin-top:6px"><a class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener" href="'+esc(main.p.url)+'">🗺️ '+esc(main.p.name)+' ম্যাপে দেখুন</a></div>';
+      var fullDesc=String(main.p.desc||"").trim();
+      if(fullDesc.length>50)guide+='<details class="mt-2"><summary style="cursor:pointer;font-weight:700;color:#0e7a3d">📖 পুরো গাইড — এই জায়গাটা পুরোপুরি কীভাবে ঘুরবেন</summary>'+guideSteps(main.p)+'<div style="white-space:pre-line;margin-top:6px">'+esc(fullDesc)+'</div></details>';
+    }
+    var costBox='<div style="background:#f4faf5;border:1px solid #d8e8dc;border-radius:10px;padding:8px 10px;margin:8px 0"><b>💵 দিন '+num(d)+'-এর খরচ (জনপ্রতি)</b>'
+      +lines.map(function(x){return '<div style="display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #dde5df;padding:2px 0"><span>'+esc(x[0])+'</span><b>'+tk(x[1])+'</b></div>'}).join("")
+      +'<div style="display:flex;justify-content:space-between;gap:10px;padding-top:5px"><span><b>মোট — দিন '+num(d)+'</b></span><span class="pl-total">'+tk(dTot)+'</span></div></div>';
+    dayBlocks+='<div class="pl-day"><b>📅 দিন '+num(d)+(main?' — '+esc(main.p.name):'')+'</b>'
+      +'<p style="margin:6px 0;line-height:1.65">'+story+'</p>'
+      +costBox+photos+guide
+      +(d<days?'<div class="pl-move">🌙 রাত কাটান: '+esc(tci)+' — '+esc(area)+' ('+esc(stayKind)+')</div>':"")
+      +'</div>';
   }
   if(!places.length)dayBlocks+='<p class="text-muted">ℹ️ এই শহরের বিস্তারিত জায়গার তালিকা এখনো সাইটে যোগ হয়নি — সাধারণ প্ল্যান দেওয়া হলো।</p>';
   routeSeq.push({label:flagOf(fc)+" "+fci,sub:"🏠 ফেরা"});
@@ -656,15 +689,16 @@ async function buildPlan(){
     +'<div><span class="pl-chip">🛫 '+flagOf(fc)+" "+esc(fci)+", "+esc(bnOf(fc))+'</span> ➜ <span class="pl-chip">🎯 '+flagOf(tc)+" "+esc(tci)+", "+esc(bnOf(tc))+'</span></div>'
     +'<div class="mt-2"><span class="pl-chip">💰 বাজেট: '+tierName(tier)+'</span><span class="pl-chip">📅 '+num(days)+' দিন</span><span class="pl-chip">👥 '+num(people)+' জন</span>'+(km?'<span class="pl-chip">📏 দূরত্ব আনুমানিক '+num(km)+' কিমি</span>':"")+"</div>"
     +'<div class="mt-2">মোট আনুমানিক খরচ ('+num(people)+' জন): <span class="pl-total">'+tk(grand)+'</span> <span class="text-muted">(জনপ্রতি '+tk(perPerson)+')</span></div>'
+    +'<p class="mt-2 mb-1">'+goTxt+'</p>'
+    +(P.visa&&intl?'<p class="mb-1">🛂 <b>ভিসা:</b> '+esc(P.visa)+'</p>':"")
+    +'<p class="mb-1">'+retTxt+'</p>'
     +'<p class="text-muted mb-0" style="font-size:13px">সব খরচ আনুমানিক — মৌসুম, টিকিটের সময় ও হোটেল অনুযায়ী বদলাতে পারে।</p>';
-  $("plGo").innerHTML="<h3>✈️ কীভাবে যাবেন</h3><p>"+goTxt+"</p>"+(P.visa&&intl?'<p>🛂 <b>ভিসা:</b> '+esc(P.visa)+'</p>':"");
-  var legsHtml=tripLegs.map(function(L){return '<div class="pl-move">'+legTxt(L)+'</div>'}).join("");
-  $("plLegs").innerHTML="<h3>🚕 যাতায়াত — কোন জায়গা থেকে কোথায়, কীভাবে, ভাড়া কত</h3>"+(legsHtml||'<p class="text-muted">সব জায়গা এই শহরের ভেতরেই — রিকশা/ট্যাক্সি/হেঁটেই ঘোরা যাবে।</p>')+'<p class="text-muted mb-0" style="font-size:13px">ভাড়া সব আনুমানিক — ওঠার আগে দর করে নিন বা অ্যাপ-ভিত্তিক গাড়ি নিন। শহরের ভেতরের ছোট যাতায়াত দিনের প্ল্যানে প্রতিটি ধাপে দেওয়া আছে।</p>';
-  $("plDaysOut").innerHTML="<h3>📅 দিন অনুযায়ী প্ল্যান — কোথা থেকে কোথায়, কী দেখবেন</h3>"+dayBlocks;
-  $("plReturn").innerHTML="<h3>🔁 কীভাবে ফিরবেন</h3><p>"+retTxt+"</p>";
+  $("plDaysOut").innerHTML="<h3>📅 দিন অনুযায়ী প্ল্যান — প্রতিদিনের গল্প, খরচ আর ছবি</h3>"+dayBlocks;
   function row(l,v){return "<tr><td>"+l+"</td><td class='text-end'>"+v+"</td></tr>"}
   $("plCost").innerHTML="<h3>💰 খরচের হিসাব (বাজেট: "+tierName(tier)+")</h3>"
     +'<table class="table pl-cost"><tbody>'
+    +(dayTotals.map(function(v,i){return row("📅 দিন "+num(i+1)+"-এর খরচ (জনপ্রতি)",tk(v))}).join(""))
+    +'<tr><td colspan="2" style="background:#eef6f0"><b>🧾 পুরো ট্রিপের ভাগ — জনপ্রতি</b></td></tr>'
     +row("✈️ "+transLabel,tk(transCost))
     +row("🏨 হোটেল ("+num(stayNights)+" রাত × "+tk(hotel)+")",tk(hotelTot))
     +row("🍽️ খাবার ("+num(days)+" দিন × "+tk(food)+")",tk(foodTot))
