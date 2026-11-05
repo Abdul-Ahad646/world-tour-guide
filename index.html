@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title data-i18n="title_home">কোথায় ঘুরবেন — World Tour Guide</title>
+<title data-i18n="title_homepg">সব পেজ — World Tour Guide</title>
 <!-- Google search (SEO) + share er jonno -->
-<meta name="description" content="বাংলাদেশ ও বিশ্বের ভ্রমণ গাইড — দেশ, বিভাগ আর শহর বেছে ম্যাপে ভ্রমণ চিহ্নিত করুন, লুকানো রত্ন খুঁজুন, কুইজ খেলুন। Bangladesh & world travel guide with maps, hidden gems, quiz and travel news."><link rel="canonical" href="https://abdul-ahad646.github.io/world-tour-guide/"><meta property="og:type" content="website"><meta property="og:title" content="কোথায় ঘুরবেন — World Tour Guide"><meta property="og:description" content="বাংলাদেশ ও বিশ্বের ভ্রমণ গাইড — দেশ, বিভাগ আর শহর বেছে ম্যাপে ভ্রমণ চিহ্নিত করুন, লুকানো রত্ন খুঁজুন, কুইজ খেলুন। Bangladesh & world travel guide with maps, hidden gems, quiz and travel news."><meta property="og:url" content="https://abdul-ahad646.github.io/world-tour-guide/"><meta property="og:image" content="https://abdul-ahad646.github.io/world-tour-guide/icon-512.png">
+<meta name="description" content="World Tour Guide-এর সব পেজ এক জায়গায় — কোথায় ঘুরবেন, ওয়ার্ল্ড ম্যাপ, আমার ম্যাপ, ট্রিপ প্ল্যানার, কুইজ, লুকানো রত্ন, নিউজ, হেল্প আর ট্যুর গাইড ভাড়া। All pages of World Tour Guide in one place."><link rel="canonical" href="https://abdul-ahad646.github.io/world-tour-guide/home.html"><meta property="og:type" content="website"><meta property="og:title" content="সব পেজ — World Tour Guide"><meta property="og:description" content="World Tour Guide-এর সব পেজ এক জায়গায়।"><meta property="og:url" content="https://abdul-ahad646.github.io/world-tour-guide/home.html"><meta property="og:image" content="https://abdul-ahad646.github.io/world-tour-guide/icon-512.png">
 <meta name="theme-color" content="#0b5d6b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="logo-round.png">
 <link rel="stylesheet" href="bootstrap.min.css">
-<link rel="stylesheet" href="style.css?v=21">
+<link rel="stylesheet" href="style.css?v=22">
 
 <!-- App (PWA): phone e add korar jonno manifest + icon -->
 <link rel="manifest" href="manifest.webmanifest">
@@ -25,7 +25,7 @@
 
 <!-- Menu: sob page er common navigation -->
 
-  <button type="button" class="navtoggle" id="navToggle" aria-label="Menu" aria-expanded="false">☰</button><nav class="nav ms-auto gap-1" id="mainNav"><a class="btn btn-sm btn-light fw-semibold" href="index.html" data-i18n="nav_explore"></a><a class="btn btn-sm btn-outline-light border-0" href="world.html" data-i18n="nav_world"></a><a class="btn btn-sm btn-outline-light border-0" href="map.html" data-i18n="nav_map"></a><a class="btn btn-sm btn-outline-light border-0" href="quiz.html" data-i18n="nav_quiz"></a><a class="btn btn-sm btn-outline-light border-0" href="plan.html" data-i18n="nav_plan"></a><a class="btn btn-sm btn-outline-light border-0" href="places.html" data-i18n="nav_gems"></a><a class="btn btn-sm btn-outline-light border-0" href="news.html" data-i18n="nav_news"></a><a class="btn btn-sm btn-outline-light border-0" href="help.html" data-i18n="nav_help"></a><a class="btn btn-sm btn-outline-light border-0" href="service.html" data-i18n="nav_service"></a></nav>
+  <button type="button" class="navtoggle" id="navToggle" aria-label="Menu" aria-expanded="false">☰</button><nav class="nav ms-auto gap-1" id="mainNav"><a class="btn btn-sm btn-outline-light border-0" href="explore.html" data-i18n="nav_explore"></a><a class="btn btn-sm btn-outline-light border-0" href="world.html" data-i18n="nav_world"></a><a class="btn btn-sm btn-outline-light border-0" href="map.html" data-i18n="nav_map"></a><a class="btn btn-sm btn-outline-light border-0" href="quiz.html" data-i18n="nav_quiz"></a><a class="btn btn-sm btn-outline-light border-0" href="plan.html" data-i18n="nav_plan"></a><a class="btn btn-sm btn-outline-light border-0" href="places.html" data-i18n="nav_gems"></a><a class="btn btn-sm btn-outline-light border-0" href="news.html" data-i18n="nav_news"></a><a class="btn btn-sm btn-outline-light border-0" href="help.html" data-i18n="nav_help"></a><a class="btn btn-sm btn-outline-light border-0" href="service.html" data-i18n="nav_service"></a></nav>
   <select class="langbtn form-select form-select-sm w-auto" id="langBtn" aria-label="Language"></select>
 </div></header>
 
@@ -34,32 +34,20 @@
 <!-- Notice bar: admin er deya choloman notice (banner er upore) -->
 
 <div class="noticebar" id="noticeBar" hidden><div class="notice-track"><span id="noticeText"></span></div></div>
-<div class="pbanner py-5 text-center text-white b-explore"><div class="container"><h1 data-i18n="exp_h"></h1><p data-i18n="exp_lead"></p></div></div>
+<div class="pbanner py-5 text-center text-white b-explore"><div class="container"><h1 data-i18n="hm_h"></h1><p data-i18n="hm_lead"></p></div></div>
 <div class="container"><div class="adslot" data-adslot></div></div>
-<section class="blk py-4 wpick" id="world-picker"><div class="container">
-  <h2 data-i18n="wp_h"></h2>
-  <p class="lead" data-i18n="wp_lead"></p>
-  <div class="wpick-grid row g-3 align-items-start">
-    <div class="card shadow-sm wpick-card p-3 col-12">
-      <div class="row g-2">
-        <div class="col-12 col-md-4">
-          <label class="f form-label fw-semibold" for="wp-country" data-i18n="wp_country"></label>
-          <select class="form-select" id="wp-country"></select>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="f form-label fw-semibold" for="wp-big" data-i18n="wp_big"></label>
-          <select class="form-select" id="wp-big" disabled></select>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="f form-label fw-semibold" for="wp-city" data-i18n="wp_small"></label>
-          <select class="form-select" id="wp-city" disabled></select>
-        </div>
-      </div>
-      <button type="button" class="btn btn-primary btn-sm mt-2 px-2 py-1" style="font-size:12.5px;line-height:1.2" id="wp-search-btn" data-i18n="wp_search_btn" disabled></button>
-      <div class="wpick-cities" id="wp-cities"></div>
-      <div class="wpick-result d-none" id="wp-result"></div>
-    </div>
-    <div class="card shadow-sm p-3 col-12"><div class="wpick-places" id="wpPlacesBox"><h3 data-i18n="tp_h2"></h3><p id="tpIdxStatus" class="d-none"></p><div class="tpgrid wp-tpgrid row row-cols-1 row-cols-sm-2 g-2" id="tpIdxGrid"></div></div></div>
+<section class="blk py-4"><div class="container">
+  <!-- Sob page er icon card — prothomei sob page ekhane -->
+  <div class="hm-grid">
+    <a class="hm-card" href="explore.html"><span class="hm-t" data-i18n="hm1_t"></span><span class="hm-d" data-i18n="hm1_d"></span></a>
+    <a class="hm-card" href="world.html"><span class="hm-t" data-i18n="hm2_t"></span><span class="hm-d" data-i18n="hm2_d"></span></a>
+    <a class="hm-card" href="map.html"><span class="hm-t" data-i18n="hm3_t"></span><span class="hm-d" data-i18n="hm3_d"></span></a>
+    <a class="hm-card" href="plan.html"><span class="hm-t" data-i18n="hm4_t"></span><span class="hm-d" data-i18n="hm4_d"></span></a>
+    <a class="hm-card" href="quiz.html"><span class="hm-t" data-i18n="hm5_t"></span><span class="hm-d" data-i18n="hm5_d"></span></a>
+    <a class="hm-card" href="places.html"><span class="hm-t" data-i18n="hm6_t"></span><span class="hm-d" data-i18n="hm6_d"></span></a>
+    <a class="hm-card" href="news.html"><span class="hm-t" data-i18n="hm7_t"></span><span class="hm-d" data-i18n="hm7_d"></span></a>
+    <a class="hm-card" href="help.html"><span class="hm-t" data-i18n="hm8_t"></span><span class="hm-d" data-i18n="hm8_d"></span></a>
+    <a class="hm-card" href="service.html"><span class="hm-t" data-i18n="hm9_t"></span><span class="hm-d" data-i18n="hm9_d"></span></a>
   </div>
 </div></section>
 
@@ -95,22 +83,7 @@
 
 <!-- Site er mul code (app.js) -->
 
-<script src="app.js?v=48" defer></script>
-
-
-<!-- Place er bistarito view: "Aro Janun" chaple puro page jure khole -->
-
-<div class="tpm" id="tpModal" hidden>
-  <div class="tpm-back" data-tpmclose></div>
-  <div class="tpm-sheet">
-    <button type="button" class="tpm-x" data-tpmclose aria-label="Close">✕</button>
-    <h2 id="tpmName"></h2>
-    <div class="tpm-gallery" id="tpmImgs"></div>
-    <p id="tpmWho" class="tpm-who"></p>
-    <p id="tpmDesc" class="tpm-desc"></p>
-    <p class="mb-0"><a id="tpmUrl" class="btn btn-outline-secondary btn-sm" href="#" target="_blank" rel="noopener" style="display:none"></a> <a id="tpmSocial" class="btn btn-outline-primary btn-sm" href="#" target="_blank" rel="noopener" style="display:none"></a></p>
-  </div>
-</div>
+<script src="app.js?v=49" defer></script>
 
 <!-- Offline cache (service worker) chalu -->
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});</script>

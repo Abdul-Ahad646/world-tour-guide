@@ -17,7 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="logo-round.png">
 <link rel="stylesheet" href="bootstrap.min.css">
-<link rel="stylesheet" href="style.css?v=21">
+<link rel="stylesheet" href="style.css?v=22">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
@@ -45,7 +45,7 @@
 <body>
 <header class="top navbar navbar-dark shadow-sm py-2"><div class="container d-flex align-items-center flex-wrap gap-2">
   <a class="logo navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html"><img src="logo-round.png" alt="World Tour Guide logo" class="logo-img">World Tour Guide</a>
-  <button type="button" class="navtoggle" id="navToggle" aria-label="Menu" aria-expanded="false">☰</button><nav class="nav ms-auto gap-1" id="mainNav"><a class="btn btn-sm btn-outline-light border-0" href="index.html" data-i18n="nav_explore"></a><a class="btn btn-sm btn-outline-light border-0" href="world.html" data-i18n="nav_world"></a><a class="btn btn-sm btn-outline-light border-0" href="map.html" data-i18n="nav_map"></a><a class="btn btn-sm btn-outline-light border-0" href="quiz.html" data-i18n="nav_quiz"></a><a class="btn btn-sm btn-light fw-semibold" href="plan.html" data-i18n="nav_plan"></a><a class="btn btn-sm btn-outline-light border-0" href="places.html" data-i18n="nav_gems"></a><a class="btn btn-sm btn-outline-light border-0" href="news.html" data-i18n="nav_news"></a><a class="btn btn-sm btn-outline-light border-0" href="help.html" data-i18n="nav_help"></a><a class="btn btn-sm btn-outline-light border-0" href="service.html" data-i18n="nav_service"></a></nav>
+  <button type="button" class="navtoggle" id="navToggle" aria-label="Menu" aria-expanded="false">☰</button><nav class="nav ms-auto gap-1" id="mainNav"><a class="btn btn-sm btn-outline-light border-0" href="explore.html" data-i18n="nav_explore"></a><a class="btn btn-sm btn-outline-light border-0" href="world.html" data-i18n="nav_world"></a><a class="btn btn-sm btn-outline-light border-0" href="map.html" data-i18n="nav_map"></a><a class="btn btn-sm btn-outline-light border-0" href="quiz.html" data-i18n="nav_quiz"></a><a class="btn btn-sm btn-light fw-semibold" href="plan.html" data-i18n="nav_plan"></a><a class="btn btn-sm btn-outline-light border-0" href="places.html" data-i18n="nav_gems"></a><a class="btn btn-sm btn-outline-light border-0" href="news.html" data-i18n="nav_news"></a><a class="btn btn-sm btn-outline-light border-0" href="help.html" data-i18n="nav_help"></a><a class="btn btn-sm btn-outline-light border-0" href="service.html" data-i18n="nav_service"></a></nav>
   <select class="langbtn form-select form-select-sm w-auto" id="langBtn" aria-label="Language"></select>
 </div></header>
 
@@ -106,6 +106,11 @@
       <button type="button" class="btn btn-success btn-sm" id="plDownload">📄 পুরো প্ল্যান PDF ডাউনলোড</button></div>
     </div>
     <div class="pl-sec" id="plLegs"></div>
+    <div class="pl-sec" id="plRouteSec">
+      <h3>🧭 কোন জায়গার পর কোন জায়গা — রুটের ছবি</h3>
+      <svg id="plRouteImg" viewBox="0 0 800 400" role="img" aria-label="Route sequence"></svg>
+      <div class="mt-2"><button type="button" class="btn btn-outline-primary btn-sm" id="plRoutePng">🖼️ রুটের ছবি ডাউনলোড (PNG)</button></div>
+    </div>
     <div class="pl-sec" id="plTrailSec">
       <h3>🗺️ রুট ম্যাপ ছবি — জায়গার চিহ্ন ও ফেরার পথসহ</h3>
       <svg id="plTrailImg" viewBox="0 0 900 560" role="img" aria-label="Trail style route map"></svg>
@@ -134,7 +139,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" defer></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js" defer></script>
 <script src="firebase-config.js" defer></script>
-<script src="app.js?v=48" defer></script>
+<script src="app.js?v=49" defer></script>
 <script>
 (function(){
 "use strict";
@@ -195,6 +200,25 @@ function updFlags(){
   if(f)f.textContent=flagOf(resolveCountry($("plFromCountry").value));
   if(t)t.textContent=flagOf(resolveCountry($("plToCountry").value));
 }
+function drawRoute(seq){
+  var svg=$("plRouteImg");if(!svg)return;
+  var MAX=16,items=seq.slice();
+  if(items.length>MAX){var extra=items.length-(MAX-1);items=items.slice(0,MAX-1);items.push({label:"… আরও "+num(extra)+"টি ধাপ",sub:"বিস্তারিত নিচের দিনের প্ল্যানে"})}
+  var W=800,rowH=62,top=26,H=top*2+items.length*rowH;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  var out='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#ffffff"/>';
+  if(items.length>1)out+='<line x1="52" y1="'+(top+16)+'" x2="52" y2="'+(top+(items.length-1)*rowH+16)+'" stroke="#0b5d6b" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>';
+  items.forEach(function(s,i){
+    var y=top+i*rowH+16;
+    var col=i===0?"#2e7d32":(i===items.length-1?"#c62828":"#f2762e");
+    var fs=s.label.length>40?12.5:(s.label.length>26?14.5:16.5);
+    out+='<circle cx="52" cy="'+y+'" r="16" fill="'+col+'" stroke="#ffffff" stroke-width="3"/>'
+      +'<text x="52" y="'+(y+5.5)+'" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff" font-family="sans-serif">'+(i+1)+'</text>'
+      +'<text x="86" y="'+(y+1)+'" font-size="'+fs+'" font-weight="700" fill="#07323b">'+esc(s.label)+'</text>'
+      +(s.sub?'<text x="86" y="'+(y+21)+'" font-size="12.5" fill="#546e7a">'+esc(s.sub)+'</text>':"");
+  });
+  svg.innerHTML=out;
+}
 function drawTrail(seq){
   var svg=$("plTrailImg");if(!svg)return;
   var MAX=14,items=seq.slice();
@@ -235,12 +259,30 @@ function downloadPlan(){
    +'<h1>🧭 ট্রিপ প্ল্যান: '+flagOf(D.fc)+" "+esc(D.fci)+", "+esc(D.fc)+" → "+flagOf(D.tc)+" "+esc(D.tci)+", "+esc(D.tc)+'</h1>'
    +sec("plSummary")
    +'<div class="sec"><h3>🗺️ রুট ম্যাপ ছবি — জায়গার চিহ্ন ও ফেরার পথসহ</h3>'+$("plTrailImg").outerHTML+'</div>'
+   +'<div class="sec"><h3>🧭 কোন জায়গার পর কোন জায়গা — রুটের ছবি</h3>'+$("plRouteImg").outerHTML+'</div>'
    +sec("plGo")+sec("plLegs")+sec("plDaysOut")+sec("plReturn")+sec("plCost")+sec("plSafe")
    +'<p style="color:#888;font-size:12px">World Tour Guide — https://abdul-ahad646.github.io/world-tour-guide/plan.html • সব খরচ আনুমানিক।</p></body></html>';
   html=html.replace("</body>","<script>window.addEventListener('load',function(){setTimeout(function(){window.print()},500)})<\/script></body>");
   var w=window.open("","_blank");
   if(w){w.document.open();w.document.write(html);w.document.close();}
   else{dlFile("trip-plan-"+(D.tci+"-"+D.tc).replace(/[^a-z0-9]+/gi,"-")+".html",new Blob([html],{type:"text/html;charset=utf-8"}));}
+}
+function downloadRoutePng(){
+  var svg=$("plRouteImg");if(!svg||!window.__plData)return;
+  try{
+    var clone=svg.cloneNode(true);
+    clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
+    var vb=(svg.getAttribute("viewBox")||"0 0 800 400").split(/\s+/),w=+vb[2],h=+vb[3];
+    clone.setAttribute("width",w);clone.setAttribute("height",h);
+    var str=new XMLSerializer().serializeToString(clone);
+    var img=new Image();
+    img.onload=function(){
+      var sc=2,cv=document.createElement("canvas");cv.width=w*sc;cv.height=h*sc;
+      var cx=cv.getContext("2d");cx.fillStyle="#ffffff";cx.fillRect(0,0,cv.width,cv.height);cx.drawImage(img,0,0,cv.width,cv.height);
+      if(cv.toBlob)cv.toBlob(function(b){if(b)dlFile("route-"+(window.__plData.tci||"image").replace(/[^a-z0-9]+/gi,"-")+".png",b)},"image/png");
+    };
+    img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(str);
+  }catch(e){}
 }
 function downloadTrailPng(){
   var svg=$("plTrailImg");if(!svg||!window.__plData)return;
@@ -565,6 +607,8 @@ async function buildPlan(){
         +(stayTxt?'<div class="mt-2">🏨 <b>এখানে থাকা ('+esc(main.town)+'):</b> '+esc(stayTxt)+' <span class="text-muted">(বাজেট অনুযায়ী: '+esc(stayKind)+', রাতপ্রতি আনুমানিক '+tk(hotel)+')</span></div>':"")
         +(foodTxt?'<div class="mt-1">🍽️ <b>এখানে খাওয়া:</b> '+esc(foodTxt)+'</div>':"");
       if(stayTxt){var sug=stayTxt.split("।")[0].split("—")[0].trim();if(sug.length>12)inner+='<div class="mt-1">⭐ <b>সাজেস্ট করা থাকা:</b> '+esc(sug.slice(0,110))+'।</div>'}
+      var fullDesc=String(main.p.desc||"").trim();
+      if(fullDesc.length>50)inner+='<details class="mt-2"><summary style="cursor:pointer;font-weight:700;color:#0e7a3d">📖 পুরো গাইড — এই জায়গাটা পুরোপুরি কীভাবে ঘুরবেন (যাওয়া, পারমিশন/ট্রেক, থাকা, খাওয়া, খরচ, টিকিট, সতর্কতা)</summary><div style="white-space:pre-line;margin-top:6px">'+esc(fullDesc)+'</div></details>';
     }
     var lastCity=main?main.town:prevTown;
     secs.forEach(function(p){
@@ -584,6 +628,7 @@ async function buildPlan(){
   }
   if(!places.length)dayBlocks+='<p class="text-muted">ℹ️ এই শহরের বিস্তারিত জায়গার তালিকা এখনো সাইটে যোগ হয়নি — সাধারণ প্ল্যান দেওয়া হলো।</p>';
   routeSeq.push({label:flagOf(fc)+" "+fci,sub:"🏠 ফেরা"});
+  drawRoute(routeSeq);
   drawTrail(routeSeq);
   window.__plData={fc:fc,fci:fci,tc:tc,tci:tci};
   $("plGmaps").href="https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(fci+", "+fc)+"&destination="+encodeURIComponent(tci+", "+tc);
@@ -637,6 +682,7 @@ function init(){
   $("plForm").addEventListener("submit",function(e){e.preventDefault();buildPlan()});
   $("plPrint").addEventListener("click",function(){window.print()});
   $("plDownload").addEventListener("click",downloadPlan);
+  $("plRoutePng").addEventListener("click",downloadRoutePng);
   $("plTrailPng").addEventListener("click",downloadTrailPng);
   if(q.get("go")){setTimeout(buildPlan,900);var __gt=0;var __gi=setInterval(function(){__gt++;if((document.getElementById("plSummary")||{}).innerHTML||__gt>=4){clearInterval(__gi);return}buildPlan()},3000);}
 }

@@ -387,3 +387,13 @@ footer.bg-dark{background-color:#0a5c2e!important}
 .dk-tabs a .dkti{display:block;font-size:21px;line-height:1.25}
 .dk-tabs a.on{color:#0e7a3d}
 @media print{.dk-tabs{display:none}body{padding-bottom:0}}
+/* Home launcher (home.html) + Service page (Hire Tour Guide) */
+.hm-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(min-width:768px){.hm-grid{grid-template-columns:1fr 1fr 1fr}}
+.hm-card{display:block;background:#fff;border:1px solid var(--dk-line,#e2e9e3);border-radius:16px;padding:20px 14px;text-decoration:none;color:#1c2b21;box-shadow:0 2px 8px rgba(20,50,30,.05)}
+.hm-card:active{transform:scale(.98)}
+.hm-t{display:block;font-size:19px;font-weight:800;font-family:"Hind Siliguri",sans-serif;margin-bottom:6px;color:#0e7a3d}
+.hm-d{display:block;font-size:14px;color:var(--dk-mut,#6b7a70);line-height:1.45}
+.svc-ico{font-size:42px;line-height:1.2}
+.svc-price{font-size:16px;color:#0e7a3d;margin-top:8px}
+.svc-pay{background:#e8f2ea;border:1px solid var(--dk-line,#e2e9e3);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:15px}
