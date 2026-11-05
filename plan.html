@@ -355,12 +355,22 @@ async function cloudCityPlaces(country,city){
     return sn.docs.map(function(d){var x=d.data()||{};return{name:x.name||'',desc:x.desc||'',url:x.url||'',country:x.country||'',city:x.city||''}}).filter(function(x){return x.name&&(!country||x.country===country)});
   }catch(e){return[]}
 }
+async function cloudCountryPlaces(country){
+  try{
+    if(!window.firebase||!window.WTG_FB)return[];
+    if(!firebase.apps.length)firebase.initializeApp(window.WTG_FB);
+    var sn=await firebase.firestore().collection('places').where('country','==',String(country)).limit(400).get();
+    return sn.docs.map(function(d){var x=d.data()||{};return{name:x.name||'',desc:x.desc||'',url:x.url||'',country:x.country||'',city:x.city||''}}).filter(function(x){return x.name});
+  }catch(e){return[]}
+}
 async function pickPlaces(country,city,need){
   var loc=localPlaces(country,city);
   var cloud=await cloudCityPlaces(country,city);
   var seen={},out=[];
-  cloud.concat(loc.inCity).forEach(function(p){var k=String(p.name||'').toLowerCase();if(k&&!seen[k]){seen[k]=1;out.push(p)}});
-  if(out.length<need){loc.inCountry.forEach(function(p){var k=String(p.name||'').toLowerCase();if(k&&!seen[k]){seen[k]=1;out.push(p)}})}
+  function add(p){var k=String(p.name||'').toLowerCase();if(k&&!seen[k]){seen[k]=1;out.push(p)}}
+  cloud.forEach(add);loc.inCity.forEach(add);
+  if(out.length<need){(await cloudCountryPlaces(country)).forEach(add)}
+  if(out.length<need){loc.inCountry.forEach(add)}
   return out;
 }
 function shortDesc(p){
@@ -441,37 +451,84 @@ async function buildPlan(){
   var area=STAYAREA[tci]||(tci+" শহরকেন্দ্র / প্রধান পর্যটন এলাকা");
   var stayKind=tier==="low"?"হোস্টেল / বাজেট গেস্টহাউস":tier==="high"?"৫-তারকা হোটেল / লাক্সারি রিসোর্ট (স্পা, পুল, ব্রেকফাস্টসহ)":"ভালো মানের ৩-তারকা হোটেল / বুটিক গেস্টহাউস";
   var foodKind=tier==="low"?"লোকাল রেস্টুরেন্ট ও স্ট্রিট ফুড — সাশ্রয়ী আর স্বাদেও সেরা":tier==="high"?"নামকরা রেস্টুরেন্ট, রুফটপ ডাইনিং ও ক্যাফে — প্রতিদিন অন্তত একবেলা স্পেশাল খাবার":"ভালো লোকাল রেস্টুরেন্ট + মাঝে মাঝে ক্যাফে/স্পেশাল ডিনার";
-  /* Day plan from site places — somoy soho: kon din, kon jayga, kotokhon, tarpor kothay */
-  var places=await pickPlaces(tc,tci,Math.max(days*3,6));
+  /* Day plan — TOUR MODE (user spec 2026-11-05): prottek din ekta jayga main stop;
+     oi jaygar full bornona + oi jaygar-i thaka/khawa (tar nijer description theke).
+     Jemon Kashmir: din 1 Pahalgam, din 2 Doodhpathri — ebhabe ghure ghure. */
+  var places=await pickPlaces(tc,tci,Math.max(days*3,9));
+  var SECMARKS=["\uD83D\uDE97","\uD83C\uDFE8","\uD83C\uDF7D","\uD83D\uDCB0","\uD83C\uDF9F","\uD83D\uDECD","\u26A0"];
+  function isSec(L){for(var j2=0;j2<SECMARKS.length;j2++)if(L.indexOf(SECMARKS[j2])===0)return true;return false}
+  function sectionOf(p,mark){
+    var ls=String(p.desc||"").split(/\n/).map(function(x){return x.trim()}).filter(Boolean);
+    var on=false,out=[];
+    for(var i2=0;i2<ls.length;i2++){var L=ls[i2];
+      if(isSec(L)){ if(on)break; if(L.indexOf(mark)===0){on=true;out.push(L);} continue; }
+      if(on)out.push(L);
+    }
+    var t=out.join(" ");
+    t=t.replace(/^[^:：]{0,26}[:：]\s*/,"");
+    if(t.length>300){t=t.slice(0,300);var c=Math.max(t.lastIndexOf("।"),t.lastIndexOf(" "));if(c>150)t=t.slice(0,c+1);}
+    return t;
+  }
   var DURS=[150,120,180,120,150,90];
-  var dayBlocks="",used=0,pIdx=0;
+  var dayBlocks="",pIdx=0;
   var routeSeq=[{label:flagOf(fc)+" "+fci,sub:"🛫 শুরু — "+bnOf(fc)}];
   if(intl&&cap!==tci)routeSeq.push({label:cap,sub:"✈️ গেটওয়ে শহর"});
   routeSeq.push({label:flagOf(tc)+" "+tci,sub:"🎯 গন্তব্য — "+bnOf(tc)});
+  var usedN={};
+  var townMain={},townExtra={},cityPool=[];
+  places.forEach(function(p){
+    if(p.city&&p.city!==tci){ if(!townMain[p.city]){townMain[p.city]=p;townExtra[p.city]=[]}else townExtra[p.city].push(p); }
+    else cityPool.push(p);
+  });
+  var mains=[];
+  Object.keys(townMain).forEach(function(ct){mains.push({p:townMain[ct],town:ct});usedN[townMain[ct].name]=1});
+  cityPool.forEach(function(p){mains.push({p:p,town:tci});usedN[p.name]=1});
+  function takeSec(town,n){
+    var res=[];
+    if(town&&townExtra[town]){for(var i3=0;i3<townExtra[town].length&&res.length<n;i3++){var pp=townExtra[town][i3];if(!usedN[pp.name]){usedN[pp.name]=1;res.push(pp)}}}
+    for(var j3=0;j3<places.length&&res.length<n;j3++){var q=places[j3];if(!usedN[q.name]){usedN[q.name]=1;res.push(q)}}
+    return res;
+  }
+  var prevTown=tci,prevBase=tci;
   for(var d=1;d<=days;d++){
-    var items=[];
-    if(d===1){items.push({t:"🛬 পৌঁছানো ও হোটেলে চেক-ইন",x:"বিশ্রাম নিন, আশপাশ হেঁটে চিনে নিন, হালকা খাবার খান।",dur:120});for(var a1=0;a1<2;a1++){if(places.length)items.push({p:places[used++%places.length]});}}
-    else if(d===days){for(var b1=0;b1<2;b1++){if(places.length&&used<places.length+2)items.push({p:places[used++%places.length]});}items.push({t:"🧳 চেক-আউট ও ফেরার যাত্রা",x:"কেনাকাটা সেরে ফেরার গাড়ি/ফ্লাইট ধরুন।",dur:0});}
-    else{for(var k=0;k<3;k++){if(places.length)items.push({p:places[used++%places.length]});}if(!places.length)items.push({t:"🏙️ শহর ঘোরা",x:tci+"-এর প্রধান আকর্ষণ, বাজার ও স্থানীয় এলাকা ঘুরে দেখুন।",dur:180});}
-    if(d>1)items.splice(0,0,{t:"🍳 সকালের নাশতা",x:"হোটেলে বা কাছের ক্যাফেতে নাশতা সেরে বের হোন। আজকের খাবারের বাজেট জনপ্রতি আনুমানিক "+tk(food)+"।",dur:30});
-    var pCnt=items.filter(function(it){return it.p}).length;
-    if(pCnt>=2){var sP=0;for(var q=0;q<items.length;q++){if(items[q].p){sP++;if(sP===1){items.splice(q+1,0,{t:"🍽️ দুপুরের খাবার",x:tci+"-এর "+area+" এলাকার রেস্টুরেন্টে — "+foodKind+"। হালাল দরকার হলে অর্ডারের আগে নিশ্চিত হয়ে নিন।",dur:45});break}}}}
+    var main=mains[d-1]||null;
+    var baseTown=main?main.town:prevTown;
+    var secs=takeSec(main?main.town:null,(d===days)?1:2);
     var cursor=(d===1)?810:540;
-    var names=items.map(function(it){return it.p?it.p.name:it.t});
-    var inner=items.map(function(it,ix){
-      var mv="";
-      if(ix>0){cursor+=30;mv='<div class="pl-move">🚕 আগের জায়গা থেকে এখানে — যাতায়াত প্রায় ৩০ মিনিট (ট্যাক্সি/রিকশা/হাঁটা)</div>'}
-      if(it.p){
-        var dur=DURS[pIdx%DURS.length];pIdx++;
-        var st=cursor;cursor+=dur;
-        routeSeq.push({label:it.p.name,sub:"📅 দিন "+num(d)+" • "+durTxt(dur)});
-        return mv+'<div><span class="pl-time">🕘 '+fmtT(st)+' – '+fmtT(cursor)+' • '+durTxt(dur)+'</span></div><div class="pl-place">📍 '+esc(it.p.name)+'</div><div>'+(introDesc(it.p)?"📖 বর্ণনা: "+esc(introDesc(it.p)):"")+'</div>'+(it.p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(it.p.url)+'">🗺️ ম্যাপে দেখুন</a>':"");
-      }
-      var chip='<div><span class="pl-time">🕘 '+fmtT(cursor)+' থেকে</span></div>';
-      if(it.dur)cursor+=it.dur;
-      return mv+chip+'<div class="pl-place">'+it.t+'</div><div>'+esc(it.x)+'</div>';
+    var blocks=[];
+    if(d===1)blocks.push({t:"🛬 "+tci+" পৌঁছানো",x:"হোটেলে চেক-ইন ও বিশ্রাম — তারপর আজকের গন্তব্যের দিকে রওনা।",dur:90});
+    else blocks.push({t:"🍳 সকালের নাশতা",x:prevBase+"-এর হোটেলে নাশতা সেরে বের হোন। আজকের খাবারের বাজেট জনপ্রতি আনুমানিক "+tk(food)+"।",dur:30});
+    var inner=blocks.map(function(it){
+      var chip='<div><span class="pl-time">🕘 '+fmtT(cursor)+' থেকে</span></div>';cursor+=it.dur;
+      return chip+'<div class="pl-place">'+it.t+'</div><div>'+esc(it.x)+'</div>';
     }).join("");
-    dayBlocks+='<div class="pl-day"><b>📅 দিন '+num(d)+'</b><div class="pl-move">🧭 আজকের রুট: '+esc(names.join(" → "))+'</div>'+inner+(d<days?'<div class="pl-move">🏨 রাতের থাকা: '+esc(tci)+' — '+esc(area)+' এলাকায় ('+esc(stayKind)+')</div>':"")+'</div>';
+    var routeNames=[];
+    if(d===1)routeNames.push(tci);
+    if(main&&main.town!==prevTown){inner+='<div class="pl-move">🚕 '+esc(prevTown)+' থেকে '+esc(main.town)+' — আজকের যাত্রা (পথের দৃশ্য উপভোগ করুন)</div>';cursor+=60;}
+    if(main){
+      var dur=DURS[pIdx%DURS.length];pIdx++;
+      var st=cursor;cursor+=dur;
+      routeNames.push(main.p.name);
+      routeSeq.push({label:main.p.name,sub:"📅 দিন "+num(d)+" • 🌙 "+main.town});
+      var stayTxt=sectionOf(main.p,"🏨"),foodTxt=sectionOf(main.p,"🍽");
+      inner+='<div><span class="pl-time">🕘 '+fmtT(st)+' – '+fmtT(cursor)+' • '+durTxt(dur)+'</span></div>'
+        +'<div class="pl-place">📍 '+esc(main.p.name)+(main.town!==tci?' <span class="text-muted">('+esc(main.town)+')</span>':"")+'</div>'
+        +'<div>'+(introDesc(main.p)?"📖 বর্ণনা: "+esc(introDesc(main.p)):"")+'</div>'
+        +(main.p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(main.p.url)+'">🗺️ ম্যাপে দেখুন</a>':"")
+        +(stayTxt?'<div class="mt-2">🏨 <b>এখানে থাকা ('+esc(main.town)+'):</b> '+esc(stayTxt)+' <span class="text-muted">(বাজেট অনুযায়ী: '+esc(stayKind)+', রাতপ্রতি আনুমানিক '+tk(hotel)+')</span></div>':"")
+        +(foodTxt?'<div class="mt-1">🍽️ <b>এখানে খাওয়া:</b> '+esc(foodTxt)+'</div>':"");
+    }
+    secs.forEach(function(p){
+      cursor+=30;
+      var mv='<div class="pl-move">🚕 আগের জায়গা থেকে এখানে — যাতায়াত প্রায় ৩০ মিনিট</div>';
+      var dur2=90,stt=cursor;cursor+=dur2;
+      routeNames.push(p.name);
+      inner+=mv+'<div><span class="pl-time">🕘 '+fmtT(stt)+' – '+fmtT(cursor)+' • '+durTxt(dur2)+'</span></div><div class="pl-place">📍 '+esc(p.name)+'</div><div>'+esc(shortDesc(p))+'</div>'+(p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(p.url)+'">🗺️ ম্যাপে দেখুন</a>':"");
+    });
+    if(!main&&!secs.length)inner+='<div class="pl-place">🏙️ '+esc(baseTown)+' আশপাশ ঘোরা</div><div>'+esc(baseTown)+'-এর বাজার, স্থানীয় এলাকা ও বাকি আকর্ষণ ধীরে ধীরে ঘুরে দেখুন।</div>';
+    if(d===days){inner+='<div class="pl-move">🧳 চেক-আউট ও ফেরার যাত্রা</div><div class="pl-place">🔁 '+esc(baseTown)+' থেকে ফেরা</div><div>কেনাকাটা সেরে '+esc(tci)+' হয়ে ফেরার গাড়ি/ফ্লাইট ধরুন।</div>';routeNames.push("ফেরা");}
+    dayBlocks+='<div class="pl-day"><b>📅 দিন '+num(d)+(main?' — '+esc(main.p.name):'')+'</b><div class="pl-move">🧭 আজকের রুট: '+esc(routeNames.join(" → "))+'</div>'+inner+(d<days?'<div class="pl-move">🌙 রাত কাটান: '+esc(baseTown)+(main?' — '+esc(main.p.name)+' এলাকায়':'')+' ('+esc(stayKind)+')</div>':"")+'</div>';
+    if(main){prevTown=main.town;prevBase=main.p.name}
   }
   if(!places.length)dayBlocks+='<p class="text-muted">ℹ️ এই শহরের বিস্তারিত জায়গার তালিকা এখনো সাইটে যোগ হয়নি — সাধারণ প্ল্যান দেওয়া হলো।</p>';
   routeSeq.push({label:flagOf(fc)+" "+fci,sub:"🏠 ফেরা"});
