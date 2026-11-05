@@ -313,6 +313,14 @@ function shortDesc(p){
   var d=String(p.desc||"").split(/\n/).filter(function(x){return x.trim()&&!/^🚗|^🏨|^🍽|^💰|^🎟|^🛍|^⚠/.test(x.trim())});
   return (d[0]||"").slice(0,170);
 }
+function introDesc(p){
+  var ls=String(p.desc||"").split(/\n/).map(function(x){return x.trim()}).filter(Boolean);
+  var out=[];
+  for(var i=0;i<ls.length;i++){ if(/^🚗|^🏨|^🍽|^💰|^🎟|^🛍|^⚠/.test(ls[i]))break; out.push(ls[i]); }
+  var t=out.join(" ");
+  if(t.length>420){ t=t.slice(0,420); var c=Math.max(t.lastIndexOf("।"),t.lastIndexOf(" ")); if(c>200)t=t.slice(0,c+1); }
+  return t;
+}
 /* ---------- Route map (SVG image) ---------- */
 function drawMap(stops){
   var svg=$("plMap");var W=900,H=380,pad=70;
@@ -403,7 +411,7 @@ async function buildPlan(){
         var dur=DURS[pIdx%DURS.length];pIdx++;
         var st=cursor;cursor+=dur;
         routeSeq.push({label:it.p.name,sub:"📅 দিন "+num(d)+" • "+durTxt(dur)});
-        return mv+'<div><span class="pl-time">🕘 '+fmtT(st)+' – '+fmtT(cursor)+' • '+durTxt(dur)+'</span></div><div class="pl-place">📍 '+esc(it.p.name)+'</div><div>'+(shortDesc(it.p)?"👀 যা দেখবেন: "+esc(shortDesc(it.p)):"")+'</div>'+(it.p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(it.p.url)+'">🗺️ ম্যাপে দেখুন</a>':"");
+        return mv+'<div><span class="pl-time">🕘 '+fmtT(st)+' – '+fmtT(cursor)+' • '+durTxt(dur)+'</span></div><div class="pl-place">📍 '+esc(it.p.name)+'</div><div>'+(introDesc(it.p)?"📖 বর্ণনা: "+esc(introDesc(it.p)):"")+'</div>'+(it.p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(it.p.url)+'">🗺️ ম্যাপে দেখুন</a>':"");
       }
       var chip='<div><span class="pl-time">🕘 '+fmtT(cursor)+' থেকে</span></div>';
       if(it.dur)cursor+=it.dur;
