@@ -157,7 +157,7 @@ function tk(n){return "৳"+String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/
 function bnD(s){return String(s).replace(/\d/g,function(d){return BN[+d]})}
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function coords(country,city){
-  try{var list=(gWCC())[country]||[];for(var i=0;i<list.length;i++){if(list[i][0]===city)return{lat:list[i][1],lon:list[i][2]}}if(list.length)return{lat:list[0][1],lon:list[0][2]}}catch(e){}
+  try{var list=(gWCC())[country]||[];for(var i=0;i<list.length;i++){if(list[i][0]===city)return{lat:list[i][1],lon:list[i][2]}}var bc=(typeof BIGCC!=="undefined"&&BIGCC[country])||null;if(bc&&bc[city])return{lat:bc[city][0],lon:bc[city][1]};if(list.length)return{lat:list[0][1],lon:list[0][2]}}catch(e){}
   return null;
 }
 function distKm(a,b){if(!a||!b)return 0;var R=6371,dLa=(b.lat-a.lat)*Math.PI/180,dLo=(b.lon-a.lon)*Math.PI/180;var h=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);return Math.round(2*R*Math.asin(Math.sqrt(h)))}
@@ -323,11 +323,78 @@ function fillCountries(inp,def){
   if(dl)dl.innerHTML=cs.map(function(n){var bn=(gWBN())[n]||n;return '<option value="'+esc(n)+'" label="'+esc(bn)+'"></option>'+(bn!==n?'<option value="'+esc(bn)+'"></option>':"")}).join("");
   inp.value=def||"";
 }
+/* Boro sohor: select-e age boro sohor gula dekhabe (user order 2026-11-05).
+   BIGCC = data-te nei emon boro sohorer coordinate (planner supplement). */
+var BIGC={
+"Bangladesh":["Dhaka","Chattogram","Khulna","Rajshahi","Sylhet","Barishal","Rangpur","Mymensingh","Cox's Bazar","Comilla","Narayanganj","Gazipur"],
+"India":["New Delhi","Mumbai","Kolkata","Chennai","Bengaluru","Hyderabad","Jaipur","Ahmedabad","Pune","Srinagar","Agra","Varanasi","Kochi","Panaji","Goa","Lucknow","Patna","Udaipur","Amritsar","Bhopal","Indore","Surat","Kanpur","Nagpur","Guwahati","Bhubaneswar","Dehradun","Shimla","Manali"],
+"Nepal":["Kathmandu","Pokhara","Chitwan","Lumbini","Bhaktapur","Lalitpur","Biratnagar","Nagarkot","Dharan","Butwal"],
+"Bhutan":["Thimphu","Paro","Punakha","Phuntsholing","Jakar"],
+"Sri Lanka":["Colombo","Kandy","Galle","Negombo","Anuradhapura","Trincomalee","Jaffna","Nuwara Eliya","Ella","Mirissa","Sigiriya"],
+"Maldives":["Male","Hulhumale","Maafushi","Addu City"],
+"Thailand":["Bangkok","Pattaya","Phuket","Chiang Mai","Krabi","Hua Hin","Phra Nakhon Si Ayutthaya","Kanchanaburi","Chiang Rai","Koh Samui","Surat Thani","Udon Thani"],
+"Malaysia":["Kuala Lumpur","George Town","Penang","Langkawi","Malacca","Johor Bahru","Ipoh","Kota Kinabalu","Kuching","Cameron Highlands","Genting Highlands"],
+"Singapore":["Singapore"],
+"Vietnam":["Hanoi","Ho Chi Minh City","Da Nang","Hue","Hoi An","Nha Trang","Da Lat","Ha Long","Can Tho","Phu Quoc"],
+"Indonesia":["Jakarta","Denpasar","Bali","Yogyakarta","Bandung","Surabaya","Medan","Makassar","Semarang","Lombok","Ubud"],
+"Cambodia":["Phnom Penh","Siem Reap","Sihanoukville","Battambang","Kampot"],
+"Philippines":["Manila","Cebu City","Davao","Boracay","Baguio","Iloilo","Bacolod City","Puerto Princesa"],
+"China":["Beijing","Shanghai","Guangzhou","Shenzhen","Chengdu","Xi'an","Hangzhou","Chongqing","Nanjing","Wuhan","Kunming","Guilin","Hong Kong","Macau","Lhasa","Urumqi"],
+"Japan":["Tokyo","Osaka","Kyoto","Fukuoka","Sapporo","Nagoya","Hiroshima","Nara-shi","Yokohama","Kobe","Okinawa","Naha"],
+"South Korea":["Seoul","Busan","Incheon","Jeju City","Daegu","Gyeongju","Jeonju","Gangneung"],
+"Pakistan":["Islamabad","Karachi","Lahore","Faisalabad","Rawalpindi","Peshawar","Quetta","Multan","Hyderabad","Gujranwala","Hunza","Skardu","Gilgit","Murree"],
+"United Arab Emirates":["Dubai","Abu Dhabi","Sharjah","Ajman","Ras Al Khaimah","Fujairah"],
+"Qatar":["Doha","Lusail","Al Wakrah"],
+"Saudi Arabia":["Riyadh","Jeddah","Mecca","Medina","Dammam","Khobar","Tabuk","Abha","Al-'Ula"],
+"Turkey":["Istanbul","Ankara","Izmir","Antalya","Bursa","Cappadocia","Trabzon","Konya","Bodrum","Fethiye","Pamukkale","Eskisehir"],
+"Egypt":["Cairo","Alexandria","Luxor","Aswan","Hurghada","Sharm el-Sheikh","Giza","Marsa Alam","Dahab","Siwa Oasis"],
+"United Kingdom":["London","Edinburgh","Manchester","Birmingham","Liverpool","Glasgow","Cardiff","Belfast","York","Bath","Oxford","Cambridge","Brighton"],
+"France":["Paris","Nice","Lyon","Marseille","Bordeaux","Lille","Nantes","Strasbourg","Toulouse","Cannes"],
+"Italy":["Rome","Venice","Florence","Milan","Naples","Bologna","Turin","Verona","Pisa","Genoa","Palermo"],
+"Spain":["Madrid","Barcelona","Seville","Valencia","Granada","Malaga","Bilbao","Palma","Alicante","Cordoba"],
+"Germany":["Berlin","Munich","Hamburg","Frankfurt am Main","Cologne","Stuttgart","Dusseldorf","Leipzig","Dresden","Heidelberg"],
+"Netherlands":["Amsterdam","Rotterdam","The Hague","Utrecht","Eindhoven","Maastricht","Haarlem"],
+"Switzerland":["Zurich","Geneva","Bern","Lucerne","Interlaken","Zermatt","Lausanne","Basel","Lugano"],
+"Greece":["Athens","Thessaloniki","Santorini","Mykonos","Crete","Heraklion","Rhodes","Corfu","Patra"],
+"United States":["New York","Los Angeles","Las Vegas","San Francisco","Chicago","Miami","Orlando","Houston","Washington","Boston","Seattle","San Diego","New Orleans","Denver","Atlanta","Dallas","Phoenix","Nashville"],
+"Canada":["Toronto","Vancouver","Montreal","Calgary","Ottawa","Edmonton","Winnipeg","Quebec","Banff","Whistler"],
+"Australia":["Sydney","Melbourne","Brisbane","Perth","Adelaide","Canberra","Hobart","Darwin","Cairns","Gold Coast"],
+"New Zealand":["Auckland","Wellington","Christchurch","Queenstown","Rotorua","Hamilton","Dunedin"],
+"Brazil":["Sao Paulo","Rio de Janeiro","Brasilia","Salvador","Fortaleza","Belo Horizonte","Curitiba","Recife","Manaus","Florianopolis"],
+"Russia":["Moscow","Saint Petersburg","Kazan","Sochi","Novosibirsk","Yekaterinburg","Vladivostok","Kaliningrad"],
+"South Africa":["Cape Town","Johannesburg","Durban","Pretoria","Port Elizabeth","Bloemfontein"],
+"Kenya":["Nairobi","Mombasa","Kisumu","Nakuru","Eldoret","Malindi","Diani Beach","Lamu","Nanyuki","Naivasha"],
+"Morocco":["Casablanca","Marrakesh","Rabat","Fes","Tangier","Agadir","Essaouira","Chefchaouen","Meknes","Ouarzazate"]
+};
+var BIGCC={
+"India":{"Panaji":[15.49,73.83],"Goa":[15.30,74.12]},
+"Nepal":{"Chitwan":[27.58,84.51],"Lumbini":[27.48,83.28],"Bhaktapur":[27.67,85.43],"Nagarkot":[27.72,85.52]},
+"Bhutan":{"Jakar":[27.55,90.75]},
+"Sri Lanka":{"Ella":[6.87,81.05],"Mirissa":[5.95,80.46],"Sigiriya":[7.96,80.76]},
+"Thailand":{"Koh Samui":[9.51,100.01]},
+"Malaysia":{"Penang":[5.41,100.33],"Langkawi":[6.35,99.80],"Cameron Highlands":[4.47,101.37],"Genting Highlands":[3.42,101.79]},
+"Indonesia":{"Bali":[-8.34,115.09],"Lombok":[-8.65,116.32]},
+"Philippines":{"Boracay":[11.97,121.92]},
+"China":{"Hong Kong":[22.32,114.17],"Macau":[22.20,113.55],"Urumqi":[43.83,87.62]},
+"Pakistan":{"Hunza":[36.32,74.65]},
+"Saudi Arabia":{"Medina":[24.47,39.61]},
+"Turkey":{"Cappadocia":[38.64,34.83],"Pamukkale":[37.92,29.12]},
+"Egypt":{"Marsa Alam":[25.07,34.90],"Dahab":[28.50,34.52],"Siwa Oasis":[29.20,25.52]},
+"Germany":{"Cologne":[50.94,6.96],"Dusseldorf":[51.23,6.77]},
+"Switzerland":{"Lucerne":[47.05,8.31],"Interlaken":[46.69,7.87],"Zermatt":[46.02,7.75]},
+"Greece":{"Santorini":[36.39,25.46],"Mykonos":[37.45,25.33],"Crete":[35.24,24.90]},
+"Canada":{"Banff":[51.18,-115.57],"Whistler":[50.12,-122.96]},
+"South Africa":{"Port Elizabeth":[-33.96,25.60]},
+"Kenya":{"Diani Beach":[-4.28,39.58]}
+};
 function citiesOf(country){
   var out=[],seen={};
   try{var e=gWC().filter(function(x){return x.name===country})[0];(e&&e.cities||[]).forEach(function(c){if(!seen[c]){seen[c]=1;out.push(c)}});
   ((gWCC())[country]||[]).forEach(function(r){if(!seen[r[0]]){seen[r[0]]=1;out.push(r[0])}});}catch(e){}
-  return out.sort();
+  var bc=BIGCC[country]||{};for(var k in bc){if(!seen[k]){seen[k]=1;out.push(k)}}
+  var big=(BIGC[country]||[]).filter(function(c){return seen[c]});
+  var rest=out.filter(function(c){return big.indexOf(c)<0}).sort();
+  return big.concat(rest);
 }
 function fillCities(inp,country,def){
   var dl=document.getElementById(inp.getAttribute("list"));
