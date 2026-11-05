@@ -127,13 +127,18 @@
 <script>
 (function(){
 "use strict";
-var $=function(id){return document.getElementById(id)};
+var $=function(id){return document.getElementById(id)}
+function gWC(){try{return WC}catch(e){return[]}}
+function gWCC(){try{return WCC}catch(e){return{}}}
+function gWBN(){try{return WBN}catch(e){return{}}}
+function gWBC(){try{return WBC}catch(e){return{}}}
+function gWBC2(){try{return WBC2}catch(e){return{}}};
 var BN="০১২৩৪৫৬৭৮৯";
 function num(n){return String(Math.round(n)).replace(/\d/g,function(d){return BN[+d]}).replace(/,/g,"")}
 function tk(n){return "৳"+String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,",")}
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function coords(country,city){
-  try{var list=(window.WCC||{})[country]||[];for(var i=0;i<list.length;i++){if(list[i][0]===city)return{lat:list[i][1],lon:list[i][2]}}if(list.length)return{lat:list[0][1],lon:list[0][2]}}catch(e){}
+  try{var list=(gWCC())[country]||[];for(var i=0;i<list.length;i++){if(list[i][0]===city)return{lat:list[i][1],lon:list[i][2]}}if(list.length)return{lat:list[0][1],lon:list[0][2]}}catch(e){}
   return null;
 }
 function distKm(a,b){if(!a||!b)return 0;var R=6371,dLa=(b.lat-a.lat)*Math.PI/180,dLo=(b.lon-a.lon)*Math.PI/180;var h=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);return Math.round(2*R*Math.asin(Math.sqrt(h)))}
@@ -160,18 +165,18 @@ function prof(country){return COST[country]||COSTDEF}
 function tierName(t){return t==="low"?"Low (সাশ্রয়ী)":t==="high"?"High (লাক্সারি)":"Medium (আরামদায়ক)"}
 function tierIdx(t){return t==="low"?0:t==="high"?2:1}
 function fillCountries(sel,def){
-  var cs=(window.WC||[]).slice().sort(function(a,b){return a.name<b.name?-1:1});
-  sel.innerHTML=cs.map(function(x){var bn=(window.WBN||{})[x.name]||x.name;return '<option value="'+esc(x.name)+'"'+(x.name===def?" selected":"")+'>'+esc(bn)+" ("+esc(x.name)+")</option>"}).join("");
+  var cs=gWC().slice().sort(function(a,b){return a.name<b.name?-1:1});
+  sel.innerHTML=cs.map(function(x){var bn=(gWBN())[x.name]||x.name;return '<option value="'+esc(x.name)+'"'+(x.name===def?" selected":"")+'>'+esc(bn)+" ("+esc(x.name)+")</option>"}).join("");
 }
 function citiesOf(country){
   var out=[],seen={};
-  try{var e=(window.WC||[]).filter(function(x){return x.name===country})[0];(e&&e.cities||[]).forEach(function(c){if(!seen[c]){seen[c]=1;out.push(c)}});
-  ((window.WCC||{})[country]||[]).forEach(function(r){if(!seen[r[0]]){seen[r[0]]=1;out.push(r[0])}});}catch(e){}
+  try{var e=gWC().filter(function(x){return x.name===country})[0];(e&&e.cities||[]).forEach(function(c){if(!seen[c]){seen[c]=1;out.push(c)}});
+  ((gWCC())[country]||[]).forEach(function(r){if(!seen[r[0]]){seen[r[0]]=1;out.push(r[0])}});}catch(e){}
   return out.sort();
 }
 function fillCities(sel,country,def){
   var cs=citiesOf(country);
-  sel.innerHTML=cs.map(function(c){var bn=((window.WBC2||{})[c]||(window.WBC||{})[c]||c);return '<option value="'+esc(c)+'"'+(c===def?" selected":"")+'>'+esc(bn!==c?bn+" ("+c+")":c)+"</option>"}).join("");
+  sel.innerHTML=cs.map(function(c){var bn=((gWBC2())[c]||(gWBC())[c]||c);return '<option value="'+esc(c)+'"'+(c===def?" selected":"")+'>'+esc(bn!==c?bn+" ("+c+")":c)+"</option>"}).join("");
   if(def&&cs.indexOf(def)<0&&cs.length)sel.value=cs[0];
 }
 function myPlaces(country,city){
@@ -307,7 +312,7 @@ function buildPlan(){
   try{history.replaceState(null,"","?fc="+encodeURIComponent(fc)+"&fci="+encodeURIComponent(fci)+"&tc="+encodeURIComponent(tc)+"&tci="+encodeURIComponent(tci)+"&b="+tier+"&d="+days+"&p="+people)}catch(e){}
 }
 function init(){
-  if(!window.WC||!window.WCC){setTimeout(init,250);return}
+  if(!gWC().length){setTimeout(init,250);return}
   var q=new URLSearchParams(location.search);
   var fc=q.get("fc")||"Bangladesh",fci=q.get("fci")||"Chattogram",tc=q.get("tc")||"Nepal",tci=q.get("tci")||"Pokhara";
   fillCountries($("plFromCountry"),fc);fillCountries($("plToCountry"),tc);
