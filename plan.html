@@ -35,6 +35,9 @@
 .pl-cost td,.pl-cost th{padding:7px 10px}
 .pl-chip{display:inline-block;background:#fff3e0;color:#8d5a00;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600;margin:2px}
 #plMap{width:100%;height:auto;border-radius:14px;background:linear-gradient(160deg,#a8d8ea,#d8f3dc)}
+.pl-flag{font-size:30px;line-height:1;min-width:42px;text-align:center}
+.pl-time{display:inline-block;background:#e0f2f1;color:#0b5d6b;border-radius:999px;padding:1px 10px;font-size:13px;font-weight:700;margin-bottom:3px}
+#plRouteImg{width:100%;height:auto;border-radius:14px;background:#fff;border:1px solid #e0e0e0}
 .pl-total{font-size:22px;font-weight:800;color:#0b5d6b}
 </style>
 </head>
@@ -53,19 +56,23 @@
     <div class="row g-3">
       <div class="col-12 col-md-6">
         <label for="plFromCountry">🛫 কোথা থেকে যাবেন — দেশ</label>
-        <select id="plFromCountry" class="form-select"></select>
+        <div class="d-flex align-items-center gap-2"><input id="plFromCountry" class="form-control" list="plFromCountryList" placeholder="দেশের নাম লিখুন বা তালিকা থেকে বেছে নিন" autocomplete="off"><span class="pl-flag" id="plFromFlag"></span></div>
+        <datalist id="plFromCountryList"></datalist>
       </div>
       <div class="col-12 col-md-6">
         <label for="plFromCity">শহর</label>
-        <select id="plFromCity" class="form-select"></select>
+        <input id="plFromCity" class="form-control" list="plFromCityList" placeholder="শহরের নাম লিখুন বা বেছে নিন" autocomplete="off">
+        <datalist id="plFromCityList"></datalist>
       </div>
       <div class="col-12 col-md-6">
         <label for="plToCountry">🎯 কোথায় যাবেন — দেশ</label>
-        <select id="plToCountry" class="form-select"></select>
+        <div class="d-flex align-items-center gap-2"><input id="plToCountry" class="form-control" list="plToCountryList" placeholder="দেশের নাম লিখুন বা তালিকা থেকে বেছে নিন" autocomplete="off"><span class="pl-flag" id="plToFlag"></span></div>
+        <datalist id="plToCountryList"></datalist>
       </div>
       <div class="col-12 col-md-6">
         <label for="plToCity">শহর</label>
-        <select id="plToCity" class="form-select"></select>
+        <input id="plToCity" class="form-control" list="plToCityList" placeholder="শহরের নাম লিখুন বা বেছে নিন" autocomplete="off">
+        <datalist id="plToCityList"></datalist>
       </div>
       <div class="col-12">
         <label>💰 বাজেট কেমন?</label>
@@ -96,7 +103,13 @@
       <h3>🗺️ রোড ম্যাপ</h3>
       <svg id="plMap" viewBox="0 0 900 380" role="img" aria-label="Route map"></svg>
       <div class="mt-2"><a id="plGmaps" class="btn btn-outline-primary btn-sm" href="#" target="_blank" rel="noopener">📍 Google Maps-এ রুট দেখুন</a>
-      <button type="button" class="btn btn-outline-secondary btn-sm" id="plPrint">🖨️ প্রিন্ট / PDF</button></div>
+      <button type="button" class="btn btn-outline-secondary btn-sm" id="plPrint">🖨️ প্রিন্ট / PDF</button>
+      <button type="button" class="btn btn-success btn-sm" id="plDownload">📥 পুরো প্ল্যান ডাউনলোড</button></div>
+    </div>
+    <div class="pl-sec" id="plRouteSec">
+      <h3>🧭 কোন জায়গার পর কোন জায়গা — রুটের ছবি</h3>
+      <svg id="plRouteImg" viewBox="0 0 800 400" role="img" aria-label="Route sequence"></svg>
+      <div class="mt-2"><button type="button" class="btn btn-outline-primary btn-sm" id="plRoutePng">🖼️ রুটের ছবি ডাউনলোড (PNG)</button></div>
     </div>
     <div class="pl-sec" id="plGo"></div>
     <div class="pl-sec" id="plStay"></div>
@@ -142,6 +155,90 @@ function coords(country,city){
   return null;
 }
 function distKm(a,b){if(!a||!b)return 0;var R=6371,dLa=(b.lat-a.lat)*Math.PI/180,dLo=(b.lon-a.lon)*Math.PI/180;var h=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);return Math.round(2*R*Math.asin(Math.sqrt(h)))}
+var ISO={"Afghanistan":"AF","Albania":"AL","Algeria":"DZ","Andorra":"AD","Angola":"AO","Antigua and Barbuda":"AG","Argentina":"AR","Armenia":"AM","Australia":"AU","Austria":"AT","Azerbaijan":"AZ","Bahamas":"BS","Bahrain":"BH","Bangladesh":"BD","Barbados":"BB","Belarus":"BY","Belgium":"BE","Belize":"BZ","Benin":"BJ","Bhutan":"BT","Bolivia":"BO","Bosnia and Herzegovina":"BA","Botswana":"BW","Brazil":"BR","Brunei":"BN","Bulgaria":"BG","Burkina Faso":"BF","Burundi":"BI","Cabo Verde":"CV","Cambodia":"KH","Cameroon":"CM","Canada":"CA","Central African Republic":"CF","Chad":"TD","Chile":"CL","China":"CN","Colombia":"CO","Comoros":"KM","Congo":"CG","Costa Rica":"CR","Croatia":"HR","Cuba":"CU","Cyprus":"CY","Czechia":"CZ","DR Congo":"CD","Denmark":"DK","Djibouti":"DJ","Dominica":"DM","Dominican Republic":"DO","Ecuador":"EC","Egypt":"EG","El Salvador":"SV","Equatorial Guinea":"GQ","Eritrea":"ER","Estonia":"EE","Eswatini":"SZ","Ethiopia":"ET","Fiji":"FJ","Finland":"FI","France":"FR","Gabon":"GA","Gambia":"GM","Georgia":"GE","Germany":"DE","Ghana":"GH","Greece":"GR","Grenada":"GD","Guatemala":"GT","Guinea":"GN","Guinea-Bissau":"GW","Guyana":"GY","Haiti":"HT","Honduras":"HN","Hungary":"HU","Iceland":"IS","India":"IN","Indonesia":"ID","Iran":"IR","Iraq":"IQ","Ireland":"IE","Italy":"IT","Ivory Coast":"CI","Jamaica":"JM","Japan":"JP","Jordan":"JO","Kazakhstan":"KZ","Kenya":"KE","Kiribati":"KI","Kosovo":"XK","Kuwait":"KW","Kyrgyzstan":"KG","Laos":"LA","Latvia":"LV","Lebanon":"LB","Lesotho":"LS","Liberia":"LR","Libya":"LY","Liechtenstein":"LI","Lithuania":"LT","Luxembourg":"LU","Madagascar":"MG","Malawi":"MW","Malaysia":"MY","Maldives":"MV","Mali":"ML","Malta":"MT","Marshall Islands":"MH","Mauritania":"MR","Mauritius":"MU","Mexico":"MX","Micronesia":"FM","Moldova":"MD","Monaco":"MC","Mongolia":"MN","Montenegro":"ME","Morocco":"MA","Mozambique":"MZ","Myanmar":"MM","Namibia":"NA","Nauru":"NR","Nepal":"NP","Netherlands":"NL","New Zealand":"NZ","Nicaragua":"NI","Niger":"NE","Nigeria":"NG","North Korea":"KP","North Macedonia":"MK","Norway":"NO","Oman":"OM","Pakistan":"PK","Palau":"PW","Palestine":"PS","Panama":"PA","Papua New Guinea":"PG","Paraguay":"PY","Peru":"PE","Philippines":"PH","Poland":"PL","Portugal":"PT","Qatar":"QA","Romania":"RO","Russia":"RU","Rwanda":"RW","Saint Kitts and Nevis":"KN","Saint Lucia":"LC","Saint Vincent and the Grenadines":"VC","Samoa":"WS","San Marino":"SM","Sao Tome and Principe":"ST","Saudi Arabia":"SA","Senegal":"SN","Serbia":"RS","Seychelles":"SC","Sierra Leone":"SL","Singapore":"SG","Slovakia":"SK","Slovenia":"SI","Solomon Islands":"SB","Somalia":"SO","South Africa":"ZA","South Korea":"KR","South Sudan":"SS","Spain":"ES","Sri Lanka":"LK","Sudan":"SD","Suriname":"SR","Sweden":"SE","Switzerland":"CH","Syria":"SY","Taiwan":"TW","Tajikistan":"TJ","Tanzania":"TZ","Thailand":"TH","Timor-Leste":"TL","Togo":"TG","Tonga":"TO","Trinidad and Tobago":"TT","Tunisia":"TN","Turkey":"TR","Turkmenistan":"TM","Tuvalu":"TV","Uganda":"UG","Ukraine":"UA","United Arab Emirates":"AE","United Kingdom":"GB","United States":"US","Uruguay":"UY","Uzbekistan":"UZ","Vanuatu":"VU","Vatican City":"VA","Venezuela":"VE","Vietnam":"VN","Yemen":"YE","Zambia":"ZM","Zimbabwe":"ZW"};
+function flagOf(c){var k=ISO[c];if(!k)return "🌍";return String.fromCodePoint(127397+k.charCodeAt(0),127397+k.charCodeAt(1))}
+function bnOf(c){return (gWBN())[c]||c}
+function countryNames(){var s={},o=[];gWC().forEach(function(x){if(!s[x.name]){s[x.name]=1;o.push(x.name)}});return o}
+function resolveCountry(v){
+  v=String(v||"").trim();if(!v)return "";
+  var cs=countryNames();if(cs.indexOf(v)>=0)return v;
+  var bn=gWBN();for(var k in bn)if(bn[k]===v)return k;
+  var m=v.match(/\(([^)]+)\)/);if(m&&cs.indexOf(m[1].trim())>=0)return m[1].trim();
+  var lv=v.toLowerCase(),hit=cs.filter(function(c){return c.toLowerCase().indexOf(lv)===0||String(bn[c]||"").indexOf(v)===0});
+  if(hit.length===1)return hit[0];
+  return v;
+}
+function resolveCity(country,v){
+  v=String(v||"").trim();if(!v)return "";
+  var cs=citiesOf(country);if(cs.indexOf(v)>=0)return v;
+  var maps=[gWBC2(),gWBC()];
+  for(var i=0;i<maps.length;i++){for(var k in maps[i])if(maps[i][k]===v&&cs.indexOf(k)>=0)return k}
+  var m=v.match(/\(([^)]+)\)/);if(m&&cs.indexOf(m[1].trim())>=0)return m[1].trim();
+  var lv=v.toLowerCase(),hit=cs.filter(function(c){return c.toLowerCase().indexOf(lv)===0});
+  if(hit.length===1)return hit[0];
+  return v;
+}
+function fmtT(mins){
+  var h=Math.floor(mins/60)%24,mm=mins%60;
+  var per=h<5?"রাত":h<11?"সকাল":h<15?"দুপুর":h<18?"বিকেল":h<20?"সন্ধ্যা":"রাত";
+  var h12=h%12;if(h12===0)h12=12;
+  return per+" "+num(h12)+":"+num(mm<10?"0"+mm:mm);
+}
+function durTxt(mins){var f=Math.floor(mins/60),r=mins%60;if(!r)return "প্রায় "+num(f)+" ঘণ্টা";return "প্রায় "+num(f)+" ঘণ্টা "+num(r)+" মিনিট"}
+function updFlags(){
+  var f=$("plFromFlag"),t=$("plToFlag");
+  if(f)f.textContent=flagOf(resolveCountry($("plFromCountry").value));
+  if(t)t.textContent=flagOf(resolveCountry($("plToCountry").value));
+}
+function drawRoute(seq){
+  var svg=$("plRouteImg");if(!svg)return;
+  var MAX=16,items=seq.slice();
+  if(items.length>MAX){var extra=items.length-(MAX-1);items=items.slice(0,MAX-1);items.push({label:"… আরও "+num(extra)+"টি ধাপ",sub:"বিস্তারিত নিচের দিনের প্ল্যানে"})}
+  var W=800,rowH=62,top=26,H=top*2+items.length*rowH;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  var out='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#ffffff"/>';
+  if(items.length>1)out+='<line x1="52" y1="'+(top+16)+'" x2="52" y2="'+(top+(items.length-1)*rowH+16)+'" stroke="#0b5d6b" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>';
+  items.forEach(function(s,i){
+    var y=top+i*rowH+16;
+    var col=i===0?"#2e7d32":(i===items.length-1?"#c62828":"#f2762e");
+    var fs=s.label.length>40?12.5:(s.label.length>26?14.5:16.5);
+    out+='<circle cx="52" cy="'+y+'" r="16" fill="'+col+'" stroke="#ffffff" stroke-width="3"/>'
+      +'<text x="52" y="'+(y+5.5)+'" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff" font-family="sans-serif">'+(i+1)+'</text>'
+      +'<text x="86" y="'+(y+1)+'" font-size="'+fs+'" font-weight="700" fill="#07323b">'+esc(s.label)+'</text>'
+      +(s.sub?'<text x="86" y="'+(y+21)+'" font-size="12.5" fill="#546e7a">'+esc(s.sub)+'</text>':"");
+  });
+  svg.innerHTML=out;
+}
+function dlFile(name,blob){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},900)}
+function downloadPlan(){
+  var D=window.__plData;if(!D)return;
+  function sec(id){var e=$(id);return e?'<div class="sec">'+e.innerHTML+"</div>":""}
+  var html='<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>ট্রিপ প্ল্যান — '+esc(D.tci)+'</title><style>body{font-family:sans-serif;max-width:840px;margin:20px auto;padding:0 14px;color:#212121}h1{color:#0b5d6b;font-size:24px}.sec{background:#f7fbfb;border:1px solid #e0e0e0;border-radius:12px;padding:14px;margin:12px 0}table{width:100%;border-collapse:collapse}td{padding:6px 8px;border-bottom:1px solid #eee}.text-end{text-align:right}.pl-total{font-size:20px;font-weight:800;color:#0b5d6b}.pl-chip{display:inline-block;background:#fff3e0;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600;margin:2px}.pl-day{border-left:4px solid #0b5d6b;background:#ffffff;border-radius:10px;padding:10px 12px;margin:10px 0}.pl-time{display:inline-block;background:#e0f2f1;color:#0b5d6b;border-radius:999px;padding:1px 10px;font-size:13px;font-weight:700}.pl-place{font-weight:700}svg{width:100%;height:auto}</style></head><body>'
+   +'<h1>🧭 ট্রিপ প্ল্যান: '+flagOf(D.fc)+" "+esc(D.fci)+", "+esc(D.fc)+" → "+flagOf(D.tc)+" "+esc(D.tci)+", "+esc(D.tc)+'</h1>'
+   +sec("plSummary")
+   +'<div class="sec"><h3>🗺️ রোড ম্যাপ</h3>'+$("plMap").outerHTML+'</div>'
+   +'<div class="sec"><h3>🧭 কোন জায়গার পর কোন জায়গা — রুটের ছবি</h3>'+$("plRouteImg").outerHTML+'</div>'
+   +sec("plGo")+sec("plStay")+sec("plFood")+sec("plDaysOut")+sec("plReturn")+sec("plCost")+sec("plSafe")
+   +'<p style="color:#888;font-size:12px">World Tour Guide — https://abdul-ahad646.github.io/world-tour-guide/plan.html • সব খরচ আনুমানিক।</p></body></html>';
+  dlFile("trip-plan-"+(D.tci+"-"+D.tc).replace(/[^a-z0-9]+/gi,"-")+".html",new Blob([html],{type:"text/html;charset=utf-8"}));
+}
+function downloadRoutePng(){
+  var svg=$("plRouteImg");if(!svg||!window.__plData)return;
+  try{
+    var clone=svg.cloneNode(true);
+    clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
+    var vb=(svg.getAttribute("viewBox")||"0 0 800 400").split(/\s+/),w=+vb[2],h=+vb[3];
+    clone.setAttribute("width",w);clone.setAttribute("height",h);
+    var str=new XMLSerializer().serializeToString(clone);
+    var img=new Image();
+    img.onload=function(){
+      var sc=2,cv=document.createElement("canvas");cv.width=w*sc;cv.height=h*sc;
+      var cx=cv.getContext("2d");cx.fillStyle="#ffffff";cx.fillRect(0,0,cv.width,cv.height);cx.drawImage(img,0,0,cv.width,cv.height);
+      if(cv.toBlob)cv.toBlob(function(b){if(b)dlFile("route-"+(window.__plData.tci||"image").replace(/[^a-z0-9]+/gi,"-")+".png",b)},"image/png");
+    };
+    img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(str);
+  }catch(e){}
+}
 var CAPITAL={Nepal:"Kathmandu",India:"New Delhi",Bhutan:"Thimphu","Sri Lanka":"Colombo",Maldives:"Male",Thailand:"Bangkok",Malaysia:"Kuala Lumpur",Singapore:"Singapore",Vietnam:"Hanoi",Indonesia:"Jakarta",Cambodia:"Phnom Penh",China:"Beijing",Japan:"Tokyo","South Korea":"Seoul","United Arab Emirates":"Abu Dhabi",Qatar:"Doha","Saudi Arabia":"Riyadh",Turkey:"Ankara",Egypt:"Cairo","United Kingdom":"London",France:"Paris",Italy:"Rome",Spain:"Madrid",Germany:"Berlin","United States":"Washington","Canada":"Ottawa",Australia:"Canberra",Bangladesh:"Dhaka",Pakistan:"Islamabad",Myanmar:"Naypyidaw",Philippines:"Manila"};
 var STAYAREA={Pokhara:"Lakeside (ফেওয়া লেকের পাড়) — পর্যটকদের প্রধান এলাকা",Kathmandu:"Thamel — পর্যটক এলাকা","Cox's Bazar":"Kolatoli / Marine Drive রোডের পাশে",Chittagong:"GEC Circle / Khulshi এলাকা",Dhaka:"Gulshan / Banani / Uttara এলাকা",Bangkok:"Sukhumvit / Silom এলাকা","Kuala Lumpur":"Bukit Bintang এলাকা",Singapore:"Bugis / Little India এলাকা",Male:"Malé শহরকেন্দ্র / Hulhumalé",Colombo:"Galle Road / Fort এলাকা",Thimphu:"Norzin Lam (শহরকেন্দ্র)",Delhi:"Karol Bagh / Connaught Place এলাকা","New Delhi":"Karol Bagh / Connaught Place এলাকা",Kolkata:"Park Street / Sudder Street এলাকা",Dubai:"Deira / Bur Dubai এলাকা",Istanbul:"Sultanahmet / Taksim এলাকা",Cairo:"Downtown / Zamalek এলাকা",London:"Paddington / King's Cross এলাকা",Paris:"Latin Quarter / Gare du Nord এলাকা"};
 var COST={ /* per person, BDT: hotel/night, food/day, local/day */
@@ -164,9 +261,11 @@ var COSTDEF={hotel:[2000,5500,20000],food:[1200,2800,8500],local:[800,2000,6000]
 function prof(country){return COST[country]||COSTDEF}
 function tierName(t){return t==="low"?"Low (সাশ্রয়ী)":t==="high"?"High (লাক্সারি)":"Medium (আরামদায়ক)"}
 function tierIdx(t){return t==="low"?0:t==="high"?2:1}
-function fillCountries(sel,def){
-  var cs=gWC().slice().sort(function(a,b){return a.name<b.name?-1:1});
-  sel.innerHTML=cs.map(function(x){var bn=(gWBN())[x.name]||x.name;return '<option value="'+esc(x.name)+'"'+(x.name===def?" selected":"")+'>'+esc(bn)+" ("+esc(x.name)+")</option>"}).join("");
+function fillCountries(inp,def){
+  var dl=document.getElementById(inp.getAttribute("list"));
+  var cs=countryNames().slice().sort();
+  if(dl)dl.innerHTML=cs.map(function(n){var bn=(gWBN())[n]||n;return '<option value="'+esc(n)+'" label="'+esc(bn)+'"></option>'+(bn!==n?'<option value="'+esc(bn)+'"></option>':"")}).join("");
+  inp.value=def||"";
 }
 function citiesOf(country){
   var out=[],seen={};
@@ -174,10 +273,12 @@ function citiesOf(country){
   ((gWCC())[country]||[]).forEach(function(r){if(!seen[r[0]]){seen[r[0]]=1;out.push(r[0])}});}catch(e){}
   return out.sort();
 }
-function fillCities(sel,country,def){
+function fillCities(inp,country,def){
+  var dl=document.getElementById(inp.getAttribute("list"));
   var cs=citiesOf(country);
-  sel.innerHTML=cs.map(function(c){var bn=((gWBC2())[c]||(gWBC())[c]||c);return '<option value="'+esc(c)+'"'+(c===def?" selected":"")+'>'+esc(bn!==c?bn+" ("+c+")":c)+"</option>"}).join("");
-  if(def&&cs.indexOf(def)<0&&cs.length)sel.value=cs[0];
+  if(dl)dl.innerHTML=cs.map(function(c){var bn=((gWBC2())[c]||(gWBC())[c]||c);return '<option value="'+esc(c)+'" label="'+esc(bn)+'"></option>'+(bn!==c?'<option value="'+esc(bn)+'"></option>':"")}).join("");
+  if(def)inp.value=def;
+  if(cs.indexOf(resolveCity(country,inp.value))<0)inp.value=cs[0]||"";
 }
 function localPlaces(country,city){
   var all=[];try{all=JSON.parse(localStorage.getItem("wtg_places_custom")||"[]")}catch(e){}
@@ -234,7 +335,9 @@ function drawMap(stops){
 }
 /* ---------- Build the plan ---------- */
 async function buildPlan(){
-  var fc=$("plFromCountry").value,fci=$("plFromCity").value,tc=$("plToCountry").value,tci=$("plToCity").value;
+  var fc=resolveCountry($("plFromCountry").value),tc=resolveCountry($("plToCountry").value);
+  var fci=resolveCity(fc,$("plFromCity").value),tci=resolveCity(tc,$("plToCity").value);
+  if(fc)$("plFromCountry").value=fc;if(tc)$("plToCountry").value=tc;if(fci)$("plFromCity").value=fci;if(tci)$("plToCity").value=tci;updFlags();
   var tier=(document.querySelector('input[name="plBudget"]:checked')||{}).value||"mid";
   var days=Math.max(1,Math.min(30,+$("plDays").value||1)),people=Math.max(1,Math.min(20,+$("plPeople").value||1));
   if(!fc||!tc||!fci||!tci)return;
@@ -274,33 +377,48 @@ async function buildPlan(){
   var area=STAYAREA[tci]||(tci+" শহরকেন্দ্র / প্রধান পর্যটন এলাকা");
   var stayKind=tier==="low"?"হোস্টেল / বাজেট গেস্টহাউস":tier==="high"?"৫-তারকা হোটেল / লাক্সারি রিসোর্ট (স্পা, পুল, ব্রেকফাস্টসহ)":"ভালো মানের ৩-তারকা হোটেল / বুটিক গেস্টহাউস";
   var foodKind=tier==="low"?"লোকাল রেস্টুরেন্ট ও স্ট্রিট ফুড — সাশ্রয়ী আর স্বাদেও সেরা":tier==="high"?"নামকরা রেস্টুরেন্ট, রুফটপ ডাইনিং ও ক্যাফে — প্রতিদিন অন্তত একবেলা স্পেশাল খাবার":"ভালো লোকাল রেস্টুরেন্ট + মাঝে মাঝে ক্যাফে/স্পেশাল ডিনার";
-  /* Day plan from site places */
+  /* Day plan from site places — somoy soho: kon din, kon jayga, kotokhon, tarpor kothay */
   var places=await pickPlaces(tc,tci,days*2);
-  var dayBlocks="",used=0;
+  var DURS=[150,120,180,120,150,90];
+  var dayBlocks="",used=0,pIdx=0;
+  var routeSeq=[{label:flagOf(fc)+" "+fci,sub:"🛫 শুরু — "+bnOf(fc)}];
+  if(intl&&cap!==tci)routeSeq.push({label:cap,sub:"✈️ গেটওয়ে শহর"});
+  routeSeq.push({label:flagOf(tc)+" "+tci,sub:"🎯 গন্তব্য — "+bnOf(tc)});
   for(var d=1;d<=days;d++){
     var items=[];
-    if(d===1){items.push({t:"🛬 পৌঁছানো ও হোটেলে চেক-ইন",x:"বিশ্রাম নিন, আশপাশ হেঁটে চিনে নিন, হালকা খাবার খান।"});if(places.length)items.push({p:places[used++%places.length],first:true});}
-    else if(d===days){if(places.length&&used<places.length+2)items.push({p:places[used++%places.length]});items.push({t:"🧳 চেক-আউট ও ফেরার যাত্রা",x:"কেনাকাটা সেরে ফেরার গাড়ি/ফ্লাইট ধরুন।"});}
-    else{for(var k=0;k<2;k++){if(places.length)items.push({p:places[used++%places.length]});}if(!places.length)items.push({t:"🏙️ শহর ঘোরা",x:tci+"-এর প্রধান আকর্ষণ, বাজার ও স্থানীয় এলাকা ঘুরে দেখুন।"});}
+    if(d===1){items.push({t:"🛬 পৌঁছানো ও হোটেলে চেক-ইন",x:"বিশ্রাম নিন, আশপাশ হেঁটে চিনে নিন, হালকা খাবার খান।",dur:120});if(places.length)items.push({p:places[used++%places.length]});}
+    else if(d===days){if(places.length&&used<places.length+2)items.push({p:places[used++%places.length]});items.push({t:"🧳 চেক-আউট ও ফেরার যাত্রা",x:"কেনাকাটা সেরে ফেরার গাড়ি/ফ্লাইট ধরুন।",dur:0});}
+    else{for(var k=0;k<2;k++){if(places.length)items.push({p:places[used++%places.length]});}if(!places.length)items.push({t:"🏙️ শহর ঘোরা",x:tci+"-এর প্রধান আকর্ষণ, বাজার ও স্থানীয় এলাকা ঘুরে দেখুন।",dur:180});}
+    var cursor=(d===1)?810:540;
+    var names=items.map(function(it){return it.p?it.p.name:it.t});
     var inner=items.map(function(it,ix){
+      var mv="";
+      if(ix>0){cursor+=30;mv='<div class="pl-move">🚕 আগের জায়গা থেকে এখানে — যাতায়াত প্রায় ৩০ মিনিট (ট্যাক্সি/রিকশা/হাঁটা)</div>'}
       if(it.p){
-        var mv=ix>0?'<div class="pl-move">🚕 আগের জায়গা থেকে এখানে — স্থানীয় ট্যাক্সি/রিকশা/হাঁটা (আনুমানিক ১৫–৪০ মিনিট)</div>':"";
-        return mv+'<div class="pl-place">📍 '+esc(it.p.name)+'</div><div>'+esc(shortDesc(it.p))+'</div>'+(it.p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(it.p.url)+'">🗺️ ম্যাপে দেখুন</a>':"");
+        var dur=DURS[pIdx%DURS.length];pIdx++;
+        var st=cursor;cursor+=dur;
+        routeSeq.push({label:it.p.name,sub:"📅 দিন "+num(d)+" • "+durTxt(dur)});
+        return mv+'<div><span class="pl-time">🕘 '+fmtT(st)+' – '+fmtT(cursor)+' • '+durTxt(dur)+'</span></div><div class="pl-place">📍 '+esc(it.p.name)+'</div><div>'+esc(shortDesc(it.p))+'</div>'+(it.p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(it.p.url)+'">🗺️ ম্যাপে দেখুন</a>':"");
       }
-      return '<div class="pl-place">'+it.t+'</div><div>'+esc(it.x)+'</div>';
+      var chip='<div><span class="pl-time">🕘 '+fmtT(cursor)+' থেকে</span></div>';
+      if(it.dur)cursor+=it.dur;
+      return mv+chip+'<div class="pl-place">'+it.t+'</div><div>'+esc(it.x)+'</div>';
     }).join("");
-    dayBlocks+='<div class="pl-day"><b>📅 দিন '+num(d)+'</b>'+inner+'</div>';
+    dayBlocks+='<div class="pl-day"><b>📅 দিন '+num(d)+'</b><div class="pl-move">🧭 আজকের রুট: '+esc(names.join(" → "))+'</div>'+inner+'</div>';
   }
   if(!places.length)dayBlocks+='<p class="text-muted">ℹ️ এই শহরের বিস্তারিত জায়গার তালিকা এখনো সাইটে যোগ হয়নি — সাধারণ প্ল্যান দেওয়া হলো।</p>';
+  routeSeq.push({label:flagOf(fc)+" "+fci,sub:"🏠 ফেরা"});
   /* Stops for map: from -> gateway (if intl & different) -> dest -> (return marker = from) */
   var stops=[{label:fci,sub:fc,c:cFrom}];
   if(intl&&cap!==tci&&cCap)stops.push({label:cap,sub:"গেটওয়ে",c:cCap});
   stops.push({label:tci,sub:tc,c:cTo});
   stops.push({label:fci,sub:"ফেরা",c:cFrom});
   drawMap(stops);
+  drawRoute(routeSeq);
+  window.__plData={fc:fc,fci:fci,tc:tc,tci:tci};
   $("plGmaps").href="https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(fci+", "+fc)+"&destination="+encodeURIComponent(tci+", "+tc);
   $("plSummary").innerHTML="<h3>🧭 আপনার ট্রিপ প্ল্যান</h3>"
-    +'<div><span class="pl-chip">🛫 '+esc(fci)+", "+esc(fc)+'</span> ➜ <span class="pl-chip">🎯 '+esc(tci)+", "+esc(tc)+'</span></div>'
+    +'<div><span class="pl-chip">🛫 '+flagOf(fc)+" "+esc(fci)+", "+esc(bnOf(fc))+'</span> ➜ <span class="pl-chip">🎯 '+flagOf(tc)+" "+esc(tci)+", "+esc(bnOf(tc))+'</span></div>'
     +'<div class="mt-2"><span class="pl-chip">💰 বাজেট: '+tierName(tier)+'</span><span class="pl-chip">📅 '+num(days)+' দিন</span><span class="pl-chip">👥 '+num(people)+' জন</span>'+(km?'<span class="pl-chip">📏 দূরত্ব আনুমানিক '+num(km)+' কিমি</span>':"")+"</div>"
     +'<div class="mt-2">মোট আনুমানিক খরচ ('+num(people)+' জন): <span class="pl-total">'+tk(grand)+'</span> <span class="text-muted">(জনপ্রতি '+tk(perPerson)+')</span></div>'
     +'<p class="text-muted mb-0" style="font-size:13px">সব খরচ আনুমানিক — মৌসুম, টিকিটের সময় ও হোটেল অনুযায়ী বদলাতে পারে।</p>';
@@ -338,13 +456,18 @@ function init(){
   var fc=q.get("fc")||"Bangladesh",fci=q.get("fci")||"Chattogram",tc=q.get("tc")||"Nepal",tci=q.get("tci")||"Pokhara";
   fillCountries($("plFromCountry"),fc);fillCountries($("plToCountry"),tc);
   fillCities($("plFromCity"),fc,fci);fillCities($("plToCity"),tc,tci);
-  $("plFromCountry").addEventListener("change",function(){fillCities($("plFromCity"),this.value)});
-  $("plToCountry").addEventListener("change",function(){fillCities($("plToCity"),this.value)});
+  $("plFromCountry").addEventListener("change",function(){fillCities($("plFromCity"),resolveCountry(this.value));updFlags()});
+  $("plToCountry").addEventListener("change",function(){fillCities($("plToCity"),resolveCountry(this.value));updFlags()});
+  $("plFromCountry").addEventListener("input",updFlags);
+  $("plToCountry").addEventListener("input",updFlags);
+  updFlags();
   var b=q.get("b");if(b){var r=document.querySelector('input[name="plBudget"][value="'+b+'"]');if(r)r.checked=true}
   if(q.get("d"))$("plDays").value=q.get("d");
   if(q.get("p"))$("plPeople").value=q.get("p");
   $("plForm").addEventListener("submit",function(e){e.preventDefault();buildPlan()});
   $("plPrint").addEventListener("click",function(){window.print()});
+  $("plDownload").addEventListener("click",downloadPlan);
+  $("plRoutePng").addEventListener("click",downloadRoutePng);
   if(q.get("go"))setTimeout(buildPlan,900);
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
