@@ -179,11 +179,32 @@ function fillCities(sel,country,def){
   sel.innerHTML=cs.map(function(c){var bn=((gWBC2())[c]||(gWBC())[c]||c);return '<option value="'+esc(c)+'"'+(c===def?" selected":"")+'>'+esc(bn!==c?bn+" ("+c+")":c)+"</option>"}).join("");
   if(def&&cs.indexOf(def)<0&&cs.length)sel.value=cs[0];
 }
-function myPlaces(country,city){
+function localPlaces(country,city){
   var all=[];try{all=JSON.parse(localStorage.getItem("wtg_places_custom")||"[]")}catch(e){}
   var inCity=all.filter(function(p){return p.country===country&&p.city===city});
   var inCountry=all.filter(function(p){return p.country===country&&p.city!==city});
-  return inCity.concat(inCountry);
+  return {inCity:inCity,inCountry:inCountry};
+}
+/* Cloud theke oi shohorer place ana — age plan.html sudhu admin browser-er
+   localStorage (wtg_places_custom) porto, tai visitor-er browser-e Pokhara-r
+   bodle Kathmandu-r place ashto. app.js-er cloudPlacesBy-er motoi quota-safe:
+   city diye single-field filter, country client-side-e milano — composite
+   index lage na. Cloud na pele local fallback. */
+async function cloudCityPlaces(country,city){
+  try{
+    if(!window.firebase||!window.WTG_FB)return[];
+    if(!firebase.apps.length)firebase.initializeApp(window.WTG_FB);
+    var sn=await firebase.firestore().collection('places').where('city','==',String(city)).get();
+    return sn.docs.map(function(d){var x=d.data()||{};return{name:x.name||'',desc:x.desc||'',url:x.url||'',country:x.country||'',city:x.city||''}}).filter(function(x){return x.name&&(!country||x.country===country)});
+  }catch(e){return[]}
+}
+async function pickPlaces(country,city,need){
+  var loc=localPlaces(country,city);
+  var cloud=await cloudCityPlaces(country,city);
+  var seen={},out=[];
+  cloud.concat(loc.inCity).forEach(function(p){var k=String(p.name||'').toLowerCase();if(k&&!seen[k]){seen[k]=1;out.push(p)}});
+  if(out.length<need){loc.inCountry.forEach(function(p){var k=String(p.name||'').toLowerCase();if(k&&!seen[k]){seen[k]=1;out.push(p)}})}
+  return out;
 }
 function shortDesc(p){
   var d=String(p.desc||"").split(/\n/).filter(function(x){return x.trim()&&!/^🚗|^🏨|^🍽|^💰|^🎟|^🛍|^⚠/.test(x.trim())});
@@ -212,7 +233,7 @@ function drawMap(stops){
   svg.innerHTML=out;
 }
 /* ---------- Build the plan ---------- */
-function buildPlan(){
+async function buildPlan(){
   var fc=$("plFromCountry").value,fci=$("plFromCity").value,tc=$("plToCountry").value,tci=$("plToCity").value;
   var tier=(document.querySelector('input[name="plBudget"]:checked')||{}).value||"mid";
   var days=Math.max(1,Math.min(30,+$("plDays").value||1)),people=Math.max(1,Math.min(20,+$("plPeople").value||1));
@@ -254,7 +275,7 @@ function buildPlan(){
   var stayKind=tier==="low"?"হোস্টেল / বাজেট গেস্টহাউস":tier==="high"?"৫-তারকা হোটেল / লাক্সারি রিসোর্ট (স্পা, পুল, ব্রেকফাস্টসহ)":"ভালো মানের ৩-তারকা হোটেল / বুটিক গেস্টহাউস";
   var foodKind=tier==="low"?"লোকাল রেস্টুরেন্ট ও স্ট্রিট ফুড — সাশ্রয়ী আর স্বাদেও সেরা":tier==="high"?"নামকরা রেস্টুরেন্ট, রুফটপ ডাইনিং ও ক্যাফে — প্রতিদিন অন্তত একবেলা স্পেশাল খাবার":"ভালো লোকাল রেস্টুরেন্ট + মাঝে মাঝে ক্যাফে/স্পেশাল ডিনার";
   /* Day plan from site places */
-  var places=myPlaces(tc,tci);
+  var places=await pickPlaces(tc,tci,days*2);
   var dayBlocks="",used=0;
   for(var d=1;d<=days;d++){
     var items=[];
