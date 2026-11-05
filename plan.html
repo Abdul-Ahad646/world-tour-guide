@@ -149,6 +149,7 @@ function gWBC2(){try{return WBC2}catch(e){return{}}};
 var BN="০১২৩৪৫৬৭৮৯";
 function num(n){return String(Math.round(n)).replace(/\d/g,function(d){return BN[+d]}).replace(/,/g,"")}
 function tk(n){return "৳"+String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,",")}
+function bnD(s){return String(s).replace(/\d/g,function(d){return BN[+d]})}
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function coords(country,city){
   try{var list=(gWCC())[country]||[];for(var i=0;i<list.length;i++){if(list[i][0]===city)return{lat:list[i][1],lon:list[i][2]}}if(list.length)return{lat:list[0][1],lon:list[0][2]}}catch(e){}
@@ -182,7 +183,7 @@ function fmtT(mins){
   var h=Math.floor(mins/60)%24,mm=mins%60;
   var per=h<5?"রাত":h<11?"সকাল":h<15?"দুপুর":h<18?"বিকেল":h<20?"সন্ধ্যা":"রাত";
   var h12=h%12;if(h12===0)h12=12;
-  return per+" "+num(h12)+":"+num(mm<10?"0"+mm:mm);
+  return per+" "+bnD(h12)+":"+bnD(mm<10?"0"+mm:mm);
 }
 function durTxt(mins){var f=Math.floor(mins/60),r=mins%60;if(!r)return "প্রায় "+num(f)+" ঘণ্টা";return "প্রায় "+num(f)+" ঘণ্টা "+num(r)+" মিনিট"}
 function updFlags(){
