@@ -160,6 +160,11 @@ function coords(country,city){
   try{var list=(gWCC())[country]||[];for(var i=0;i<list.length;i++){if(list[i][0]===city)return{lat:list[i][1],lon:list[i][2]}}var bc=(typeof BIGCC!=="undefined"&&BIGCC[country])||null;if(bc&&bc[city])return{lat:bc[city][0],lon:bc[city][1]};if(list.length)return{lat:list[0][1],lon:list[0][2]}}catch(e){}
   return null;
 }
+function exactCoords(country,city){
+  try{var list=(gWCC())[country]||[];for(var i=0;i<list.length;i++){if(list[i][0]===city)return{lat:list[i][1],lon:list[i][2]}}}catch(e){}
+  var bc=(typeof BIGCC!=="undefined"&&BIGCC[country])||null;if(bc&&bc[city])return{lat:bc[city][0],lon:bc[city][1]};
+  return null;
+}
 function distKm(a,b){if(!a||!b)return 0;var R=6371,dLa=(b.lat-a.lat)*Math.PI/180,dLo=(b.lon-a.lon)*Math.PI/180;var h=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);return Math.round(2*R*Math.asin(Math.sqrt(h)))}
 var ISO={"Afghanistan":"AF","Albania":"AL","Algeria":"DZ","Andorra":"AD","Angola":"AO","Antigua and Barbuda":"AG","Argentina":"AR","Armenia":"AM","Australia":"AU","Austria":"AT","Azerbaijan":"AZ","Bahamas":"BS","Bahrain":"BH","Bangladesh":"BD","Barbados":"BB","Belarus":"BY","Belgium":"BE","Belize":"BZ","Benin":"BJ","Bhutan":"BT","Bolivia":"BO","Bosnia and Herzegovina":"BA","Botswana":"BW","Brazil":"BR","Brunei":"BN","Bulgaria":"BG","Burkina Faso":"BF","Burundi":"BI","Cabo Verde":"CV","Cambodia":"KH","Cameroon":"CM","Canada":"CA","Central African Republic":"CF","Chad":"TD","Chile":"CL","China":"CN","Colombia":"CO","Comoros":"KM","Congo":"CG","Costa Rica":"CR","Croatia":"HR","Cuba":"CU","Cyprus":"CY","Czechia":"CZ","DR Congo":"CD","Denmark":"DK","Djibouti":"DJ","Dominica":"DM","Dominican Republic":"DO","Ecuador":"EC","Egypt":"EG","El Salvador":"SV","Equatorial Guinea":"GQ","Eritrea":"ER","Estonia":"EE","Eswatini":"SZ","Ethiopia":"ET","Fiji":"FJ","Finland":"FI","France":"FR","Gabon":"GA","Gambia":"GM","Georgia":"GE","Germany":"DE","Ghana":"GH","Greece":"GR","Grenada":"GD","Guatemala":"GT","Guinea":"GN","Guinea-Bissau":"GW","Guyana":"GY","Haiti":"HT","Honduras":"HN","Hungary":"HU","Iceland":"IS","India":"IN","Indonesia":"ID","Iran":"IR","Iraq":"IQ","Ireland":"IE","Italy":"IT","Ivory Coast":"CI","Jamaica":"JM","Japan":"JP","Jordan":"JO","Kazakhstan":"KZ","Kenya":"KE","Kiribati":"KI","Kosovo":"XK","Kuwait":"KW","Kyrgyzstan":"KG","Laos":"LA","Latvia":"LV","Lebanon":"LB","Lesotho":"LS","Liberia":"LR","Libya":"LY","Liechtenstein":"LI","Lithuania":"LT","Luxembourg":"LU","Madagascar":"MG","Malawi":"MW","Malaysia":"MY","Maldives":"MV","Mali":"ML","Malta":"MT","Marshall Islands":"MH","Mauritania":"MR","Mauritius":"MU","Mexico":"MX","Micronesia":"FM","Moldova":"MD","Monaco":"MC","Mongolia":"MN","Montenegro":"ME","Morocco":"MA","Mozambique":"MZ","Myanmar":"MM","Namibia":"NA","Nauru":"NR","Nepal":"NP","Netherlands":"NL","New Zealand":"NZ","Nicaragua":"NI","Niger":"NE","Nigeria":"NG","North Korea":"KP","North Macedonia":"MK","Norway":"NO","Oman":"OM","Pakistan":"PK","Palau":"PW","Palestine":"PS","Panama":"PA","Papua New Guinea":"PG","Paraguay":"PY","Peru":"PE","Philippines":"PH","Poland":"PL","Portugal":"PT","Qatar":"QA","Romania":"RO","Russia":"RU","Rwanda":"RW","Saint Kitts and Nevis":"KN","Saint Lucia":"LC","Saint Vincent and the Grenadines":"VC","Samoa":"WS","San Marino":"SM","Sao Tome and Principe":"ST","Saudi Arabia":"SA","Senegal":"SN","Serbia":"RS","Seychelles":"SC","Sierra Leone":"SL","Singapore":"SG","Slovakia":"SK","Slovenia":"SI","Solomon Islands":"SB","Somalia":"SO","South Africa":"ZA","South Korea":"KR","South Sudan":"SS","Spain":"ES","Sri Lanka":"LK","Sudan":"SD","Suriname":"SR","Sweden":"SE","Switzerland":"CH","Syria":"SY","Taiwan":"TW","Tajikistan":"TJ","Tanzania":"TZ","Thailand":"TH","Timor-Leste":"TL","Togo":"TG","Tonga":"TO","Trinidad and Tobago":"TT","Tunisia":"TN","Turkey":"TR","Turkmenistan":"TM","Tuvalu":"TV","Uganda":"UG","Ukraine":"UA","United Arab Emirates":"AE","United Kingdom":"GB","United States":"US","Uruguay":"UY","Uzbekistan":"UZ","Vanuatu":"VU","Vatican City":"VA","Venezuela":"VE","Vietnam":"VN","Yemen":"YE","Zambia":"ZM","Zimbabwe":"ZW"};
 function flagOf(c){var k=ISO[c];if(!k)return "🌍";return String.fromCodePoint(127397+k.charCodeAt(0),127397+k.charCodeAt(1))}
@@ -522,6 +527,16 @@ async function buildPlan(){
      oi jaygar full bornona + oi jaygar-i thaka/khawa (tar nijer description theke).
      Jemon Kashmir: din 1 Pahalgam, din 2 Doodhpathri — ebhabe ghure ghure. */
   var places=await pickPlaces(tc,tci,Math.max(days*3,9));
+  /* ELAKA filter: destination theke 200km-er baire-er jayga plan-e asbe na —
+     Kashmir plan-e Delhi/Mumbai asha bondho (user-er Kashmir test-e dhora pore). */
+  if(cTo&&places.length){
+    var nearP=places.filter(function(p){
+      if(!p.city||p.city===tci)return true;
+      var pc=exactCoords(tc,p.city);
+      return pc?distKm(cTo,pc)<=200:false;
+    });
+    if(nearP.length)places=nearP;
+  }
   var SECMARKS=["\uD83D\uDE97","\uD83C\uDFE8","\uD83C\uDF7D","\uD83D\uDCB0","\uD83C\uDF9F","\uD83D\uDECD","\u26A0"];
   function isSec(L){for(var j2=0;j2<SECMARKS.length;j2++)if(L.indexOf(SECMARKS[j2])===0)return true;return false}
   function sectionOf(p,mark){
@@ -548,7 +563,9 @@ async function buildPlan(){
     else cityPool.push(p);
   });
   var mains=[];
-  Object.keys(townMain).forEach(function(ct){mains.push({p:townMain[ct],town:ct});usedN[townMain[ct].name]=1});
+  var townKeys=Object.keys(townMain);
+  if(cTo){townKeys.sort(function(a,b){var da=exactCoords(tc,a),db=exactCoords(tc,b);return (da?distKm(cTo,da):9999)-(db?distKm(cTo,db):9999)})}
+  townKeys.forEach(function(ct){mains.push({p:townMain[ct],town:ct});usedN[townMain[ct].name]=1});
   cityPool.forEach(function(p){mains.push({p:p,town:tci});usedN[p.name]=1});
   function takeSec(town,n){
     var res=[];
