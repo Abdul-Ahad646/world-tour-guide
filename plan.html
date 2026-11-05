@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title data-i18n="plan_h">ট্রিপ প্ল্যানার — World Tour Guide</title>
+<meta name="description" content="কোথা থেকে কোথায় যাবেন, বাজেট আর দিন বেছে দিলেই পুরো ট্রিপ প্ল্যান — কীভাবে যাবেন, কোথায় থাকবেন, কোথায় খাবেন, দিন অনুযায়ী কোন জায়গা দেখবেন, ফেরার পথ আর মোট খরচের হিসাব। Trip planner with route map, budget and day-by-day itinerary.">
+<link rel="canonical" href="https://abdul-ahad646.github.io/world-tour-guide/plan.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ট্রিপ প্ল্যানার — World Tour Guide">
+<meta property="og:description" content="বাজেট অনুযায়ী পুরো ট্রিপের প্ল্যান — রুট ম্যাপ, যাতায়াত, থাকা-খাওয়া, দিনভিত্তিক ঘোরার তালিকা আর খরচের হিসাব।">
+<meta property="og:url" content="https://abdul-ahad646.github.io/world-tour-guide/plan.html">
+<meta property="og:image" content="https://abdul-ahad646.github.io/world-tour-guide/icon-512.png">
+<meta name="theme-color" content="#0b5d6b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="logo-round.png">
+<link rel="stylesheet" href="bootstrap.min.css">
+<link rel="stylesheet" href="style.css?v=20">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+.pl-form label{font-weight:600}
+.pl-budget{display:flex;gap:8px;flex-wrap:wrap}
+.pl-budget input{position:absolute;opacity:0;pointer-events:none}
+.pl-budget label{flex:1;min-width:96px;text-align:center;padding:10px 6px;border:2px solid #cfd8dc;border-radius:14px;cursor:pointer;background:#fff;font-weight:700;margin:0}
+.pl-budget input:checked+label{border-color:#0b5d6b;background:#e0f2f1;box-shadow:0 2px 10px rgba(11,93,107,.18)}
+.pl-budget small{display:block;font-weight:500;color:#607d8b;font-size:12px}
+.pl-sec{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:18px;margin:14px 0}
+.pl-sec h3{font-size:20px;margin-bottom:10px}
+.pl-day{border-left:4px solid #0b5d6b;background:#f7fbfb;border-radius:10px;padding:10px 12px;margin:10px 0}
+.pl-place{font-weight:700}
+.pl-move{color:#546e7a;font-size:14px;margin:4px 0 4px 8px}
+.pl-cost td,.pl-cost th{padding:7px 10px}
+.pl-chip{display:inline-block;background:#fff3e0;color:#8d5a00;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600;margin:2px}
+#plMap{width:100%;height:auto;border-radius:14px;background:linear-gradient(160deg,#a8d8ea,#d8f3dc)}
+.pl-total{font-size:22px;font-weight:800;color:#0b5d6b}
+</style>
+</head>
+<body>
+<header class="top navbar navbar-dark shadow-sm py-2"><div class="container d-flex align-items-center flex-wrap gap-2">
+  <a class="logo navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html"><img src="logo-round.png" alt="World Tour Guide logo" class="logo-img">World Tour Guide</a>
+  <button type="button" class="navtoggle" id="navToggle" aria-label="Menu" aria-expanded="false">☰</button><nav class="nav ms-auto gap-1" id="mainNav"><a class="btn btn-sm btn-outline-light border-0" href="index.html" data-i18n="nav_explore"></a><a class="btn btn-sm btn-outline-light border-0" href="world.html" data-i18n="nav_world"></a><a class="btn btn-sm btn-outline-light border-0" href="map.html" data-i18n="nav_map"></a><a class="btn btn-sm btn-outline-light border-0" href="quiz.html" data-i18n="nav_quiz"></a><a class="btn btn-sm btn-light fw-semibold" href="plan.html" data-i18n="nav_plan"></a><a class="btn btn-sm btn-outline-light border-0" href="places.html" data-i18n="nav_gems"></a><a class="btn btn-sm btn-outline-light border-0" href="news.html" data-i18n="nav_news"></a><a class="btn btn-sm btn-outline-light border-0" href="help.html" data-i18n="nav_help"></a><a class="btn btn-sm btn-outline-light border-0" href="service.html" data-i18n="nav_service"></a></nav>
+  <select class="langbtn form-select form-select-sm w-auto" id="langBtn" aria-label="Language"></select>
+</div></header>
+
+<div class="noticebar" id="noticeBar" hidden><div class="notice-track"><span id="noticeText"></span></div></div>
+<div class="pbanner py-5 text-center text-white" style="background:linear-gradient(120deg,#0b5d6b,#12805c)"><div class="container"><h1 data-i18n="plan_h">ট্রিপ প্ল্যানার</h1><p data-i18n="plan_lead">কোথা থেকে কোথায় যাবেন, বাজেট আর দিন বেছে দিন — পুরো ট্রিপের প্ল্যান তৈরি।</p></div></div>
+
+<div class="container py-3">
+  <form id="plForm" class="card shadow-sm p-3 pl-form">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <label for="plFromCountry">🛫 কোথা থেকে যাবেন — দেশ</label>
+        <select id="plFromCountry" class="form-select"></select>
+      </div>
+      <div class="col-12 col-md-6">
+        <label for="plFromCity">শহর</label>
+        <select id="plFromCity" class="form-select"></select>
+      </div>
+      <div class="col-12 col-md-6">
+        <label for="plToCountry">🎯 কোথায় যাবেন — দেশ</label>
+        <select id="plToCountry" class="form-select"></select>
+      </div>
+      <div class="col-12 col-md-6">
+        <label for="plToCity">শহর</label>
+        <select id="plToCity" class="form-select"></select>
+      </div>
+      <div class="col-12">
+        <label>💰 বাজেট কেমন?</label>
+        <div class="pl-budget" role="radiogroup" aria-label="Budget">
+          <span><input type="radio" name="plBudget" id="plBLow" value="low"><label for="plBLow">🪙 Low<small>সাশ্রয়ী ভ্রমণ</small></label></span>
+          <span><input type="radio" name="plBudget" id="plBMid" value="mid" checked><label for="plBMid">🎒 Medium<small>আরাম + সাশ্রয়</small></label></span>
+          <span><input type="radio" name="plBudget" id="plBHigh" value="high"><label for="plBHigh">👑 High<small>লাক্সারি ভ্রমণ</small></label></span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <label for="plDays">📅 কত দিন থাকবেন?</label>
+        <input type="number" id="plDays" class="form-control" min="1" max="30" value="5">
+      </div>
+      <div class="col-6 col-md-3">
+        <label for="plPeople">👥 কত জন?</label>
+        <input type="number" id="plPeople" class="form-control" min="1" max="20" value="2">
+      </div>
+      <div class="col-12 col-md-6 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary btn-lg w-100">🧭 Search — প্ল্যান তৈরি করুন</button>
+      </div>
+    </div>
+    <p class="text-muted mt-2 mb-0" style="font-size:13px">উদাহরণ: বাংলাদেশ → চট্টগ্রাম থেকে নেপাল → পোখারা, Medium বাজেট, ৫ দিন — Search দিলেই পুরো প্ল্যান নিচে আসবে।</p>
+  </form>
+
+  <div id="plOut" hidden>
+    <div class="pl-sec" id="plSummary"></div>
+    <div class="pl-sec">
+      <h3>🗺️ রোড ম্যাপ</h3>
+      <svg id="plMap" viewBox="0 0 900 380" role="img" aria-label="Route map"></svg>
+      <div class="mt-2"><a id="plGmaps" class="btn btn-outline-primary btn-sm" href="#" target="_blank" rel="noopener">📍 Google Maps-এ রুট দেখুন</a>
+      <button type="button" class="btn btn-outline-secondary btn-sm" id="plPrint">🖨️ প্রিন্ট / PDF</button></div>
+    </div>
+    <div class="pl-sec" id="plGo"></div>
+    <div class="pl-sec" id="plStay"></div>
+    <div class="pl-sec" id="plFood"></div>
+    <div class="pl-sec" id="plDaysOut"></div>
+    <div class="pl-sec" id="plReturn"></div>
+    <div class="pl-sec" id="plCost"></div>
+    <div class="pl-sec" id="plSafe"></div>
+  </div>
+</div>
+
+<footer class="bg-dark text-light py-4"><div class="container">
+  <b style="font-family:Fraunces,serif;font-size:20px;color:#fff">World Tour Guide</b>
+  <p data-i18n="foot"></p>
+  <div class="contact d-flex align-items-center gap-2 flex-wrap mt-2">
+    <b class="ct-h" data-i18n="ct_h"></b>
+    <span class="made">Made by Abdul Ahad</span>
+    <a class="ct fb" href="https://www.facebook.com/abdul.ahad.233586" target="_blank" rel="noopener"><span>Facebook</span></a>
+    <a class="ct wa" href="https://wa.me/8801646060044" target="_blank" rel="noopener"><span>01646060044</span></a>
+  </div>
+</div></footer>
+
+<script>(function(){var s=document.createElement('script');s.src='data-world.js?v=1';document.head.appendChild(s);})();</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js" defer></script>
+<script src="firebase-config.js" defer></script>
+<script src="app.js?v=48" defer></script>
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+var BN="০১২৩৪৫৬৭৮৯";
+function num(n){return String(Math.round(n)).replace(/\d/g,function(d){return BN[+d]}).replace(/,/g,"")}
+function tk(n){return "৳"+String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,",")}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function coords(country,city){
+  try{var list=(window.WCC||{})[country]||[];for(var i=0;i<list.length;i++){if(list[i][0]===city)return{lat:list[i][1],lon:list[i][2]}}if(list.length)return{lat:list[0][1],lon:list[0][2]}}catch(e){}
+  return null;
+}
+function distKm(a,b){if(!a||!b)return 0;var R=6371,dLa=(b.lat-a.lat)*Math.PI/180,dLo=(b.lon-a.lon)*Math.PI/180;var h=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);return Math.round(2*R*Math.asin(Math.sqrt(h)))}
+var CAPITAL={Nepal:"Kathmandu",India:"New Delhi",Bhutan:"Thimphu","Sri Lanka":"Colombo",Maldives:"Male",Thailand:"Bangkok",Malaysia:"Kuala Lumpur",Singapore:"Singapore",Vietnam:"Hanoi",Indonesia:"Jakarta",Cambodia:"Phnom Penh",China:"Beijing",Japan:"Tokyo","South Korea":"Seoul","United Arab Emirates":"Abu Dhabi",Qatar:"Doha","Saudi Arabia":"Riyadh",Turkey:"Ankara",Egypt:"Cairo","United Kingdom":"London",France:"Paris",Italy:"Rome",Spain:"Madrid",Germany:"Berlin","United States":"Washington","Canada":"Ottawa",Australia:"Canberra",Bangladesh:"Dhaka",Pakistan:"Islamabad",Myanmar:"Naypyidaw",Philippines:"Manila"};
+var STAYAREA={Pokhara:"Lakeside (ফেওয়া লেকের পাড়) — পর্যটকদের প্রধান এলাকা",Kathmandu:"Thamel — পর্যটক এলাকা","Cox's Bazar":"Kolatoli / Marine Drive রোডের পাশে",Chittagong:"GEC Circle / Khulshi এলাকা",Dhaka:"Gulshan / Banani / Uttara এলাকা",Bangkok:"Sukhumvit / Silom এলাকা","Kuala Lumpur":"Bukit Bintang এলাকা",Singapore:"Bugis / Little India এলাকা",Male:"Malé শহরকেন্দ্র / Hulhumalé",Colombo:"Galle Road / Fort এলাকা",Thimphu:"Norzin Lam (শহরকেন্দ্র)",Delhi:"Karol Bagh / Connaught Place এলাকা","New Delhi":"Karol Bagh / Connaught Place এলাকা",Kolkata:"Park Street / Sudder Street এলাকা",Dubai:"Deira / Bur Dubai এলাকা",Istanbul:"Sultanahmet / Taksim এলাকা",Cairo:"Downtown / Zamalek এলাকা",London:"Paddington / King's Cross এলাকা",Paris:"Latin Quarter / Gare du Nord এলাকা"};
+var COST={ /* per person, BDT: hotel/night, food/day, local/day */
+ Nepal:{hotel:[1500,4000,14000],food:[900,2000,5500],local:[600,1500,4500],visa:"বাংলাদেশিদের জন্য নেপালে visa on arrival (SAARC) — পাসপোর্টে ৬ মাস মেয়াদ রাখুন"},
+ India:{hotel:[1200,3500,12000],food:[800,1800,5000],local:[500,1300,4000],visa:"ভারতের ভিসা আগাম নিতে হয় (IVAC, ঢাকা) — ভ্রমণের অন্তত ৩–৪ সপ্তাহ আগে আবেদন করুন"},
+ Bhutan:{hotel:[2500,6000,20000],food:[1200,2800,7000],local:[1000,2500,6000],visa:"ভুটানের ভিসা আগাম অনুমোদন লাগে; দৈনিক SDF ফি প্রযোজ্য — ট্যুর অপারেটর/হোটেলের মাধ্যমে ব্যবস্থা করুন"},
+ "Sri Lanka":{hotel:[1800,4500,16000],food:[1000,2200,6000],local:[700,1800,5000],visa:"শ্রীলঙ্কার ETA অনলাইনে আগাম নিন"},
+ Maldives:{hotel:[6000,15000,60000],food:[2500,6000,18000],local:[1500,4000,15000],visa:"মালদ্বীপে on arrival ভিসা (হোটেল বুকিং ও রিটার্ন টিকিট দেখাতে হয়)"},
+ Thailand:{hotel:[1500,4500,18000],food:[1100,2600,8000],local:[700,1800,6000],visa:"থাইল্যান্ডের ভিসা আগাম নিতে হয় (দূতাবাস/VFS, ঢাকা)"},
+ Malaysia:{hotel:[1600,4800,19000],food:[1100,2600,8000],local:[700,1800,5500],visa:"মালয়েশিয়ার e-visa অনলাইনে আগাম নিন"},
+ Singapore:{hotel:[4500,11000,35000],food:[2200,5000,15000],local:[1200,3000,9000],visa:"সিঙ্গাপুরের ভিসা আগাম নিতে হয় (অনুমোদিত এজেন্টের মাধ্যমে)"},
+ Vietnam:{hotel:[1300,3800,15000],food:[900,2100,6500],local:[600,1500,4500],visa:"ভিয়েতনামের e-visa অনলাইনে আগাম নিন"},
+ Indonesia:{hotel:[1500,4500,18000],food:[1000,2400,7500],local:[700,1800,5500],visa:"ইন্দোনেশিয়ার ভিসা/e-visa আগাম যাচাই করুন"},
+ Bangladesh:{hotel:[1000,3000,10000],food:[700,1500,4500],local:[400,1000,3500],visa:""},
+ "United Arab Emirates":{hotel:[3500,9000,30000],food:[1800,4200,13000],local:[1000,2600,9000],visa:"UAE ভিসা আগাম নিতে হয় (এয়ারলাইন/এজেন্টের মাধ্যমে)"},
+ Turkey:{hotel:[2200,6000,24000],food:[1400,3200,10000],local:[800,2000,6500],visa:"তুরস্কের ভিসা আগাম নিতে হয় (দূতাবাস, ঢাকা)"},
+ Egypt:{hotel:[1500,4200,17000],food:[900,2100,6500],local:[600,1500,5000],visa:"মিশরের ভিসা আগাম নিতে হয় (দূতাবাস, ঢাকা)"}
+};
+var COSTDEF={hotel:[2000,5500,20000],food:[1200,2800,8500],local:[800,2000,6000],visa:"গন্তব্যের ভিসা নিয়ম আগাম যাচাই করুন — বাংলাদেশি পাসপোর্টে বেশিরভাগ দেশে visa on arrival নেই"};
+function prof(country){return COST[country]||COSTDEF}
+function tierName(t){return t==="low"?"Low (সাশ্রয়ী)":t==="high"?"High (লাক্সারি)":"Medium (আরামদায়ক)"}
+function tierIdx(t){return t==="low"?0:t==="high"?2:1}
+function fillCountries(sel,def){
+  var cs=(window.WC||[]).slice().sort(function(a,b){return a.name<b.name?-1:1});
+  sel.innerHTML=cs.map(function(x){var bn=(window.WBN||{})[x.name]||x.name;return '<option value="'+esc(x.name)+'"'+(x.name===def?" selected":"")+'>'+esc(bn)+" ("+esc(x.name)+")</option>"}).join("");
+}
+function citiesOf(country){
+  var out=[],seen={};
+  try{var e=(window.WC||[]).filter(function(x){return x.name===country})[0];(e&&e.cities||[]).forEach(function(c){if(!seen[c]){seen[c]=1;out.push(c)}});
+  ((window.WCC||{})[country]||[]).forEach(function(r){if(!seen[r[0]]){seen[r[0]]=1;out.push(r[0])}});}catch(e){}
+  return out.sort();
+}
+function fillCities(sel,country,def){
+  var cs=citiesOf(country);
+  sel.innerHTML=cs.map(function(c){var bn=((window.WBC2||{})[c]||(window.WBC||{})[c]||c);return '<option value="'+esc(c)+'"'+(c===def?" selected":"")+'>'+esc(bn!==c?bn+" ("+c+")":c)+"</option>"}).join("");
+  if(def&&cs.indexOf(def)<0&&cs.length)sel.value=cs[0];
+}
+function myPlaces(country,city){
+  var all=[];try{all=JSON.parse(localStorage.getItem("wtg_places_custom")||"[]")}catch(e){}
+  var inCity=all.filter(function(p){return p.country===country&&p.city===city});
+  var inCountry=all.filter(function(p){return p.country===country&&p.city!==city});
+  return inCity.concat(inCountry);
+}
+function shortDesc(p){
+  var d=String(p.desc||"").split(/\n/).filter(function(x){return x.trim()&&!/^🚗|^🏨|^🍽|^💰|^🎟|^🛍|^⚠/.test(x.trim())});
+  return (d[0]||"").slice(0,170);
+}
+/* ---------- Route map (SVG image) ---------- */
+function drawMap(stops){
+  var svg=$("plMap");var W=900,H=380,pad=70;
+  var pts=stops.filter(function(s){return s.c});
+  var lats=pts.map(function(s){return s.c.lat}),lons=pts.map(function(s){return s.c.lon});
+  var mnLa=Math.min.apply(null,lats),mxLa=Math.max.apply(null,lats),mnLo=Math.min.apply(null,lons),mxLo=Math.max.apply(null,lons);
+  if(mxLa-mnLa<2){mxLa+=1;mnLa-=1} if(mxLo-mnLo<2){mxLo+=1;mnLo-=1}
+  function X(lon){return pad+(lon-mnLo)/(mxLo-mnLo)*(W-2*pad)}
+  function Y(lat){return H-pad-(lat-mnLa)/(mxLa-mnLa)*(H-2*pad)}
+  var path=stops.map(function(s,i){return (i?"L":"M")+X(s.c.lon).toFixed(1)+" "+Y(s.c.lat).toFixed(1)}).join(" ");
+  var out='<defs><linearGradient id="plSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe8f5"/><stop offset="1" stop-color="#e6f7ee"/></linearGradient></defs>'
+    +'<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="url(#plSky)"/>'
+    +'<path d="'+path+'" fill="none" stroke="#0b5d6b" stroke-width="3.5" stroke-dasharray="10 7" stroke-linecap="round"/>';
+  stops.forEach(function(s,i){
+    var x=X(s.c.lon),y=Y(s.c.lat);
+    out+='<circle cx="'+x+'" cy="'+y+'" r="17" fill="'+(i===0?"#2e7d32":i===stops.length-1?"#c62828":"#f2762e")+'" stroke="#fff" stroke-width="3"/>'
+      +'<text x="'+x+'" y="'+(y+6)+'" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">'+(i+1)+'</text>'
+      +'<text x="'+x+'" y="'+(y-26)+'" text-anchor="middle" font-size="15.5" font-weight="700" fill="#07323b">'+esc(s.label)+'</text>'
+      +(s.sub?'<text x="'+x+'" y="'+(y+36)+'" text-anchor="middle" font-size="12.5" fill="#455a64">'+esc(s.sub)+'</text>':"");
+  });
+  svg.innerHTML=out;
+}
+/* ---------- Build the plan ---------- */
+function buildPlan(){
+  var fc=$("plFromCountry").value,fci=$("plFromCity").value,tc=$("plToCountry").value,tci=$("plToCity").value;
+  var tier=(document.querySelector('input[name="plBudget"]:checked')||{}).value||"mid";
+  var days=Math.max(1,Math.min(30,+$("plDays").value||1)),people=Math.max(1,Math.min(20,+$("plPeople").value||1));
+  if(!fc||!tc||!fci||!tci)return;
+  var ti=tierIdx(tier),P=prof(tc);
+  var cFrom=coords(fc,fci),cTo=coords(tc,tci),cap=CAPITAL[tc]||tci,cCap=coords(tc,cap);
+  var km=distKm(cFrom,cTo),intl=fc!==tc;
+  var nights=Math.max(1,days-0),stayNights=days>1?days-1:1;
+  /* Transport cost (per person, return) */
+  var goTxt="",retTxt="",transCost=0,transLabel="";
+  if(intl){
+    var flight=Math.max(12000,Math.round((9000+km*10)/500)*500);
+    var flightHi=Math.round(flight*1.45/500)*500;
+    var via=(cap!==tci)?(" → "+cap+" (গেটওয়ে) → "+tci):" → "+tci;
+    var leg2=(cap!==tci)?(" তারপর "+cap+" থেকে "+tci+" — অভ্যন্তরীণ ফ্লাইট (প্রায় ২৫–৩০ মিনিট) অথবা ট্যুরিস্ট বাস/গাড়ি (প্রায় ৬–৮ ঘণ্টা)।"):"";
+    goTxt="✈️ <b>বিমানে যান:</b> "+fci+" থেকে"+(fci!=="Dhaka"&&fc==="Bangladesh"?" প্রথমে ঢাকা (বাস/ট্রেন/অভ্যন্তরীণ ফ্লাইট), তারপর ঢাকা থেকে":" সরাসরি/এক স্টপে")+" আন্তর্জাতিক ফ্লাইটে"+via+"।"+leg2+" ফ্লাইটের সময় ও ভাড়া মৌসুম অনুযায়ী বদলায় — টিকিট ৪–৬ সপ্তাহ আগে কাটলে সাশ্রয় হয়।";
+    transCost=flight;transLabel="আন্তর্জাতিক ফ্লাইট (জনপ্রতি, আনুমানিক "+tk(flight)+"–"+tk(flightHi)+")";
+    retTxt="🔁 ফেরার পথও একই রুটের উল্টো: "+tci+" → "+(cap!==tci?cap+" → ":"")+(fci!=="Dhaka"&&fc==="Bangladesh"?"ঢাকা → ":"")+fci+"। শেষ দিনের ফ্লাইট ধরতে হোটেল থেকে অন্তত ৩ ঘণ্টা আগে বের হোন; আন্তর্জাতিক ফ্লাইটে ৩ ঘণ্টা আগে এয়ারপোর্টে পৌঁছান।";
+  }else if(km>380){
+    var df=Math.round((2500+km*4)/100)*100;
+    goTxt="✈️/🚌 <b>দূরের পথ ("+num(km)+" কিমি):</b> "+fci+" থেকে অভ্যন্তরীণ ফ্লাইটে দ্রুত যাওয়া যায় (আনুমানিক "+tk(df)+"), অথবা সাশ্রয়ী চাইলে এসি বাস/ট্রেনে রাতের যাত্রা করুন।";
+    transCost=df;transLabel="যাতায়াত (জনপ্রতি, আনুমানিক)";
+    retTxt="🔁 শেষ দিনে একই পথে ফিরুন — "+tci+" থেকে "+fci+"। রাতের বাস/ট্রেন নিলে এক রাতের হোটেল খরচও বাঁচে।";
+  }else if(km>60){
+    var db=Math.round((300+km*3)/50)*50;
+    goTxt="🚌 <b>বাস/ট্রেনে যান ("+num(km)+" কিমি):</b> "+fci+" থেকে সরাসরি এসি বাস বা ট্রেনে "+tci+" — আনুমানিক "+(Math.max(1,Math.round(km/45)))+"–"+(Math.max(2,Math.round(km/35)))+" ঘণ্টা। লাগেজ কম রাখুন, সকালের গাড়ি ধরলে দিনটা কাজে লাগে।";
+    transCost=db*2;transLabel="বাস/ট্রেন যাতায়াত (যাওয়া-আসা, জনপ্রতি)";
+    retTxt="🔁 ফেরার বাস/ট্রেন আগের দিনই বুক করে রাখুন — "+tci+" থেকে "+fci+" সরাসরি গাড়ি পাবেন।";
+  }else{
+    goTxt="🚕 <b>কাছের পথ ("+num(km)+" কিমি):</b> "+fci+" থেকে ট্যাক্সি/সিএনজি/প্রাইভেট গাড়িতে সরাসরি "+tci+" যাওয়া যায়।";
+    transCost=800;transLabel="স্থানীয় যাতায়াত (জনপ্রতি, আনুমানিক)";
+    retTxt="🔁 একই গাড়ি/ট্যাক্সিতে ফিরে আসুন — ফেরার সময় আগেই ঠিক করে রাখুন।";
+  }
+  var hotel=P.hotel[ti],food=P.food[ti],local=P.local[ti];
+  var hotelTot=hotel*stayNights,foodTot=food*days,localTot=local*days,ticketTot=Math.round((tier==="low"?800:tier==="high"?6000:2500));
+  var perPerson=transCost+hotelTot+foodTot+localTot+ticketTot;
+  var grand=perPerson*people;
+  var area=STAYAREA[tci]||(tci+" শহরকেন্দ্র / প্রধান পর্যটন এলাকা");
+  var stayKind=tier==="low"?"হোস্টেল / বাজেট গেস্টহাউস":tier==="high"?"৫-তারকা হোটেল / লাক্সারি রিসোর্ট (স্পা, পুল, ব্রেকফাস্টসহ)":"ভালো মানের ৩-তারকা হোটেল / বুটিক গেস্টহাউস";
+  var foodKind=tier==="low"?"লোকাল রেস্টুরেন্ট ও স্ট্রিট ফুড — সাশ্রয়ী আর স্বাদেও সেরা":tier==="high"?"নামকরা রেস্টুরেন্ট, রুফটপ ডাইনিং ও ক্যাফে — প্রতিদিন অন্তত একবেলা স্পেশাল খাবার":"ভালো লোকাল রেস্টুরেন্ট + মাঝে মাঝে ক্যাফে/স্পেশাল ডিনার";
+  /* Day plan from site places */
+  var places=myPlaces(tc,tci);
+  var dayBlocks="",used=0;
+  for(var d=1;d<=days;d++){
+    var items=[];
+    if(d===1){items.push({t:"🛬 পৌঁছানো ও হোটেলে চেক-ইন",x:"বিশ্রাম নিন, আশপাশ হেঁটে চিনে নিন, হালকা খাবার খান।"});if(places.length)items.push({p:places[used++%places.length],first:true});}
+    else if(d===days){if(places.length&&used<places.length+2)items.push({p:places[used++%places.length]});items.push({t:"🧳 চেক-আউট ও ফেরার যাত্রা",x:"কেনাকাটা সেরে ফেরার গাড়ি/ফ্লাইট ধরুন।"});}
+    else{for(var k=0;k<2;k++){if(places.length)items.push({p:places[used++%places.length]});}if(!places.length)items.push({t:"🏙️ শহর ঘোরা",x:tci+"-এর প্রধান আকর্ষণ, বাজার ও স্থানীয় এলাকা ঘুরে দেখুন।"});}
+    var inner=items.map(function(it,ix){
+      if(it.p){
+        var mv=ix>0?'<div class="pl-move">🚕 আগের জায়গা থেকে এখানে — স্থানীয় ট্যাক্সি/রিকশা/হাঁটা (আনুমানিক ১৫–৪০ মিনিট)</div>':"";
+        return mv+'<div class="pl-place">📍 '+esc(it.p.name)+'</div><div>'+esc(shortDesc(it.p))+'</div>'+(it.p.url?'<a class="btn btn-sm btn-outline-primary mt-1" target="_blank" rel="noopener" href="'+esc(it.p.url)+'">🗺️ ম্যাপে দেখুন</a>':"");
+      }
+      return '<div class="pl-place">'+it.t+'</div><div>'+esc(it.x)+'</div>';
+    }).join("");
+    dayBlocks+='<div class="pl-day"><b>📅 দিন '+num(d)+'</b>'+inner+'</div>';
+  }
+  if(!places.length)dayBlocks+='<p class="text-muted">ℹ️ এই শহরের বিস্তারিত জায়গার তালিকা এখনো সাইটে যোগ হয়নি — সাধারণ প্ল্যান দেওয়া হলো।</p>';
+  /* Stops for map: from -> gateway (if intl & different) -> dest -> (return marker = from) */
+  var stops=[{label:fci,sub:fc,c:cFrom}];
+  if(intl&&cap!==tci&&cCap)stops.push({label:cap,sub:"গেটওয়ে",c:cCap});
+  stops.push({label:tci,sub:tc,c:cTo});
+  stops.push({label:fci,sub:"ফেরা",c:cFrom});
+  drawMap(stops);
+  $("plGmaps").href="https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(fci+", "+fc)+"&destination="+encodeURIComponent(tci+", "+tc);
+  $("plSummary").innerHTML="<h3>🧭 আপনার ট্রিপ প্ল্যান</h3>"
+    +'<div><span class="pl-chip">🛫 '+esc(fci)+", "+esc(fc)+'</span> ➜ <span class="pl-chip">🎯 '+esc(tci)+", "+esc(tc)+'</span></div>'
+    +'<div class="mt-2"><span class="pl-chip">💰 বাজেট: '+tierName(tier)+'</span><span class="pl-chip">📅 '+num(days)+' দিন</span><span class="pl-chip">👥 '+num(people)+' জন</span>'+(km?'<span class="pl-chip">📏 দূরত্ব আনুমানিক '+num(km)+' কিমি</span>':"")+"</div>"
+    +'<div class="mt-2">মোট আনুমানিক খরচ ('+num(people)+' জন): <span class="pl-total">'+tk(grand)+'</span> <span class="text-muted">(জনপ্রতি '+tk(perPerson)+')</span></div>'
+    +'<p class="text-muted mb-0" style="font-size:13px">সব খরচ আনুমানিক — মৌসুম, টিকিটের সময় ও হোটেল অনুযায়ী বদলাতে পারে।</p>';
+  $("plGo").innerHTML="<h3>✈️ কীভাবে যাবেন</h3><p>"+goTxt+"</p>"+(P.visa&&intl?'<p>🛂 <b>ভিসা:</b> '+esc(P.visa)+'</p>':"");
+  $("plStay").innerHTML="<h3>🏨 কোথায় থাকবেন</h3><p><b>এলাকা:</b> "+esc(area)+"</p><p><b>ধরন ("+tierName(tier)+"):</b> "+stayKind+" — প্রতি রাত আনুমানিক "+tk(hotel)+" (জনপ্রতি/শেয়ারিং ধরে)। মোট "+num(stayNights)+" রাত: "+tk(hotelTot)+"।</p><p>আগাম বুকিং করুন; ছবি ও রিভিউ দেখে নিন, বাতিল-সুবিধা (free cancellation) থাকলে ভালো।</p>";
+  $("plFood").innerHTML="<h3>🍽️ কোথায় খাবেন</h3><p>"+foodKind+"। প্রতিদিন খাবার বাজেট আনুমানিক "+tk(food)+" (জনপ্রতি), "+num(days)+" দিনে মোট "+tk(foodTot)+"।</p><p>হালাল খাবার দরকার হলে হোটেলের আশপাশের মুসলিম/ভারতীয় রেস্টুরেন্ট খুঁজুন, অর্ডারের আগে নিশ্চিত হয়ে নিন। স্থানীয় জনপ্রিয় খাবার অবশ্যই চেখে দেখুন। সবসময় বোতলের/ছাঁকা পানি পান করুন।</p>";
+  $("plDaysOut").innerHTML="<h3>📅 দিন অনুযায়ী প্ল্যান — কোথা থেকে কোথায়, কী দেখবেন</h3>"+dayBlocks;
+  $("plReturn").innerHTML="<h3>🔁 কীভাবে ফিরবেন</h3><p>"+retTxt+"</p>";
+  function row(l,v){return "<tr><td>"+l+"</td><td class='text-end'>"+v+"</td></tr>"}
+  $("plCost").innerHTML="<h3>💰 খরচের হিসাব (বাজেট: "+tierName(tier)+")</h3>"
+    +'<table class="table pl-cost"><tbody>'
+    +row("✈️ "+transLabel,tk(transCost))
+    +row("🏨 হোটেল ("+num(stayNights)+" রাত × "+tk(hotel)+")",tk(hotelTot))
+    +row("🍽️ খাবার ("+num(days)+" দিন × "+tk(food)+")",tk(foodTot))
+    +row("🚕 স্থানীয় যাতায়াত ("+num(days)+" দিন × "+tk(local)+")",tk(localTot))
+    +row("🎟️ টিকিট, এন্ট্রি ফি ও অন্যান্য",tk(ticketTot))
+    +'<tr class="table-light"><td><b>জনপ্রতি মোট</b></td><td class="text-end"><b>'+tk(perPerson)+"</b></td></tr>"
+    +'<tr><td><b>সর্বমোট ('+num(people)+' জন)</b></td><td class="text-end pl-total">'+tk(grand)+"</td></tr>"
+    +"</tbody></table><p class='text-muted mb-0' style='font-size:13px'>অতিরিক্ত কেনাকাটা ও ব্যক্তিগত খরচ আলাদা। জরুরি অবস্থার জন্য মোটের ১০% অতিরিক্ত হাতে রাখুন।</p>";
+  $("plSafe").innerHTML="<h3>⚠️ সতর্কতা</h3><ul class='mb-0'>"
+    +"<li>পাসপোর্টের মেয়াদ অন্তত ৬ মাস থাকতে হবে; ভিসা, হোটেল বুকিং ও রিটার্ন টিকিটের কপি ফোনে ও কাগজে রাখুন।</li>"
+    +(P.visa&&intl?"<li>"+esc(P.visa)+"।</li>":"")
+    +"<li>টাকা: কার্ডের পাশাপাশি কিছু নগদ স্থানীয় মুদ্রা রাখুন; টাকা বদলাতে অনুমোদিত মানি এক্সচেঞ্জ ব্যবহার করুন।</li>"
+    +"<li>আবহাওয়া দেখে পোশাক নিন; পাহাড়ি এলাকায় ঠান্ডা ও বৃষ্টির প্রস্তুতি রাখুন।</li>"
+    +"<li>অপরিচিত জায়গায় রাতে একা ঘোরাঘুরি এড়ান; ট্যাক্সিতে ওঠার আগে ভাড়া ঠিক করুন বা অ্যাপ-ভিত্তিক গাড়ি নিন।</li>"
+    +"<li>ভ্রমণ বীমা (travel insurance) নেওয়া ভালো — বিশেষ করে High বাজেটের লম্বা ট্রিপে।</li>"
+    +"<li>জরুরি নম্বর ও হোটেলের ঠিকানা সবসময় সঙ্গে রাখুন; পরিবারকে রুটিন জানিয়ে রাখুন।</li></ul>";
+  $("plOut").hidden=false;
+  $("plOut").scrollIntoView({behavior:"smooth"});
+  try{history.replaceState(null,"","?fc="+encodeURIComponent(fc)+"&fci="+encodeURIComponent(fci)+"&tc="+encodeURIComponent(tc)+"&tci="+encodeURIComponent(tci)+"&b="+tier+"&d="+days+"&p="+people)}catch(e){}
+}
+function init(){
+  if(!window.WC||!window.WCC){setTimeout(init,250);return}
+  var q=new URLSearchParams(location.search);
+  var fc=q.get("fc")||"Bangladesh",fci=q.get("fci")||"Chattogram",tc=q.get("tc")||"Nepal",tci=q.get("tci")||"Pokhara";
+  fillCountries($("plFromCountry"),fc);fillCountries($("plToCountry"),tc);
+  fillCities($("plFromCity"),fc,fci);fillCities($("plToCity"),tc,tci);
+  $("plFromCountry").addEventListener("change",function(){fillCities($("plFromCity"),this.value)});
+  $("plToCountry").addEventListener("change",function(){fillCities($("plToCity"),this.value)});
+  var b=q.get("b");if(b){var r=document.querySelector('input[name="plBudget"][value="'+b+'"]');if(r)r.checked=true}
+  if(q.get("d"))$("plDays").value=q.get("d");
+  if(q.get("p"))$("plPeople").value=q.get("p");
+  $("plForm").addEventListener("submit",function(e){e.preventDefault();buildPlan()});
+  $("plPrint").addEventListener("click",function(){window.print()});
+  if(q.get("go"))setTimeout(buildPlan,900);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});</script>
+</body>
+</html>
