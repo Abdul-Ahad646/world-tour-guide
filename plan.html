@@ -134,6 +134,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js" defer></script>
 <script src="firebase-config.js" defer></script>
 <script src="app.js?v=50" defer></script>
+<script src="jspdf.umd.min.js" defer></script>
+<script src="html2canvas.min.js" defer></script>
 <script>
 (function(){
 "use strict";
@@ -263,7 +265,62 @@ function drawMapImg(){
     })(tx,ty);
   }
 }
+function dlFile(name,blob){
+  try{
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement("a");a.href=url;a.download=name;
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){try{document.body.removeChild(a)}catch(e){} try{URL.revokeObjectURL(url)}catch(e){}},4000);
+  }catch(e){}
+}
 function downloadPlan(){
+  var D=window.__plData;if(!D)return;
+  var btn=$("plDownload");
+  if(!window.jspdf||!window.html2canvas){printPlanFallback();return}
+  var oldTxt=btn?btn.textContent:"";
+  if(btn){btn.disabled=true;btn.textContent="⏳ PDF বানাচ্ছে… একটু অপেক্ষা করুন"}
+  var restore=[];
+  document.querySelectorAll("#plAi button,#plAi input").forEach(function(el){restore.push([el,el.style.display]);el.style.display="none"});
+  function unhide(){restore.forEach(function(r){r[0].style.display=r[1]})}
+  var els=[];
+  ["plSummary","plImgs"].forEach(function(id){var e=$(id);if(e)els.push(e)});
+  var days=$("plDaysOut");
+  if(days){if(days.children&&days.children.length){for(var i=0;i<days.children.length;i++)els.push(days.children[i])}else els.push(days)}
+  ["plCost","plSafe","plAi"].forEach(function(id){var e=$(id);if(e&&e.innerHTML.trim())els.push(e)});
+  var pdf=new window.jspdf.jsPDF({unit:"mm",format:"a4",compress:true});
+  var pageW=190,pageH=277,first=true;
+  function addCanvas(cv){
+    var pxPerMm=cv.width/pageW;
+    var sliceH=Math.floor(pageH*pxPerMm);
+    var y=0;
+    while(y<cv.height){
+      var h=Math.min(sliceH,cv.height-y);
+      var c2=document.createElement("canvas");c2.width=cv.width;c2.height=h;
+      c2.getContext("2d").drawImage(cv,0,y,cv.width,h,0,0,cv.width,h);
+      var img=c2.toDataURL("image/jpeg",0.92);
+      if(!first)pdf.addPage();
+      first=false;
+      pdf.addImage(img,"JPEG",10,10,pageW,h/pxPerMm);
+      y+=h;
+    }
+  }
+  var chain=Promise.resolve();
+  els.forEach(function(el){
+    chain=chain.then(function(){return html2canvas(el,{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false}).then(addCanvas).catch(function(){})});
+  });
+  chain.then(function(){
+    unhide();
+    if(btn){btn.disabled=false;btn.textContent=oldTxt}
+    if(first){printPlanFallback();return}
+    var fname="trip-plan-"+(D.tci+"-"+D.tc).replace(/[^a-z0-9]+/gi,"-")+".pdf";
+    dlFile(fname,pdf.output("blob"));
+  }).catch(function(){
+    unhide();
+    if(btn){btn.disabled=false;btn.textContent=oldTxt}
+    printPlanFallback();
+  });
+}
+function printPlanFallback(){
   var D=window.__plData;if(!D)return;
   function sec(id){var e=$(id);return e?'<div class="sec">'+e.innerHTML+"</div>":""}
   var html='<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>ট্রিপ প্ল্যান — '+esc(D.tci)+'</title><style>body{font-family:sans-serif;max-width:840px;margin:20px auto;padding:0 14px;color:#212121}h1{color:#0b5d6b;font-size:24px}.sec{background:#f7fbfb;border:1px solid #e0e0e0;border-radius:12px;padding:14px;margin:12px 0}table{width:100%;border-collapse:collapse}td{padding:6px 8px;border-bottom:1px solid #eee}.text-end{text-align:right}.pl-total{font-size:20px;font-weight:800;color:#0b5d6b}.pl-chip{display:inline-block;background:#fff3e0;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600;margin:2px}.pl-day{border-left:4px solid #0b5d6b;background:#ffffff;border-radius:10px;padding:10px 12px;margin:10px 0}.pl-time{display:inline-block;background:#e0f2f1;color:#0b5d6b;border-radius:999px;padding:1px 10px;font-size:13px;font-weight:700}.pl-place{font-weight:700}.pl-imgs img{width:31%;height:80px;object-fit:cover;border-radius:8px;margin-right:4px}svg{width:100%;height:auto}@page{margin:12mm}@media print{body{max-width:none;margin:0}.sec{break-inside:avoid}}</style></head><body>'
@@ -749,7 +806,7 @@ function plAiSetup(){
       +'<p style="font-size:13.5px">এই প্ল্যানের জন্য AI-এর ধাপে-ধাপে গাইড পেতে একটা <b>ফ্রি Google Gemini API Key</b> লাগবে (Bangla AI অ্যাপের key-ই চলবে — একবার দিলেই দুই জায়গায় কাজ করবে)।</p>'
       +'<p class="text-muted" style="font-size:13px">ফ্রি key নেওয়া: ১) aistudio.google.com/apikey খুলুন → ২) Google account দিয়ে login → ৩) "Create API key" চাপুন → ৪) key-টা কপি করে নিচে বসান।</p>'
       +'<div class="d-flex gap-2"><input id="plAiKeyIn" class="form-control" type="password" placeholder="Gemini API key বসান"><button type="button" class="btn btn-success" id="plAiKeySave">সেভ</button></div><span id="plAiKeyMsg" class="d-block mt-1" style="font-size:13px"></span>';
-    $("plAiKeySave").addEventListener("click",function(){var v=$("plAiKeyIn").value.trim();if(!v){$("plAiKeyMsg").textContent="আগে key বসান।";return}try{localStorage.setItem("banglaai_gemini_key",v)}catch(e){}$("plAiKeyMsg").textContent="সেভ হয়েছে ✓";plAiSetup();});
+    $("plAiKeySave").addEventListener("click",function(){var v=$("plAiKeyIn").value.trim();if(!v){$("plAiKeyMsg").textContent="আগে key বসান।";return}try{localStorage.setItem("banglaai_gemini_key",v)}catch(e){}$("plAiKeyMsg").textContent="সেভ হয়েছে ✓";plAiSetup();setTimeout(function(){if($("plAiBtn"))plAiRun()},80);});
   }
 }
 async function plAiRun(){
