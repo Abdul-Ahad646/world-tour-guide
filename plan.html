@@ -722,7 +722,7 @@ async function buildPlan(){
   try{history.replaceState(null,"","?fc="+encodeURIComponent(fc)+"&fci="+encodeURIComponent(fci)+"&tc="+encodeURIComponent(tc)+"&tci="+encodeURIComponent(tci)+"&b="+tier+"&d="+days+"&p="+people)}catch(e){}
 }
 /* ---------- AI guide (Gemini) — Bangla AI-r sathe shared free key ---------- */
-var PL_AI_MODEL="gemini-2.0-flash";
+var PL_AI_MODELS=["gemini-3.8-flash","gemini-flash-latest","gemini-2.5-flash","gemini-2.5-flash-lite","gemini-2.0-flash"];
 function plAiKey(){try{return localStorage.getItem("banglaai_gemini_key")||""}catch(e){return""}}
 function plAiSetup(){
   var box=$("plAi");if(!box)return;
@@ -746,9 +746,16 @@ async function plAiRun(){
   var parts=A.places.map(function(p,i){return (i+1)+". "+p.name+"\n"+String(p.desc||"").slice(0,700)}).join("\n\n");
   var prompt="তুমি Bangla AI — বাংলাদেশি ভ্রমণকারীর জন্য বাংলায় লেখা ট্যুর গাইড। নিচে একটা ট্রিপ প্ল্যানের জায়গাগুলোর তথ্য দেওয়া হলো। শুধু এই তথ্য ব্যবহার করে, প্রতিটি জায়গার জন্য ধাপে ধাপে লেখো: কীভাবে ঘুরে শেষ করবে (কোনটা আগে, কোনটা পরে), যাওয়া-আসার পথ, পারমিশন/টিকিট লাগলে কোথায়, পথে কোথায় থাকবে ও খাবে। তথ্যে যা নেই তা বানিয়ে লিখো না। সহজ বাংলায়, প্রতিটি জায়গার নাম শিরোনাম দিয়ে লেখো।\n\nরুট: "+A.route+"\n\nজায়গাগুলো:\n"+parts;
   try{
-    var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+PL_AI_MODEL+":generateContent?key="+encodeURIComponent(plAiKey()),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}]})});
-    var j=await r.json();
-    if(!r.ok)throw new Error((j&&j.error&&j.error.message)||("HTTP "+r.status));
+    var j=null,lastErr=null;
+    for(var mi=0;mi<PL_AI_MODELS.length;mi++){
+      var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+PL_AI_MODELS[mi]+":generateContent?key="+encodeURIComponent(plAiKey()),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}]})});
+      j=await r.json().catch(function(){return null});
+      if(r.ok)break;
+      lastErr=new Error((j&&j.error&&j.error.message)||("HTTP "+r.status));
+      if(!(r.status===404||/not found|no longer available|not supported/i.test(lastErr.message)))throw lastErr;
+      j=null;
+    }
+    if(!j)throw lastErr||new Error("AI সাড়া দেয়নি");
     var pr=(((j.candidates||[])[0]||{}).content||{}).parts;
     var txt=Array.isArray(pr)?pr.map(function(x){return x.text||""}).join(""):"";
     out.textContent=txt||"AI কিছু লিখতে পারেনি — আবার চেষ্টা করুন।";
