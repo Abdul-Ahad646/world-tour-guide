@@ -289,6 +289,14 @@ function downloadPlan(){
   ["plCost","plSafe","plAi"].forEach(function(id){var e=$(id);if(e&&e.innerHTML.trim())els.push(e)});
   var pdf=new window.jspdf.jsPDF({unit:"mm",format:"a4",compress:true});
   var pageW=190,pageH=277,first=true;
+  /* v45: PDF-er prothom pata — title/cover (html2canvas diye, jate Bangla thik ase) */
+  var cover=document.createElement("div");
+  cover.style.cssText="width:680px;background:#ffffff;padding:48px 40px;font-family:sans-serif;color:#14301e";
+  cover.innerHTML='<div style="font-size:15px;font-weight:700;color:#0e7a3d;letter-spacing:1px">WORLD TOUR GUIDE</div>'
+    +'<div style="font-size:34px;font-weight:800;margin:14px 0 6px">🧭 ট্রিপ প্ল্যান</div>'
+    +'<div style="font-size:21px;font-weight:700">'+esc(D.fci)+', '+esc(D.fc)+' → '+esc(D.tci)+', '+esc(D.tc)+'</div>'
+    +'<div style="margin-top:18px;font-size:14px;color:#555">তারিখ: '+new Date().toLocaleDateString("bn-BD",{day:"numeric",month:"long",year:"numeric"})+' • সব খরচ আনুমানিক</div>'
+    +'<div style="margin-top:26px;border-top:3px solid #0e7a3d;padding-top:14px;font-size:13px;color:#777">পরের পাতা থেকে দিনের প্ল্যান, খরচ ও নিরাপত্তা টিপস — একসঙ্গে পাবেন।</div>';
   function addCanvas(cv){
     var pxPerMm=cv.width/pageW;
     var sliceH=Math.floor(pageH*pxPerMm);
@@ -305,6 +313,8 @@ function downloadPlan(){
     }
   }
   var chain=Promise.resolve();
+  document.body.appendChild(cover);
+  chain=chain.then(function(){return html2canvas(cover,{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false}).then(addCanvas).catch(function(){})}).then(function(){try{cover.remove()}catch(e){}});
   els.forEach(function(el){
     chain=chain.then(function(){return html2canvas(el,{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false}).then(addCanvas).catch(function(){})});
   });
@@ -312,6 +322,7 @@ function downloadPlan(){
     unhide();
     if(btn){btn.disabled=false;btn.textContent=oldTxt}
     if(first){printPlanFallback();return}
+    try{var n=pdf.getNumberOfPages();for(var pi=1;pi<=n;pi++){pdf.setPage(pi);pdf.setFontSize(9);pdf.setTextColor(140,140,140);pdf.text("Page "+pi+" / "+n,178,290,null,null,"right");}}catch(e){}
     var fname="trip-plan-"+(D.tci+"-"+D.tc).replace(/[^a-z0-9]+/gi,"-")+".pdf";
     dlFile(fname,pdf.output("blob"));
   }).catch(function(){
@@ -822,7 +833,7 @@ async function plAiRun(){
       j=await r.json().catch(function(){return null});
       if(r.ok)break;
       lastErr=new Error((j&&j.error&&j.error.message)||("HTTP "+r.status));
-      if(!(r.status===404||/not found|no longer available|not supported/i.test(lastErr.message)))throw lastErr;
+      if(!(r.status===404||r.status===429||r.status===500||r.status===503||/not found|no longer available|not supported|overloaded|high demand|unavailable/i.test(lastErr.message)))throw lastErr;
       j=null;
     }
     if(!j)throw lastErr||new Error("AI সাড়া দেয়নি");
